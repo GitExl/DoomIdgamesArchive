@@ -36,9 +36,9 @@ import android.preference.PreferenceActivity;
 public class PreferencesActivity extends PreferenceActivity {
 
     @SuppressWarnings("deprecation")
-	@Override
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
-    	super.onCreate(savedInstanceState);
+        super.onCreate(savedInstanceState);
         addPreferencesFromResource(R.xml.preferences);
     }
 }

@@ -47,14 +47,14 @@ import android.widget.TabWidget;
  * Tab helper class for Eclair SDKs up to Gingerbread SDKs.
  */
 public class TabHelperEclair extends TabHelper implements TabHost.OnTabChangeListener {
-	private FragmentActivity mActivity;
-	private TabHost mTabHost;
-	private HashMap<String, Tab> mTabList;
-	private Tab mLastTab;
+    private FragmentActivity mActivity;
+    private TabHost mTabHost;
+    private HashMap<String, Tab> mTabList;
+    private Tab mLastTab;
 
-	
-	/**
-	 * A dummy factory class that returns an empty, dummy view for a TabHost.
+    
+    /**
+     * A dummy factory class that returns an empty, dummy view for a TabHost.
      */
     static class DummyTabFactory implements TabHost.TabContentFactory {
         private final Context mContext;
@@ -71,44 +71,44 @@ public class TabHelperEclair extends TabHelper implements TabHost.OnTabChangeLis
             return v;
         }
     }
-	
-	
-	public TabHelperEclair(FragmentActivity activity) {
-		mActivity = activity;
-		
-		mTabList = new HashMap<String, Tab>();
-	}
-	
-	@Override
-	public void addTab(Tab tab) {
-		String tag = tab.getTag();
-		
-		// Set up the TabHost if it was not done already.
-		if (mTabHost == null) {
-			mTabHost = (TabHost)mActivity.findViewById(android.R.id.tabhost);
-			mTabHost.setup();
-			mTabHost.setOnTabChangedListener(this);
-		}
-		
-		// Set the tab properties.
-		TabSpec tabSpec = mTabHost.newTabSpec(tag);
-		tabSpec.setIndicator(tab.getText());
-		tabSpec.setContent(new DummyTabFactory(mActivity));
-		
-		// Add the tab to the interface.
+    
+    
+    public TabHelperEclair(FragmentActivity activity) {
+        mActivity = activity;
+        
+        mTabList = new HashMap<String, Tab>();
+    }
+    
+    @Override
+    public void addTab(Tab tab) {
+        String tag = tab.getTag();
+        
+        // Set up the TabHost if it was not done already.
+        if (mTabHost == null) {
+            mTabHost = (TabHost)mActivity.findViewById(android.R.id.tabhost);
+            mTabHost.setup();
+            mTabHost.setOnTabChangedListener(this);
+        }
+        
+        // Set the tab properties.
+        TabSpec tabSpec = mTabHost.newTabSpec(tag);
+        tabSpec.setIndicator(tab.getText());
+        tabSpec.setContent(new DummyTabFactory(mActivity));
+        
+        // Add the tab to the interface.
         mTabList.put(tag, tab);
-		mTabHost.addTab(tabSpec);
-		
-		// Shorten the tab's height because there is no icon to display.
-		// The tab would display an empty space instead of the icon otherwise.
-		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.GINGERBREAD || Build.VERSION.SDK_INT > Build.VERSION_CODES.GINGERBREAD_MR1) {
-			TabWidget widget = mTabHost.getTabWidget();
-			int height = (int)TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 40, mActivity.getResources().getDisplayMetrics());
-			RelativeLayout child = (RelativeLayout)widget.getChildAt(widget.getChildCount() - 1);
-	        child.getLayoutParams().height = height;
-		}
-	}
-	
+        mTabHost.addTab(tabSpec);
+        
+        // Shorten the tab's height because there is no icon to display.
+        // The tab would display an empty space instead of the icon otherwise.
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.GINGERBREAD || Build.VERSION.SDK_INT > Build.VERSION_CODES.GINGERBREAD_MR1) {
+            TabWidget widget = mTabHost.getTabWidget();
+            int height = (int)TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 40, mActivity.getResources().getDisplayMetrics());
+            RelativeLayout child = (RelativeLayout)widget.getChildAt(widget.getChildCount() - 1);
+            child.getLayoutParams().height = height;
+        }
+    }
+    
     @Override
     public void onTabChanged(String tabId) {
         Tab newTab = mTabList.get(tabId);
@@ -117,7 +117,7 @@ public class TabHelperEclair extends TabHelper implements TabHost.OnTabChangeLis
         // Determine what event to trigger based on the previously selected tab and the newly selected one.
         if (mLastTab != newTab) {
             if (mLastTab != null) {
-            	// Unselect last tab.
+                // Unselect last tab.
                 if (mLastTab.getFragment() != null) {
                     mLastTab.getListener().onTabUnselected(mLastTab, ft);
                 }
@@ -139,19 +139,19 @@ public class TabHelperEclair extends TabHelper implements TabHost.OnTabChangeLis
         mActivity.getSupportFragmentManager().executePendingTransactions();
     }
 
-	@Override
-	public Tab newTab(Fragment fragment, String tag) {
-		return new TabEclair(mActivity, fragment, tag);
-	}
+    @Override
+    public Tab newTab(Fragment fragment, String tag) {
+        return new TabEclair(mActivity, fragment, tag);
+    }
 
-	@Override
-	public void onSaveInstanceState(Bundle outState) {
-		outState.putInt("tabPosition", mTabHost.getCurrentTab());
-	}
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        outState.putInt("tabPosition", mTabHost.getCurrentTab());
+    }
 
-	@Override
-	public void onRestoreInstanceState(Bundle savedInstanceState) {
-		int position = savedInstanceState.getInt("tabPosition");
-		mTabHost.setCurrentTab(position);
-	}
+    @Override
+    public void onRestoreInstanceState(Bundle savedInstanceState) {
+        int position = savedInstanceState.getInt("tabPosition");
+        mTabHost.setCurrentTab(position);
+    }
 }

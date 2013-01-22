@@ -41,164 +41,164 @@ import android.view.View;
  */
 public class RatingView extends View {
 
-	// The total rating icons that this view will display.
-	private int mRatingMax;
-	
-	// The amount of filled rating icons that this view will display.
-	private float mRating;
-	
-	// The space that is kept in between rating icons.
-	private int mRatingSpacing;
-	
-	// Rating icon drawables.
-	private Drawable mDrawableEmpty;
-	private Drawable mDrawableHalf;
-	private Drawable mDrawableFull;
-	
-	// Dimensions of the rating icons. This is cached when the view is constructed.
-	private int mIconWidth;
-	private int mIconHeight;
-	
-	// Y coordinate to render rating icons at. This is cached when the view's size changes.
-	private int mRenderY;
+    // The total rating icons that this view will display.
+    private int mRatingMax;
+    
+    // The amount of filled rating icons that this view will display.
+    private float mRating;
+    
+    // The space that is kept in between rating icons.
+    private int mRatingSpacing;
+    
+    // Rating icon drawables.
+    private Drawable mDrawableEmpty;
+    private Drawable mDrawableHalf;
+    private Drawable mDrawableFull;
+    
+    // Dimensions of the rating icons. This is cached when the view is constructed.
+    private int mIconWidth;
+    private int mIconHeight;
+    
+    // Y coordinate to render rating icons at. This is cached when the view's size changes.
+    private int mRenderY;
 
-	
-	/**
-	 * General exception raised by the RatingView class.
-	 */
-	public class RatingBarException extends Exception {
-		private static final long serialVersionUID = -3952282621756694962L;
-		
-		public RatingBarException(String error) {
-			super(error);
-		}
-	}
-	
-	
-	public RatingView(Context context, AttributeSet attrs) throws RatingBarException {
-		super(context, attrs);
-		
-		// Retrieve view parameters.
-		TypedArray a = context.getTheme().obtainStyledAttributes(attrs, R.styleable.RatingView, 0, 0);
-		try {
-			mRatingMax = a.getInt(R.styleable.RatingView_ratingMax, 5);
-			mRating = a.getFloat(R.styleable.RatingView_rating, (float)2.5);
-			mRatingSpacing = a.getInt(R.styleable.RatingView_ratingSpacing, 1);
-			
-			// Get default drawables so this view is displayed in edit mode.
-			if (isInEditMode()) {
-				mDrawableEmpty = getResources().getDrawable(R.drawable.rating_skull_empty);
-				mDrawableHalf = getResources().getDrawable(R.drawable.rating_skull_half);
-				mDrawableFull = getResources().getDrawable(R.drawable.rating_skull_full);
-				
-			// Get drawables defined in XML.
-			} else {
-				mDrawableEmpty = a.getDrawable(R.styleable.RatingView_drawableEmpty);
-				mDrawableHalf = a.getDrawable(R.styleable.RatingView_drawableHalf);
-				mDrawableFull = a.getDrawable(R.styleable.RatingView_drawableFull);
-			}
-		} finally {
-			a.recycle();
-		}
-		
-		// Test if all icon drawables are specified.
-		if (mDrawableEmpty == null) {
-			throw new RatingBarException("No empty icon drawable specified.");
-		}
-		if (mDrawableHalf == null) {
-			throw new RatingBarException("No half icon drawable specified.");
-		}
-		if (mDrawableFull == null) {
-			throw new RatingBarException("No full icon drawable specified.");
-		}
-		
-		// Cache drawables size.
-		mIconWidth = mDrawableEmpty.getIntrinsicWidth();
-		mIconHeight = mDrawableEmpty.getIntrinsicHeight();
-		
-		// Test whether all icon drawables are of the same width and height.
-		if (mIconWidth != mDrawableHalf.getIntrinsicWidth() ||
-				mIconHeight != mDrawableHalf.getIntrinsicHeight() ||
-				mIconWidth != mDrawableFull.getIntrinsicWidth() ||
-				mIconHeight != mDrawableFull.getIntrinsicHeight()) {
-			throw new RatingBarException("Icon drawables are not of equal width and height.");
-		}
-	}
-	
-	@Override
-	protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-		// Calculate icon width as minimum width.
-		int minw = getPaddingLeft() + getPaddingRight() + getSuggestedMinimumWidth() + (mRatingMax * (mIconWidth + mRatingSpacing));
-		int w = resolveSize(minw, widthMeasureSpec);
-	   
-		// Calculate icon height as minimum height.
-		int minh = getPaddingTop() + getPaddingBottom() + getSuggestedMinimumHeight() + mIconHeight;
-		int h = resolveSize(minh, heightMeasureSpec);
+    
+    /**
+     * General exception raised by the RatingView class.
+     */
+    public class RatingBarException extends Exception {
+        private static final long serialVersionUID = -3952282621756694962L;
+        
+        public RatingBarException(String error) {
+            super(error);
+        }
+    }
+    
+    
+    public RatingView(Context context, AttributeSet attrs) throws RatingBarException {
+        super(context, attrs);
+        
+        // Retrieve view parameters.
+        TypedArray a = context.getTheme().obtainStyledAttributes(attrs, R.styleable.RatingView, 0, 0);
+        try {
+            mRatingMax = a.getInt(R.styleable.RatingView_ratingMax, 5);
+            mRating = a.getFloat(R.styleable.RatingView_rating, (float)2.5);
+            mRatingSpacing = a.getInt(R.styleable.RatingView_ratingSpacing, 1);
+            
+            // Get default drawables so this view is displayed in edit mode.
+            if (isInEditMode()) {
+                mDrawableEmpty = getResources().getDrawable(R.drawable.rating_skull_empty);
+                mDrawableHalf = getResources().getDrawable(R.drawable.rating_skull_half);
+                mDrawableFull = getResources().getDrawable(R.drawable.rating_skull_full);
+                
+            // Get drawables defined in XML.
+            } else {
+                mDrawableEmpty = a.getDrawable(R.styleable.RatingView_drawableEmpty);
+                mDrawableHalf = a.getDrawable(R.styleable.RatingView_drawableHalf);
+                mDrawableFull = a.getDrawable(R.styleable.RatingView_drawableFull);
+            }
+        } finally {
+            a.recycle();
+        }
+        
+        // Test if all icon drawables are specified.
+        if (mDrawableEmpty == null) {
+            throw new RatingBarException("No empty icon drawable specified.");
+        }
+        if (mDrawableHalf == null) {
+            throw new RatingBarException("No half icon drawable specified.");
+        }
+        if (mDrawableFull == null) {
+            throw new RatingBarException("No full icon drawable specified.");
+        }
+        
+        // Cache drawables size.
+        mIconWidth = mDrawableEmpty.getIntrinsicWidth();
+        mIconHeight = mDrawableEmpty.getIntrinsicHeight();
+        
+        // Test whether all icon drawables are of the same width and height.
+        if (mIconWidth != mDrawableHalf.getIntrinsicWidth() ||
+                mIconHeight != mDrawableHalf.getIntrinsicHeight() ||
+                mIconWidth != mDrawableFull.getIntrinsicWidth() ||
+                mIconHeight != mDrawableFull.getIntrinsicHeight()) {
+            throw new RatingBarException("Icon drawables are not of equal width and height.");
+        }
+    }
+    
+    @Override
+    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+        // Calculate icon width as minimum width.
+        int minw = getPaddingLeft() + getPaddingRight() + getSuggestedMinimumWidth() + (mRatingMax * (mIconWidth + mRatingSpacing));
+        int w = resolveSize(minw, widthMeasureSpec);
+       
+        // Calculate icon height as minimum height.
+        int minh = getPaddingTop() + getPaddingBottom() + getSuggestedMinimumHeight() + mIconHeight;
+        int h = resolveSize(minh, heightMeasureSpec);
 
-		setMeasuredDimension(w, h);
-	}
-	
-	@Override
-	protected void onSizeChanged(int w, int h, int oldw, int oldh) {
-		// Render icons vertically centered.
-		mRenderY = h / 2 - mIconHeight / 2;
-	};
-	
-	@Override
-	protected void onDraw(Canvas canvas) {
-		super.onDraw(canvas);
-		
-		int x = 0;
-		Drawable icon = null;
-		
-		// Draw all rating icons.
-		for (int i = 0; i < mRatingMax; i++) {
-			
-			// Select what icon drawable to use depending on the rating.
-			if (mRating - i <= 0) {
-				icon = mDrawableEmpty;
-			} else if (mRating - i <= 0.5) {
-				icon = mDrawableHalf;
-			} else {
-				icon = mDrawableFull;
-			}
-			
-			// Place and render the icon.
-			icon.setBounds(x, mRenderY, x + mIconWidth, mRenderY + mIconHeight);
-			icon.draw(canvas);
-			
-			// Increase x position by icon width and spacing.
-			x += mIconWidth + mRatingSpacing;
-		}
-	}
-	
-	public void setRating(float rating) {
-		mRating = rating;
-		
-		invalidate();
-		requestLayout();
-	}
-	
-	/**
-	 * Sets the spacing to use between rating icons. A spacing below 0 will be treated as 0.
-	 */
-	public void setRatingSpacing(int ratingSpacing) {
-		mRatingSpacing = Math.max(ratingSpacing, 0);
-		
-		invalidate();
-		requestLayout();
-	}
-	
-	/**
-	 * Sets the maximum rating value. This determines how many rating icons will be drawn. A ratingMax below 0 will be treated as 0.
-	 */
-	public void setRatingMax(int ratingMax) {
-		mRatingMax = ratingMax;
-		
-		// Maximum rating is 0 or higher.
-		mRating = Math.min(ratingMax, mRating);
-		
-		invalidate();
-		requestLayout();
-	}
+        setMeasuredDimension(w, h);
+    }
+    
+    @Override
+    protected void onSizeChanged(int w, int h, int oldw, int oldh) {
+        // Render icons vertically centered.
+        mRenderY = h / 2 - mIconHeight / 2;
+    };
+    
+    @Override
+    protected void onDraw(Canvas canvas) {
+        super.onDraw(canvas);
+        
+        int x = 0;
+        Drawable icon = null;
+        
+        // Draw all rating icons.
+        for (int i = 0; i < mRatingMax; i++) {
+            
+            // Select what icon drawable to use depending on the rating.
+            if (mRating - i <= 0) {
+                icon = mDrawableEmpty;
+            } else if (mRating - i <= 0.5) {
+                icon = mDrawableHalf;
+            } else {
+                icon = mDrawableFull;
+            }
+            
+            // Place and render the icon.
+            icon.setBounds(x, mRenderY, x + mIconWidth, mRenderY + mIconHeight);
+            icon.draw(canvas);
+            
+            // Increase x position by icon width and spacing.
+            x += mIconWidth + mRatingSpacing;
+        }
+    }
+    
+    public void setRating(float rating) {
+        mRating = rating;
+        
+        invalidate();
+        requestLayout();
+    }
+    
+    /**
+     * Sets the spacing to use between rating icons. A spacing below 0 will be treated as 0.
+     */
+    public void setRatingSpacing(int ratingSpacing) {
+        mRatingSpacing = Math.max(ratingSpacing, 0);
+        
+        invalidate();
+        requestLayout();
+    }
+    
+    /**
+     * Sets the maximum rating value. This determines how many rating icons will be drawn. A ratingMax below 0 will be treated as 0.
+     */
+    public void setRatingMax(int ratingMax) {
+        mRatingMax = ratingMax;
+        
+        // Maximum rating is 0 or higher.
+        mRating = Math.min(ratingMax, mRating);
+        
+        invalidate();
+        requestLayout();
+    }
 }

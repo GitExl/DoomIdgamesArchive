@@ -40,22 +40,22 @@ import android.view.MenuItem;
  * Main activity's settings menu.
  */
 public final class SettingsMenu {
-	
-	public static boolean onOptionsItemSelected(MenuItem item, FragmentActivity activity) {
-    	switch (item.getItemId()) {
-	    	case R.id.MenuMain_Settings:
-	    		activity.startActivity(new Intent(activity, PreferencesActivity.class));
-	    		return true;
-	    	case R.id.MenuMain_About:
-	    		activity.startActivity(new Intent(activity, AboutActivity.class));
-	    		return true;
-	    	default:
-	    		return false;
-    	}
-	}
-	
-	public static boolean onCreateOptionsMenu(Menu menu, FragmentActivity activity) {
-		activity.getMenuInflater().inflate(R.menu.activity_main, menu);
+    
+    public static boolean onOptionsItemSelected(MenuItem item, FragmentActivity activity) {
+        switch (item.getItemId()) {
+            case R.id.MenuMain_Settings:
+                activity.startActivity(new Intent(activity, PreferencesActivity.class));
+                return true;
+            case R.id.MenuMain_About:
+                activity.startActivity(new Intent(activity, AboutActivity.class));
+                return true;
+            default:
+                return false;
+        }
+    }
+    
+    public static boolean onCreateOptionsMenu(Menu menu, FragmentActivity activity) {
+        activity.getMenuInflater().inflate(R.menu.activity_main, menu);
         return true;
-	}
+    }
 }

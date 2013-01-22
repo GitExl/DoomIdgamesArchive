@@ -39,7 +39,7 @@ import android.widget.TextView;
  */
 public class TextFileActivity extends Activity {
 
-	@Override
+    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_idgames_textfile);
@@ -48,14 +48,14 @@ public class TextFileActivity extends Activity {
         TextView text = (TextView)findViewById(R.id.IdgamesText_Text);
         String textData = this.getIntent().getExtras().getString("textfile");
         if (textData != null) {
-        	text.setText(textData);
+            text.setText(textData);
         }
     }
-	
-	@Override
-	public void onBackPressed() {
-		super.onBackPressed();
-		
-		this.finish();
-	}
+    
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        
+        this.finish();
+    }
 }

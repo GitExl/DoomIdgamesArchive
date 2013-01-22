@@ -37,16 +37,16 @@ import android.support.v4.app.FragmentActivity;
  * Initializes the appropriate tab helper for the current SDK version.
  */
 public abstract class TabActivity extends FragmentActivity {
-	TabHelper mTabHelper;
+    TabHelper mTabHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-        	mTabHelper = new TabHelperHoneycomb(this);
+            mTabHelper = new TabHelperHoneycomb(this);
         } else {
-        	mTabHelper = new TabHelperEclair(this);
+            mTabHelper = new TabHelperEclair(this);
         }
     }
 
