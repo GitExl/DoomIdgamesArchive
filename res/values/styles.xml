@@ -1,0 +1,1 @@
+<resources>    <style name="AppTheme" parent="android:Theme.Light" />    <style name="CustomRatingBar" parent="@android:style/Widget.RatingBar">        <item name="android:progressDrawable">@drawable/rating_star</item>        <item name="android:minHeight">22dip</item>        <item name="android:maxHeight">22dip</item>    </style></resources>

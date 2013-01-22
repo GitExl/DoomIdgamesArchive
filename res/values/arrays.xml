@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string-array name="download_mirrors">
+        <item>Greece</item>
+        <item>Russia</item>
+        <item>Texas</item>
+        <item>Sweden (unofficial)</item>
+        <item>Portugal (unofficial)</item>
+    </string-array>
+    <string-array name="download_mirrors_values">
+        <item>http://ftp.ntua.gr/pub/vendors/idgames/</item>
+        <item>http://ftp.chg.ru/pub/games/idgames/</item>
+        <item>http://ftp.mancubus.net/pub/idgames/</item>
+        <item>http://ftp.sunet.se/pub/pc/games/idgames/</item>
+        <item>http://ftp.netc.pt/pub/idgames/</item>
+    </string-array>
+    
+    <string-array name="list_limits">
+        <item>10</item>
+        <item>15</item>
+        <item>20</item>
+        <item>25</item>
+        <item>30</item>
+        <item>35</item>
+        <item>40</item>
+    </string-array>
+    <string-array name="list_limits_values">
+        <item>10</item>
+        <item>15</item>
+        <item>20</item>
+        <item>25</item>
+        <item>30</item>
+        <item>35</item>
+        <item>40</item>
+    </string-array>
+    
+    <string-array name="search_types">
+        <item>Filename</item>
+        <item>Title</item>
+        <item>Author</item>
+        <item>Email</item>
+        <item>Description</item>
+        <item>Credits</item>
+        <item>Editors used</item>
+        <item>Entire text file</item>
+    </string-array>
+
+</resources>

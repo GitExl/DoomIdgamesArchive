@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout android:layout_width="match_parent"
+    android:layout_height="match_parent" xmlns:android="http://schemas.android.com/apk/res/android" android:background="@drawable/background">
+
+    <RelativeLayout
+        android:id="@+id/IdgamesDetails_TitleLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/Application" >
+
+        <TextView
+            android:id="@+id/IdgamesDetails_Title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_toLeftOf="@+id/IdgamesDetails_Rating"
+            android:ellipsize="none"
+            android:padding="@dimen/Padding"
+            android:text="@string/IdgamesDetails_TitleDefault"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="@android:color/white" />
+
+        <RatingBar
+            android:id="@+id/IdgamesDetails_Rating"
+            style="@style/CustomRatingBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginLeft="@dimen/Padding"
+            android:layout_marginRight="@dimen/Padding"
+            android:layout_marginTop="@dimen/Padding"
+            android:maxHeight="22dp"
+            android:minHeight="22dp"
+            android:numStars="5"
+            android:rating="3.5" />
+
+        <TextView
+            android:id="@+id/IdgamesDetails_VoteCount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignRight="@+id/IdgamesDetails_Rating"
+            android:layout_below="@+id/IdgamesDetails_Rating"
+            android:paddingBottom="@dimen/Padding"
+            android:text="@string/IdgamesDetails_RatingVotesDefault"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:textColor="@android:color/white" />
+    </RelativeLayout>
+
+    <ScrollView android:id="@+id/IdgamesDetails_Scroller" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_below="@+id/IdgamesDetails_TitleLayout">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" >
+
+            <LinearLayout
+                android:id="@+id/IdgamesDetails_Layout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@android:color/background_light"
+                android:orientation="vertical"
+                android:paddingBottom="@dimen/PaddingMedium" android:paddingLeft="@dimen/Padding" android:paddingRight="@dimen/Padding">
+            </LinearLayout>
+        </RelativeLayout>
+    </ScrollView>
+
+    <ProgressBar
+        android:id="@+id/IdgamesDetails_Progress"
+        style="?android:attr/progressBarStyleLarge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:indeterminate="true"
+        android:visibility="gone" />
+    <ImageView android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_below="@id/IdgamesDetails_TitleLayout" android:background="@drawable/shadow" android:contentDescription="@string/Shadow"/>
+    <ImageView android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_below="@id/IdgamesDetails_Scroller" android:background="@drawable/shadow" android:contentDescription="@string/Shadow"/>
+
+</RelativeLayout>

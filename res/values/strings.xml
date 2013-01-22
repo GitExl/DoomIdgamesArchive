@@ -1,0 +1,37 @@
+<resources>
+
+    <string name="ApplicationName">Doom idgames Archive</string>
+    <string name="MenuMain_Settings">Settings</string>
+    <string name="MenuMain_About">About</string>
+    <string name="MenuDetails_Download">Download</string>
+    <string name="MenuDetails_ViewText">Text</string>
+    <string name="MainActivity_Title">Doom idgames Archive</string>
+    <string name="IdgamesList_PathDefault"> / </string>
+    <string name="IdgamesListItem_TitleDefault">Title</string>
+    <string name="IdgamesListItem_SubTitleDefault">Subtitle</string>
+    <string name="IdgamesListHeader_TitleDefault">List Header Title</string>
+    <string name="IdgamesDetails_TitleDefault">Title</string>
+    <string name="IdgamesListText_TextDefault">Lorem ipsum.</string>
+    <string name="IdgamesDetails_RatingVotesDefault">12 votes</string>
+    <string name="IdgamesText_TextDefault">Textfile contents.</string>
+    <string name="IdgamesText_CloseButtonDefault">Close</string>
+    <string name="DownloadMirrors">The /idgames download mirror to use when downloading files</string>
+    <string name="DownloadMirrorsTitle">Mirror</string>
+    <string name="ListVoteLimitsTitle">New votes list size</string>
+    <string name="ListNewLimitsTitle">New files list size</string>
+    <string name="ListVoteLimits">The number of new votes to display</string>
+    <string name="ListNewLimits">The number of new files to display</string>
+    <string name="About_CloseButtonDefault">Close</string>
+    <string name="About_TextDefault">By Dennis \'Exl\' Meuwissen\n\nThis app makes use of the Doomworld /idgames API.\n\nDoom is © 2012 Bethesda Softworks LLC and Id Software.\n\nSpecial thanks to Linguica, Bloodshedder and Matt Tropiano.</string>
+    <string name="About_IconDescription">Application Icon</string>
+    <string name="Tabs_NewFiles">New</string>
+    <string name="Tabs_LatestVotes">Votes</string>
+    <string name="Tabs_Browse">Browse</string>
+    <string name="Tabs_Search">Search</string>
+    <string name="SearchHint">Search</string>
+    <string name="Shadow">Shadow</string>
+    <string name="Background">Background</string>
+    <string name="IdgamesList_MessageDefault">Message</string>
+    <string name="Caco">Dead Cacodemon</string>
+
+</resources>

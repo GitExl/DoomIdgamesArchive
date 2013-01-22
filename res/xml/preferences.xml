@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <PreferenceCategory android:title="Lists" >
+        <ListPreference
+            android:defaultValue="20"
+            android:entries="@array/list_limits"
+            android:entryValues="@array/list_limits_values"
+            android:key="ListLimitNew"
+            android:summary="@string/ListNewLimits"
+            android:title="@string/ListNewLimitsTitle" />
+        <ListPreference
+            android:defaultValue="20"
+            android:entries="@array/list_limits"
+            android:entryValues="@array/list_limits_values"
+            android:key="ListLimitVotes"
+            android:summary="@string/ListVoteLimits"
+            android:title="@string/ListVoteLimitsTitle" />
+    </PreferenceCategory>
+    <PreferenceCategory android:title="Downloads" >
+        <ListPreference
+            android:defaultValue="http://ftp.ntua.gr/pub/vendors/idgames/"
+            android:entries="@array/download_mirrors"
+            android:entryValues="@array/download_mirrors_values"
+            android:key="DownloadMirror"
+            android:summary="@string/DownloadMirrors"
+            android:title="@string/DownloadMirrorsTitle" />
+    </PreferenceCategory>
+
+</PreferenceScreen>
