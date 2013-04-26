@@ -11,6 +11,7 @@
         android:layout_height="wrap_content"
         android:padding="@dimen/Padding"
         android:text="@string/IdgamesText_TextDefault"
-        android:textSize="11sp" android:typeface="monospace"/>
+        android:textSize="10sp"
+        android:typeface="monospace" />
 
 </ScrollView>
