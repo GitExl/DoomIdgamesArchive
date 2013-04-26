@@ -1,6 +1,8 @@
 Version 1.3.1
 --------------
 - Fixed: partial file, directory or review information being displayed.
+- Changed: file reviews have a slightly darker background now to be able to distinguish them better.
+- Changed: minor visual tweaks.
 
 Version 1.3.0
 --------------
@@ -11,7 +13,7 @@ Version 1.3.0
 
 Version 1.2.0
 --------------
-- Added: support for Android 2.1 (Éclair) and upwards.
+- Added: support for Android 2.1 (ï¿½clair) and upwards.
 - Changed: improved data cache performance. Switching between screens is faster now.
 - Changed: file dates and times are locale aware now.
 - Fixed: a bug where multiple entries' details would be added to one details screen.
