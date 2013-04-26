@@ -22,7 +22,7 @@
     <string name="ListVoteLimits">The number of new votes to display</string>
     <string name="ListNewLimits">The number of new files to display</string>
     <string name="About_CloseButtonDefault">Close</string>
-    <string name="About_TextDefault">By Dennis \'Exl\' Meuwissen\n\nThis app makes use of the Doomworld /idgames API.\n\nDoom is © 2012 Bethesda Softworks LLC and Id Software.\n\nSpecial thanks to Linguica, Bloodshedder and Matt Tropiano.</string>
+    <string name="About_TextDefault">By Dennis \'Exl\' Meuwissen\n\nThis app makes use of the Doomworld /idgames API.\n\nDoom is © Bethesda Softworks LLC and Id Software.\n\nSpecial thanks to Linguica, Bloodshedder and Matt Tropiano.</string>
     <string name="About_IconDescription">Application Icon</string>
     <string name="Tabs_NewFiles">New</string>
     <string name="Tabs_LatestVotes">Votes</string>
