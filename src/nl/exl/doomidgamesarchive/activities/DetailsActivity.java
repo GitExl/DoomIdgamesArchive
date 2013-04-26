@@ -166,10 +166,10 @@ public class DetailsActivity extends Activity {
             Review review;
             for (int i = 0; i < reviews.size(); i++) {
                 review = reviews.get(i);
-                addText(review.getText());
+                addText(review.getText(), R.layout.idgames_details_listreview);
             }
         } else {
-            addText("This file has no reviews.");
+            addText("This file has no reviews.", R.layout.idgames_details_listtext);
         }
         
         // Store this info for use in other UI functions.
@@ -210,7 +210,7 @@ public class DetailsActivity extends Activity {
         }
         total = total.substring(2);
         
-        addText(total);
+        addText(total, R.layout.idgames_details_listtext);
     }
     
     /**
@@ -240,8 +240,9 @@ public class DetailsActivity extends Activity {
      * Adds a TextView to the mLayout.
      * 
      * @param text The text to add.
+     * @param resource The resource id of the layout to use.
      */
-    private void addText(String text) {
+    private void addText(String text, int resource) {
         text = text.trim();
         
         // Do not create empty text layouts at all.
@@ -250,7 +251,7 @@ public class DetailsActivity extends Activity {
         }
         
         // Build view.
-        View view = getLayoutInflater().inflate(R.layout.idgames_details_listtext, null);
+        View view = getLayoutInflater().inflate(resource, null);
         
         TextView textView = (TextView)view.findViewById(R.id.IdgamesListText_Text);
         textView.setText(Html.fromHtml(text));
