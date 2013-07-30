@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:custom="http://schemas.android.com/apk/res/nl.exl.doomidgamesarchive"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/background" >
@@ -22,20 +23,19 @@
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:textColor="@android:color/white" />
 
-        <RatingBar
+        <nl.exl.doomidgamesarchive.RatingView
             android:id="@+id/IdgamesDetails_Rating"
-            style="@style/CustomRatingBar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
-            android:layout_alignParentTop="true"
-            android:layout_marginLeft="@dimen/Padding"
+            android:layout_centerVertical="true"
             android:layout_marginRight="@dimen/Padding"
-            android:layout_marginTop="@dimen/Padding"
-            android:maxHeight="22dp"
-            android:minHeight="22dp"
-            android:numStars="5"
-            android:rating="3.5" />
+            custom:drawableEmpty="@drawable/rating_skull_empty"
+            custom:drawableFull="@drawable/rating_skull_full"
+            custom:drawableHalf="@drawable/rating_skull_half"
+            custom:rating="2.5"
+            custom:ratingMax="5"
+            custom:ratingSpacing="2dp" />
 
         <TextView
             android:id="@+id/IdgamesDetails_VoteCount"

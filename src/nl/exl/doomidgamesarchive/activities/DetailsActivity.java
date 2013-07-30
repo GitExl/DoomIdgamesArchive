@@ -6,6 +6,7 @@ import java.util.List;
 import nl.exl.doomidgamesarchive.Config;
 import nl.exl.doomidgamesarchive.DownloadTask;
 import nl.exl.doomidgamesarchive.R;
+import nl.exl.doomidgamesarchive.RatingView;
 import nl.exl.doomidgamesarchive.idgamesapi.FileEntry;
 import nl.exl.doomidgamesarchive.idgamesapi.Request;
 import nl.exl.doomidgamesarchive.idgamesapi.Response;
@@ -32,7 +33,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
-import android.widget.RatingBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -48,7 +48,7 @@ public class DetailsActivity extends Activity {
     private RelativeLayout mTitleLayout;
     private ProgressBar mProgressBar;
     private TextView mTitleText;
-    private RatingBar mRatingBar;
+    private RatingView mRatingView;
     private TextView mVoteCount;
 
     // ID of the IdgamesApi file being displayed.
@@ -72,7 +72,7 @@ public class DetailsActivity extends Activity {
         mLayout = (LinearLayout)findViewById(R.id.IdgamesDetails_Layout);
         mTitleLayout = (RelativeLayout)findViewById(R.id.IdgamesDetails_TitleLayout);
         mTitleText = (TextView)findViewById(R.id.IdgamesDetails_Title);
-        mRatingBar = (RatingBar)findViewById(R.id.IdgamesDetails_Rating);
+        mRatingView = (RatingView)findViewById(R.id.IdgamesDetails_Rating);
         mVoteCount = (TextView)findViewById(R.id.IdgamesDetails_VoteCount);
         mProgressBar = (ProgressBar)findViewById(R.id.IdgamesDetails_Progress);
         
@@ -139,7 +139,7 @@ public class DetailsActivity extends Activity {
         
         // Set title area contents.
         mTitleText.setText(fileEntry.toString());
-        mRatingBar.setRating((float)fileEntry.getRating());
+        mRatingView.setRating((float)fileEntry.getRating());
         
         // Set number of votes.
         if (fileEntry.getVoteCount() == 0) {
