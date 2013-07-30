@@ -17,6 +17,7 @@
         custom:drawableEmpty="@drawable/rating_skull_empty"
         custom:drawableFull="@drawable/rating_skull_full"
         custom:drawableHalf="@drawable/rating_skull_half"
+        custom:ratingSpacing="1dp"
         custom:rating="2.5"
         custom:ratingMax="5" />
 

@@ -54,7 +54,7 @@ public class RatingView extends View {
         try {
             mRatingMax = a.getInt(R.styleable.RatingView_ratingMax, 5);
             mRating = a.getFloat(R.styleable.RatingView_rating, (float)2.5);
-            mRatingSpacing = a.getInt(R.styleable.RatingView_ratingSpacing, 1);
+            mRatingSpacing = a.getDimensionPixelSize(R.styleable.RatingView_ratingSpacing, 1);
             
             // Get default drawables so this view is displayed in edit mode.
             if (isInEditMode()) {
@@ -97,8 +97,8 @@ public class RatingView extends View {
     }
     
     @Override
-    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        // Calculate icon width as minimum width.
+    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {  	
+    	// Calculate icon width as minimum width.
         int minw = getPaddingLeft() + getPaddingRight() + getSuggestedMinimumWidth() + (mRatingMax * (mIconWidth + mRatingSpacing));
         int w = resolveSize(minw, widthMeasureSpec);
        
@@ -154,7 +154,7 @@ public class RatingView extends View {
      * Sets the spacing to use between rating icons. A spacing below 0 will be treated as 0.
      */
     public void setRatingSpacing(int ratingSpacing) {
-        mRatingSpacing = Math.max(ratingSpacing, 0);
+    	mRatingSpacing = dpToPx(Math.max(ratingSpacing, 0));
         
         invalidate();
         requestLayout();
@@ -171,5 +171,17 @@ public class RatingView extends View {
         
         invalidate();
         requestLayout();
+    }
+    
+    /**
+     * Returns a Device Pixels value as pixels.
+     * 
+     * @param dp The device pixels value to convert.
+     * 
+     * @return The dp parameter converted to pixels.
+     */
+    private int dpToPx(int dp) {
+        float density = getResources().getDisplayMetrics().density;
+        return Math.round((float)dp * density);
     }
 }

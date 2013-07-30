@@ -4,7 +4,7 @@
     <declare-styleable name="RatingView">
         <attr name="ratingMax" format="integer" />
         <attr name="rating" format="float" />
-        <attr name="ratingSpacing" format="integer" />
+        <attr name="ratingSpacing" format="dimension" />
         <attr name="drawableEmpty" format="reference" />
         <attr name="drawableHalf" format="reference" />
         <attr name="drawableFull" format="reference" />
