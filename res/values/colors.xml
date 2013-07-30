@@ -2,7 +2,6 @@
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
 
     <color name="Application">#DC143C</color>
-    <color name="white">#FFFFFF</color>
     <color name="gray80">#D8D8D8</color>
     <color name="gray95">#F2F2F2</color>
     <color name="shadow_start">#33000000</color>

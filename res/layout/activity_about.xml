@@ -2,7 +2,9 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:padding="@dimen/PaddingMedium" >
+    android:padding="@dimen/PaddingMedium"
+    android:background="@android:color/background_light"
+    >
 
     <TextView
         android:id="@+id/About_Text"
