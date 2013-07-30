@@ -98,15 +98,35 @@ public class RatingView extends View {
     
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {  	
-    	// Calculate icon width as minimum width.
-        int minw = getPaddingLeft() + getPaddingRight() + getSuggestedMinimumWidth() + (mRatingMax * (mIconWidth + mRatingSpacing));
-        int w = resolveSize(minw, widthMeasureSpec);
-       
-        // Calculate icon height as minimum height.
-        int minh = getPaddingTop() + getPaddingBottom() + getSuggestedMinimumHeight() + mIconHeight;
-        int h = resolveSize(minh, heightMeasureSpec);
+        final int desiredWidth = getPaddingLeft() + getPaddingRight() + getSuggestedMinimumWidth() + (mRatingMax * (mIconWidth + mRatingSpacing));
+        final int desiredHeight = getPaddingTop() + getPaddingBottom() + getSuggestedMinimumHeight() + mIconHeight;
+        
+        final int widthMode = MeasureSpec.getMode(widthMeasureSpec);
+        final int heightMode = MeasureSpec.getMode(heightMeasureSpec);
+        
+        final int widthSize = MeasureSpec.getSize(widthMeasureSpec);
+        final int heightSize = MeasureSpec.getSize(heightMeasureSpec);
+        
+        int width = 0;
+        int height = 0;
+        
+        if (widthMode == MeasureSpec.EXACTLY) {
+        	width = widthSize;
+        } else if (widthMode == MeasureSpec.AT_MOST) {
+        	width = Math.min(desiredWidth, widthSize);
+        } else if (widthMode == MeasureSpec.UNSPECIFIED) {
+        	width = desiredWidth;
+        }
+        
+        if (heightMode == MeasureSpec.EXACTLY) {
+        	height = heightSize;
+        } else if (heightMode == MeasureSpec.AT_MOST) {
+        	height = Math.min(desiredHeight, heightSize);
+        } else if (heightMode == MeasureSpec.UNSPECIFIED) {
+        	height = desiredHeight;
+        }
 
-        setMeasuredDimension(w, h);
+        setMeasuredDimension(width, height);
     }
     
     @Override
