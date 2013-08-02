@@ -1,3 +1,7 @@
+Version 1.3.2
+-------------
+- Fixed: a bug causing the settings activity background to be black.
+
 Version 1.3.1
 --------------
 - Fixed: partial file, directory or review information being displayed.
