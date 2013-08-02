@@ -9,6 +9,6 @@ Notes
 -----
 This app makes use of the Doomworld /idgames API.
 
-Doom is © 2012 Bethesda Softworks LLC and Id Software.
+Doom is © Bethesda Softworks LLC and Id Software.
 
 Special thanks to Linguica, Bloodshedder and Matt Tropiano.
