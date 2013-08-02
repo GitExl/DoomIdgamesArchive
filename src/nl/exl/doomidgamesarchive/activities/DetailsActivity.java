@@ -201,16 +201,15 @@ public class DetailsActivity extends Activity {
         
         addHeader(title, 0);
         
-        String total = "";
+        StringBuilder total = new StringBuilder();
         for (String text : items) {
             text = text.trim();
             if (text.length() > 0) {
-                total += " - " + text;
+            	total.append(" - ");
+            	total.append(text);
             }
         }
-        total = total.substring(2);
-        
-        addText(total, R.layout.idgames_details_listtext);
+        addText(total.substring(2), R.layout.idgames_details_listtext);
     }
     
     /**

@@ -106,21 +106,24 @@ public class IdgamesListAdapter extends ArrayAdapter<Entry> {
         // Fill view with file info.
         } else if (entry instanceof FileEntry) {
             FileEntry fileEntry = (FileEntry)entry;
-            
-            String subText = fileEntry.getAuthor();
+            StringBuilder subText = new StringBuilder();
+
+            subText.append(fileEntry.getAuthor());
             
             // Add date.
             String date = fileEntry.getLocaleDate();
             if (date != null && date.length() > 0) {
-                subText += " - " + date;
+                subText.append(" - ");
+                subText.append(date);
             }
             
             // Add file size.
             if (fileEntry.getFileSize() > 0) {
-                subText += " - " + fileEntry.getFileSizeString();
+                subText.append(" - ");
+                subText.append(fileEntry.getFileSizeString());
             }
 
-            holder.subtitle.setText(subText);
+            holder.subtitle.setText(subText.toString());
             holder.subtitle.setMaxLines(1);
             
             holder.rating.setRating((float)fileEntry.getRating());
