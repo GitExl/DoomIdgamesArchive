@@ -86,7 +86,7 @@ public class ResponseParser {
         private String mElement;
         
         // The contents of the current text file entry.
-        private String mTextFileContents;
+        private StringBuilder mTextFileContents;
         
         // Entries and related data currently being parsed, waiting to be inserted into the
         // mResponse object.
@@ -132,7 +132,7 @@ public class ResponseParser {
                 if (mContainsSingleFile) {
                     mState = STATE_FILE;    
                     mFileEntry = new FileEntry();
-                    mTextFileContents = "";
+                    mTextFileContents = new StringBuilder();
                 } else {
                     mState = STATE_CONTENT;
                 }
@@ -142,7 +142,7 @@ public class ResponseParser {
                 if (localName.equals("file")) {
                     mState = STATE_FILE;
                     mFileEntry = new FileEntry();
-                    mTextFileContents = "";
+                    mTextFileContents = new StringBuilder();
                 } else if (localName.equals("vote")) {
                     mState = STATE_VOTE;
                     mVoteEntry = new VoteEntry();
@@ -176,7 +176,7 @@ public class ResponseParser {
             } else if (mContainsSingleFile == true && mState == STATE_FILE && localName.equals("content")) {
                 mState = STATE_UNKNOWN;
                 
-                mFileEntry.addTextFileContents(mTextFileContents);
+                mFileEntry.addTextFileContents(mTextFileContents.toString());
                 mResponse.addEntry(mFileEntry);
                 mFileEntry = null;
                 mTextFileContents = null;
@@ -185,7 +185,7 @@ public class ResponseParser {
             } else if (mState == STATE_FILE && localName.equals("file")) {
                 mState = STATE_CONTENT;
                 
-                mFileEntry.addTextFileContents(mTextFileContents);
+                mFileEntry.addTextFileContents(mTextFileContents.toString());
                 mResponse.addEntry(mFileEntry);
                 mFileEntry = null;
                 mTextFileContents = null;
@@ -265,7 +265,7 @@ public class ResponseParser {
                 else if (mElement.equals("bugs"))
                     mFileEntry.addBugs(chars);
                 else if (mElement.equals("textfile"))
-                    mTextFileContents += chars;
+                    mTextFileContents.append(chars);
             }
 
             // Review.
