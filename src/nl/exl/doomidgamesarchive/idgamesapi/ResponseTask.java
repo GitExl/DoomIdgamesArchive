@@ -48,7 +48,7 @@ public class ResponseTask extends AsyncTask<Request, Void, Response> {
                 // Attempt a connection.
                 URL url = new URL(request.getURL());
                 HttpURLConnection urlConnection = (HttpURLConnection)url.openConnection();
-                content = new BufferedInputStream(urlConnection.getInputStream());
+                content = new BufferedInputStream(urlConnection.getInputStream(), 8192);
             } catch (MalformedURLException e) {
                 Log.w("ResponseTask", "Malformed URL: " + e.toString());
                 failure = e.toString();
