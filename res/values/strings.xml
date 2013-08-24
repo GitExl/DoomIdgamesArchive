@@ -5,10 +5,12 @@
     <string name="MenuMain_About">About</string>
     <string name="MenuDetails_Download">Download</string>
     <string name="MenuDetails_ViewText">Text</string>
+    <string name="Describe_Progress">Progress indicator</string>
     <string name="MainActivity_Title">Doom idgames Archive</string>
     <string name="IdgamesList_PathDefault"> / </string>
     <string name="IdgamesListItem_TitleDefault">Title</string>
     <string name="IdgamesListItem_SubTitleDefault">Subtitle</string>
+    <string name="IdgamesListItem_DateDefault">17&#8211;05&#8211;1987</string>
     <string name="IdgamesListHeader_TitleDefault">List Header Title</string>
     <string name="IdgamesDetails_TitleDefault">Title</string>
     <string name="IdgamesListText_TextDefault">Lorem ipsum.</string>

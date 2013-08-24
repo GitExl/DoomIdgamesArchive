@@ -79,8 +79,6 @@ public class DetailsActivity extends Activity {
         
         mProgress = (ImageView)findViewById(R.id.IdgamesDetails_Progress);
         mProgress.setBackgroundResource(R.drawable.cacodemon);
-        AnimationDrawable progressAnim = (AnimationDrawable)mProgress.getBackground();
-        progressAnim.start();
         
         // Restore state from a saved instance.
         if (savedInstanceState != null) {
@@ -285,6 +283,9 @@ public class DetailsActivity extends Activity {
         mTitleLayout.setVisibility(View.GONE);
         mLayout.setVisibility(View.GONE);
         mProgress.setVisibility(View.VISIBLE);
+        
+        AnimationDrawable progressAnim = (AnimationDrawable)mProgress.getBackground();
+        progressAnim.start();
     }
     
     /**
@@ -294,6 +295,9 @@ public class DetailsActivity extends Activity {
         mTitleLayout.setVisibility(View.VISIBLE);
         mLayout.setVisibility(View.VISIBLE);
         mProgress.setVisibility(View.GONE);
+        
+        AnimationDrawable progressAnim = (AnimationDrawable)mProgress.getBackground();
+        progressAnim.stop();
     }
     
     /**

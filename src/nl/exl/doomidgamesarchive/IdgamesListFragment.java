@@ -119,8 +119,6 @@ public class IdgamesListFragment extends Fragment implements OnItemClickListener
         
         mProgress = (ImageView)view.findViewById(R.id.IdgamesList_Progress);
         mProgress.setBackgroundResource(R.drawable.cacodemon);
-        AnimationDrawable progressAnim = (AnimationDrawable)mProgress.getBackground();
-        progressAnim.start();
         
         mMessageContainer = (RelativeLayout)view.findViewById(R.id.IdgamesList_MessageContainer);
         mMessage = (TextView)view.findViewById(R.id.IdgamesList_Message);
@@ -406,6 +404,9 @@ public class IdgamesListFragment extends Fragment implements OnItemClickListener
         mListShadow.setVisibility(View.GONE);
         mProgress.setVisibility(View.VISIBLE);
         mMessageContainer.setVisibility(View.GONE);
+        
+        AnimationDrawable progressAnim = (AnimationDrawable)mProgress.getBackground();
+        progressAnim.start();
     }
     
     /**
@@ -413,6 +414,8 @@ public class IdgamesListFragment extends Fragment implements OnItemClickListener
      */
     private void hideProgressIndicator(String message) {
         mProgress.setVisibility(View.GONE);
+        AnimationDrawable progressAnim = (AnimationDrawable)mProgress.getBackground();
+        progressAnim.stop();
         
         if (message != null) {
             mEntryListView.setVisibility(View.GONE);

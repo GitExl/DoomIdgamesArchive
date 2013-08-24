@@ -51,6 +51,7 @@ public class IdgamesListAdapter extends ArrayAdapter<Entry> {
     public static class ViewHolder {
         TextView title;
         TextView subtitle;
+        TextView date;
         RatingView rating;
     }
     
@@ -73,13 +74,19 @@ public class IdgamesListAdapter extends ArrayAdapter<Entry> {
             holder = new ViewHolder();
             holder.title = (TextView)convertView.findViewById(R.id.IdgamesListItem_Title);
             holder.subtitle = (TextView)convertView.findViewById(R.id.IdgamesListItem_Subtitle);
+            holder.date = (TextView)convertView.findViewById(R.id.IdgamesListItem_Date);
             holder.rating = (RatingView)convertView.findViewById(R.id.IdgamesListItem_Rating);
             convertView.setTag(holder);
-        
+                    
         // Reuse an existing listitem View.
         } else {
             holder = (ViewHolder)convertView.getTag();
         }
+        
+        if (holder.date != null) {
+        	holder.date.setVisibility(View.GONE);
+        }
+        holder.rating.setVisibility(View.GONE);
 
         // Get the IdgamesApi entry for this list position.
         Entry entry = this.getItem(position);
@@ -100,8 +107,6 @@ public class IdgamesListAdapter extends ArrayAdapter<Entry> {
         if (entry instanceof DirectoryEntry) {
             holder.subtitle.setText("Directory");
             holder.subtitle.setMaxLines(1);
-            
-            holder.rating.setVisibility(View.GONE);
 
         // Fill view with file info.
         } else if (entry instanceof FileEntry) {
@@ -109,12 +114,18 @@ public class IdgamesListAdapter extends ArrayAdapter<Entry> {
             StringBuilder subText = new StringBuilder();
 
             subText.append(fileEntry.getAuthor());
-            
+
             // Add date.
             String date = fileEntry.getLocaleDate();
             if (date != null && date.length() > 0) {
-                subText.append(" - ");
-                subText.append(date);
+
+                if (holder.date == null) {
+                	subText.append(" - ");
+                    subText.append(date);
+                } else {
+                	holder.date.setText(date);
+                	holder.date.setVisibility(View.VISIBLE);
+                }
             }
             
             // Add file size.
