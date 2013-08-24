@@ -22,7 +22,7 @@ public class FileEntry extends Entry {
     private int mId = -1;
     
     // Title of this entry.
-    private String mTitle = "";
+    private String mTitle;
     
     // The author of this entry.
     private String mAuthor;
@@ -447,9 +447,9 @@ public class FileEntry extends Entry {
      * Returns this entry's title. If the entry has no title, the filename is returned instead.
      */
     public String toString() {
-        if (mTitle == null) {
-            if (mFileName == null) {
-                return "";
+        if (mTitle == null || mTitle.length() == 0) {
+            if (mFileName == null || mFileName.length() == 0) {
+                return "Unknown";
             } else {
                 return mFileName;
             }
