@@ -166,7 +166,7 @@ public class DetailsActivity extends Activity {
             Review review;
             for (int i = 0; i < reviews.size(); i++) {
                 review = reviews.get(i);
-                addText(review.getText(), R.layout.idgames_details_listreview);
+                addReview(review);
             }
         } else {
             addText("This file has no reviews.", R.layout.idgames_details_listtext);
@@ -254,6 +254,20 @@ public class DetailsActivity extends Activity {
         
         TextView textView = (TextView)view.findViewById(R.id.IdgamesListText_Text);
         textView.setText(Html.fromHtml(text));
+        
+        mLayout.addView(view);
+    }
+    
+    private void addReview(Review review) {
+    	View view = getLayoutInflater().inflate(R.layout.idgames_details_listreview, null);
+        
+        TextView textView = (TextView)view.findViewById(R.id.IdgamesListReview_Text);
+        TextView usernameView = (TextView)view.findViewById(R.id.IdgamesListReview_Username);
+        RatingView ratingView = (RatingView)view.findViewById(R.id.IdgamesListReview_Rating);
+        
+        textView.setText(Html.fromHtml(review.getText()));
+        usernameView.setText(review.getUsername());
+        ratingView.setRating(review.getRating());
         
         mLayout.addView(view);
     }

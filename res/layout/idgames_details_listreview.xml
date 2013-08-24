@@ -1,22 +1,54 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res/nl.exl.doomidgamesarchive"
     android:layout_width="match_parent"
     android:layout_height="wrap_content" >
 
     <TextView
-        android:id="@+id/IdgamesListText_Text"
-        android:background="@color/gray95"
-        android:padding="@dimen/Padding"
+        android:id="@+id/IdgamesListReview_Text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
-        android:layout_marginTop="@dimen/Padding"
-        android:layout_marginBottom="@dimen/PaddingMedium"
         android:layout_marginLeft="@dimen/Padding"
         android:layout_marginRight="@dimen/Padding"
+        android:layout_marginTop="@dimen/Padding"
+        android:background="@color/gray95"
         android:lineSpacingMultiplier="1.2"
+        android:padding="@dimen/Padding"
         android:text="@string/IdgamesListText_TextDefault"
         android:textAppearance="?android:attr/textAppearanceSmall" >
     </TextView>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/IdgamesListReview_Text"
+        android:layout_marginBottom="@dimen/PaddingMedium"
+        android:layout_marginLeft="@dimen/Padding"
+        android:layout_marginRight="@dimen/Padding"
+        android:background="@color/gray80"
+        android:padding="@dimen/PaddingSmall" >
+
+        <nl.exl.doomidgamesarchive.RatingView
+            android:id="@+id/IdgamesListReview_Rating"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            app:drawableEmpty="@drawable/rating_skull_small_empty"
+            app:drawableFull="@drawable/rating_skull_small_full"
+            app:drawableHalf="@drawable/rating_skull_small_half"
+            app:rating="3.5"
+            app:ratingMax="5"
+            app:ratingSpacing="1dp" />
+
+        <TextView
+            android:id="@+id/IdgamesListReview_Username"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:gravity="right|center_vertical"
+            android:text="@string/IdgamesListText_TextDefault"
+            android:textSize="@dimen/TextSizeSmall" />
+    </LinearLayout>
 
 </RelativeLayout>

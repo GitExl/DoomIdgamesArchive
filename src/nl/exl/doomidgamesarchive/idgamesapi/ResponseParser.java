@@ -272,6 +272,10 @@ public class ResponseParser {
             if (mState == STATE_REVIEW) {
                 if (mElement.equals("text")) {
                     mReview.addText(chars);
+                } else if (mElement.equals("vote")) {
+                	mReview.setRating(Float.parseFloat(chars));
+                } else if (mElement.equals("username")) {
+                    mReview.setUsername(chars);
                 }
                 
             // Vote.

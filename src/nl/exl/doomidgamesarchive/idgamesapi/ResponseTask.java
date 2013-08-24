@@ -92,7 +92,7 @@ public class ResponseTask extends AsyncTask<Request, Void, Response> {
             try {
                 mCache.put(request, response);
             } catch (IOException e) {
-                Log.e("ResponseTask", "Cannot put response in mCache: " + e.toString());
+                Log.e("ResponseTask", "Cannot put response in cache: " + e.toString());
             }
         }
         
