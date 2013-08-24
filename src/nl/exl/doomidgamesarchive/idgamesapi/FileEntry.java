@@ -21,8 +21,8 @@ public class FileEntry extends Entry {
     // File database id.
     private int mId = -1;
     
-    // Title of this entry. Can be null.
-    private String mTitle;
+    // Title of this entry.
+    private String mTitle = "";
     
     // The author of this entry.
     private String mAuthor;
@@ -447,9 +447,9 @@ public class FileEntry extends Entry {
      * Returns this entry's title. If the entry has no title, the filename is returned instead.
      */
     public String toString() {
-        if (mTitle == null || mTitle.length() == 0) {
+        if (mTitle == null) {
             if (mFileName == null) {
-                return "unknown";
+                return "";
             } else {
                 return mFileName;
             }
