@@ -17,12 +17,27 @@
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_toLeftOf="@+id/IdgamesDetails_Rating"
-            android:ellipsize="none" android:gravity="top" android:padding="@dimen/Padding" android:text="@string/IdgamesDetails_TitleDefault" android:textAppearance="?android:attr/textAppearanceMedium" android:textColor="@android:color/white"/>
+            android:ellipsize="none"
+            android:gravity="top"
+            android:padding="@dimen/Padding"
+            android:text="@string/IdgamesDetails_TitleDefault"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="@android:color/white" />
 
         <nl.exl.doomidgamesarchive.RatingView
             android:id="@+id/IdgamesDetails_Rating"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" android:layout_alignParentRight="true" android:layout_centerVertical="false" android:layout_marginRight="@dimen/Padding" android:layout_marginTop="@dimen/Padding" custom:drawableEmpty="@drawable/rating_skull_empty" custom:drawableFull="@drawable/rating_skull_full" custom:drawableHalf="@drawable/rating_skull_half" custom:rating="2.5" custom:ratingMax="5" custom:ratingSpacing="2dp"/>
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="false"
+            android:layout_marginRight="@dimen/Padding"
+            android:layout_marginTop="@dimen/Padding"
+            custom:drawableEmpty="@drawable/rating_skull_empty"
+            custom:drawableFull="@drawable/rating_skull_full"
+            custom:drawableHalf="@drawable/rating_skull_half"
+            custom:rating="2.5"
+            custom:ratingMax="5"
+            custom:ratingSpacing="2dp" />
 
         <TextView
             android:id="@+id/IdgamesDetails_VoteCount"
@@ -59,14 +74,13 @@
         </RelativeLayout>
     </ScrollView>
 
-    <ProgressBar
+    <ImageView
         android:id="@+id/IdgamesDetails_Progress"
-        style="?android:attr/progressBarStyleLarge"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
-        android:indeterminate="true"
+        android:contentDescription="@string/Describe_Progress"
         android:visibility="gone" />
 
     <ImageView

@@ -21,6 +21,7 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.drawable.AnimationDrawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -31,6 +32,7 @@ import android.text.Html;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
@@ -46,7 +48,7 @@ public class DetailsActivity extends Activity {
     // Layout references.
     private LinearLayout mLayout;
     private RelativeLayout mTitleLayout;
-    private ProgressBar mProgressBar;
+    private ImageView mProgress;
     private TextView mTitleText;
     private RatingView mRatingView;
     private TextView mVoteCount;
@@ -74,7 +76,11 @@ public class DetailsActivity extends Activity {
         mTitleText = (TextView)findViewById(R.id.IdgamesDetails_Title);
         mRatingView = (RatingView)findViewById(R.id.IdgamesDetails_Rating);
         mVoteCount = (TextView)findViewById(R.id.IdgamesDetails_VoteCount);
-        mProgressBar = (ProgressBar)findViewById(R.id.IdgamesDetails_Progress);
+        
+        mProgress = (ImageView)findViewById(R.id.IdgamesDetails_Progress);
+        mProgress.setBackgroundResource(R.drawable.cacodemon);
+        AnimationDrawable progressAnim = (AnimationDrawable)mProgress.getBackground();
+        progressAnim.start();
         
         // Restore state from a saved instance.
         if (savedInstanceState != null) {
@@ -278,7 +284,7 @@ public class DetailsActivity extends Activity {
     private void showProgressIndicator() {
         mTitleLayout.setVisibility(View.GONE);
         mLayout.setVisibility(View.GONE);
-        mProgressBar.setVisibility(View.VISIBLE);
+        mProgress.setVisibility(View.VISIBLE);
     }
     
     /**
@@ -287,7 +293,7 @@ public class DetailsActivity extends Activity {
     private void hideProgressIndicator() {
         mTitleLayout.setVisibility(View.VISIBLE);
         mLayout.setVisibility(View.VISIBLE);
-        mProgressBar.setVisibility(View.GONE);
+        mProgress.setVisibility(View.GONE);
     }
     
     /**

@@ -11,6 +11,7 @@ import nl.exl.doomidgamesarchive.idgamesapi.ResponseTask;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
+import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.Editable;
@@ -30,7 +31,6 @@ import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -55,7 +55,7 @@ public class IdgamesListFragment extends Fragment implements OnItemClickListener
     private RelativeLayout mSearchTools;
     
     // View references.
-    private ProgressBar mProgress;
+    private ImageView mProgress;
     private TextView mPathText;
     private AutoCompleteTextView mSearchField;
     private Spinner mSearchSpinner;
@@ -117,7 +117,11 @@ public class IdgamesListFragment extends Fragment implements OnItemClickListener
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_idgames_list, container, false);
         
-        mProgress = (ProgressBar)view.findViewById(R.id.IdgamesList_Progress);
+        mProgress = (ImageView)view.findViewById(R.id.IdgamesList_Progress);
+        mProgress.setBackgroundResource(R.drawable.cacodemon);
+        AnimationDrawable progressAnim = (AnimationDrawable)mProgress.getBackground();
+        progressAnim.start();
+        
         mMessageContainer = (RelativeLayout)view.findViewById(R.id.IdgamesList_MessageContainer);
         mMessage = (TextView)view.findViewById(R.id.IdgamesList_Message);
         mListShadow = (ImageView)view.findViewById(R.id.IdgamesList_ListShadow);

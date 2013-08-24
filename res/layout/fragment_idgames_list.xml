@@ -63,14 +63,13 @@
         </RelativeLayout>
     </RelativeLayout>
 
-    <ProgressBar
+    <ImageView
         android:id="@+id/IdgamesList_Progress"
-        style="?android:attr/progressBarStyleLarge"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
-        android:indeterminate="true"
+        android:contentDescription="@string/Describe_Progress"
         android:visibility="gone" />
 
     <RelativeLayout
