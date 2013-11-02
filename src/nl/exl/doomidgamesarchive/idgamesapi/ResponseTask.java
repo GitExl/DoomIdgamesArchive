@@ -66,7 +66,7 @@ public class ResponseTask extends AsyncTask<Request, Void, Response> {
                 return response;
             }
             
-            Log.i("ResponseTask", "Download took " + (System.currentTimeMillis() - startTime) / 1000.0 + " seconds.");
+            //Log.i("ResponseTask", "Download took " + (System.currentTimeMillis() - startTime) / 1000.0 + " seconds.");
             startTime = System.currentTimeMillis();
     
             // Attempt to parse the response XML into a response object.
@@ -77,7 +77,7 @@ public class ResponseTask extends AsyncTask<Request, Void, Response> {
             responseParser.parse(content);
             response = responseParser.getResponse();
             
-            Log.i("ResponseTask", "Parsing took " + (System.currentTimeMillis() - startTime) / 1000.0 + " seconds.");
+            //Log.i("ResponseTask", "Parsing took " + (System.currentTimeMillis() - startTime) / 1000.0 + " seconds.");
             
             // If this task was cancelled, abort here so that any cancelled response does not end up in the cach.e
             if (isCancelled()) {
