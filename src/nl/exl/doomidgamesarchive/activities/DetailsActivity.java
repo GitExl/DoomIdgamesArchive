@@ -29,12 +29,12 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.preference.PreferenceManager;
 import android.text.Html;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -45,6 +45,11 @@ import android.widget.TextView;
 @TargetApi(Build.VERSION_CODES.HONEYCOMB)
 public class DetailsActivity extends Activity {
 
+	// Activity states for UI choices.
+	private static final int STATE_INVALID = 0;
+	private static final int STATE_LOADING = 1;
+	private static final int STATE_READY = 2;
+	
     // Layout references.
     private LinearLayout mLayout;
     private RelativeLayout mTitleLayout;
@@ -62,6 +67,8 @@ public class DetailsActivity extends Activity {
     private String mFilePath = null;
     private String mFileTitle = null;
     private String mTextFileContents = null;
+    
+    private int mState = STATE_INVALID;
     
     
     @Override
@@ -90,7 +97,16 @@ public class DetailsActivity extends Activity {
             
         // Get the file ID to display.
         } else {
-            mFileId = this.getIntent().getIntExtra("fileId", -1);
+        	// Test for idgames:// protocol link.
+        	Uri data = this.getIntent().getData();
+        	if (data != null && data.getScheme().equals("idgames")) {
+        		mFileId = Integer.parseInt(data.getHost());
+        		// TODO: Bad file Id. Show dialog, or set activity ui state to show message?
+
+			// Use the file id from the regular intent.
+        	} else {
+        		mFileId = this.getIntent().getIntExtra("fileId", -1);
+        	}
         }
         
         // Build a request for the file ID's info.
@@ -110,12 +126,18 @@ public class DetailsActivity extends Activity {
                     }
                 }
                 
+                mState = STATE_READY;
+                
                 hideProgressIndicator();
+                invalidateOptionsMenu();
             }
 
             @Override
             protected void onPreExecute() {
+            	mState = STATE_LOADING;
+            	
                 showProgressIndicator();
+                invalidateOptionsMenu();
             }
         };
         responseTask.execute(request);
@@ -363,7 +385,27 @@ public class DetailsActivity extends Activity {
     
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.idgames_details, menu);
+        
+        // Hide action bar menu items if no details have been loaded yet.
+        if (mState != STATE_READY) {
+        	setMenuVisible(menu, false);
+        } else {
+        	setMenuVisible(menu, true);
+        }
+        
         return true;
+    }
+    
+    /**
+     * Sets the visibility of all of a menu's items.
+     * 
+     * @param menu The menu to change visibility of.
+     * @param isVisible True if the items should be visible, false if they should not be.
+     */
+    private void setMenuVisible(Menu menu, boolean isVisible) {
+    	for (int i = 0; i < menu.size(); i++) {
+    		menu.getItem(i).setVisible(isVisible);
+    	}
     }
     
     public boolean onOptionsItemSelected(MenuItem item) {
