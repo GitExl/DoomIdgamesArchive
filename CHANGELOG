@@ -1,13 +1,13 @@
 Version 1.4.0
 -------------
-- Added: display review ratings and user names.
+- Added: display individual review ratings and user names (user names are all still "Anonymous" however).
 - Added: small layout changes for tablet displays.
 - Added: support for idgames:// protocol links.
 - Added: make hyperlinks in text files clickable.
 - Changed: use a spinning Cacodemon as progress indicator.
-- Changed: styled about activity.
-- Fixed: "null" file titles. 
-- Fixed: file details activity could crash if the menu buttons were used before any data was loaded.
+- Changed: styled the about activity.
+- Fixed: "null" file titles being displayed for some entries.
+- Fixed: the file details activity could crash if the menu buttons were used before any data was loaded.
 
 Version 1.3.2
 -------------
