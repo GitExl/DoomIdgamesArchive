@@ -42,7 +42,7 @@ public class ResponseTask extends AsyncTask<Request, Void, Response> {
         
         // Fetch a response from the Idgames web API.
         if (response == null) {
-            long startTime = System.currentTimeMillis();
+            //long startTime = System.currentTimeMillis();
             
             try {
                 // Attempt a connection.
@@ -67,7 +67,7 @@ public class ResponseTask extends AsyncTask<Request, Void, Response> {
             }
             
             //Log.i("ResponseTask", "Download took " + (System.currentTimeMillis() - startTime) / 1000.0 + " seconds.");
-            startTime = System.currentTimeMillis();
+            //startTime = System.currentTimeMillis();
     
             // Attempt to parse the response XML into a response object.
             ResponseParser responseParser = new ResponseParser();
