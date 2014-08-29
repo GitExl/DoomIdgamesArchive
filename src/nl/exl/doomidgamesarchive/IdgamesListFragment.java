@@ -140,7 +140,7 @@ public class IdgamesListFragment extends Fragment implements OnItemClickListener
                     executeSearch();
                 }
                 return false;
-            }           
+            }
         });
         mSearchField.setOnKeyListener(new OnKeyListener() {
             @Override

@@ -24,11 +24,11 @@ public class Review {
     }
     
     public String getUsername() {
-    	return mUsername;
+        return mUsername;
     }
     
     public float getRating() {
-    	return mRating;
+        return mRating;
     }
     
     public void setText(String text) {
@@ -44,11 +44,11 @@ public class Review {
     }
     
     public void setUsername(String username) {
-    	mUsername = username;
+        mUsername = username;
     }
     
     public void setRating(float rating) {
-    	mRating = rating;
+        mRating = rating;
     }
     
     

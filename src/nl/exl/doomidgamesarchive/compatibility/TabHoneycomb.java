@@ -89,7 +89,7 @@ public class TabHoneycomb extends Tab implements ActionBar.TabListener {
         FragmentTransaction ft = mActivity.getSupportFragmentManager().beginTransaction();
         ft.disallowAddToBackStack();
         mListener.onTabUnselected(this, ft);
-        ft.commit();        
+        ft.commit();
     }
 
 

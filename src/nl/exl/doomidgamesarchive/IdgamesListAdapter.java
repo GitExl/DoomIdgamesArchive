@@ -77,14 +77,14 @@ public class IdgamesListAdapter extends ArrayAdapter<Entry> {
             holder.date = (TextView)convertView.findViewById(R.id.IdgamesListItem_Date);
             holder.rating = (RatingView)convertView.findViewById(R.id.IdgamesListItem_Rating);
             convertView.setTag(holder);
-                    
+            
         // Reuse an existing listitem View.
         } else {
             holder = (ViewHolder)convertView.getTag();
         }
         
         if (holder.date != null) {
-        	holder.date.setVisibility(View.GONE);
+            holder.date.setVisibility(View.GONE);
         }
         holder.rating.setVisibility(View.GONE);
 
@@ -120,11 +120,11 @@ public class IdgamesListAdapter extends ArrayAdapter<Entry> {
             if (date != null && date.length() > 0) {
 
                 if (holder.date == null) {
-                	subText.append(" - ");
+                    subText.append(" - ");
                     subText.append(date);
                 } else {
-                	holder.date.setText(date);
-                	holder.date.setVisibility(View.VISIBLE);
+                    holder.date.setText(date);
+                    holder.date.setVisibility(View.VISIBLE);
                 }
             }
             

@@ -44,11 +44,11 @@ import android.widget.TextView;
 @TargetApi(Build.VERSION_CODES.HONEYCOMB)
 public class DetailsActivity extends Activity {
 
-	// Activity states for UI choices.
-	private static final int STATE_INVALID = 0;
-	private static final int STATE_LOADING = 1;
-	private static final int STATE_READY = 2;
-	
+    // Activity states for UI choices.
+    private static final int STATE_INVALID = 0;
+    private static final int STATE_LOADING = 1;
+    private static final int STATE_READY = 2;
+    
     // Layout references.
     private LinearLayout mLayout;
     private RelativeLayout mTitleLayout;
@@ -96,16 +96,16 @@ public class DetailsActivity extends Activity {
             
         // Get the file ID to display.
         } else {
-        	// Test for idgames:// protocol link.
-        	Uri data = this.getIntent().getData();
-        	if (data != null && data.getScheme().equals("idgames")) {
-        		mFileId = Integer.parseInt(data.getHost());
-        		// TODO: Bad file Id. Show dialog, or set activity ui state to show message?
+            // Test for idgames:// protocol link.
+            Uri data = this.getIntent().getData();
+            if (data != null && data.getScheme().equals("idgames")) {
+                mFileId = Integer.parseInt(data.getHost());
+                // TODO: Bad file Id. Show dialog, or set activity ui state to show message?
 
-			// Use the file id from the regular intent.
-        	} else {
-        		mFileId = this.getIntent().getIntExtra("fileId", -1);
-        	}
+          // Use the file id from the regular intent.
+            } else {
+                mFileId = this.getIntent().getIntExtra("fileId", -1);
+            }
         }
         
         // Build a request for the file ID's info.
@@ -133,9 +133,11 @@ public class DetailsActivity extends Activity {
 
             @Override
             protected void onPreExecute() {
-            	mState = STATE_LOADING;
-            	
+                mState = STATE_LOADING;
+                
                 showProgressIndicator();
+                
+                // TODO: This does not exists pre-API 11. Use ActivityCompat?
                 invalidateOptionsMenu();
             }
         };
@@ -230,8 +232,8 @@ public class DetailsActivity extends Activity {
         for (String text : items) {
             text = text.trim();
             if (text.length() > 0) {
-            	total.append(" - ");
-            	total.append(text);
+                total.append(" - ");
+                total.append(text);
             }
         }
         addText(total.substring(2), R.layout.idgames_details_listtext);
@@ -284,7 +286,7 @@ public class DetailsActivity extends Activity {
     }
     
     private void addReview(Review review) {
-    	View view = getLayoutInflater().inflate(R.layout.idgames_details_listreview, null);
+        View view = getLayoutInflater().inflate(R.layout.idgames_details_listreview, null);
         
         TextView textView = (TextView)view.findViewById(R.id.IdgamesListReview_Text);
         TextView usernameView = (TextView)view.findViewById(R.id.IdgamesListReview_Username);
@@ -387,9 +389,9 @@ public class DetailsActivity extends Activity {
         
         // Hide action bar menu items if no details have been loaded yet.
         if (mState != STATE_READY) {
-        	setMenuVisible(menu, false);
+            setMenuVisible(menu, false);
         } else {
-        	setMenuVisible(menu, true);
+            setMenuVisible(menu, true);
         }
         
         return true;
@@ -402,9 +404,9 @@ public class DetailsActivity extends Activity {
      * @param isVisible True if the items should be visible, false if they should not be.
      */
     private void setMenuVisible(Menu menu, boolean isVisible) {
-    	for (int i = 0; i < menu.size(); i++) {
-    		menu.getItem(i).setVisible(isVisible);
-    	}
+        for (int i = 0; i < menu.size(); i++) {
+            menu.getItem(i).setVisible(isVisible);
+        }
     }
     
     public boolean onOptionsItemSelected(MenuItem item) {

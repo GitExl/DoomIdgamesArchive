@@ -97,7 +97,7 @@ public class RatingView extends View {
     }
     
     @Override
-    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {  	
+    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {     
         final int desiredWidth = getPaddingLeft() + getPaddingRight() + getSuggestedMinimumWidth() + (mRatingMax * (mIconWidth + mRatingSpacing));
         final int desiredHeight = getPaddingTop() + getPaddingBottom() + getSuggestedMinimumHeight() + mIconHeight;
         
@@ -111,19 +111,19 @@ public class RatingView extends View {
         int height = 0;
         
         if (widthMode == MeasureSpec.EXACTLY) {
-        	width = widthSize;
+            width = widthSize;
         } else if (widthMode == MeasureSpec.AT_MOST) {
-        	width = Math.min(desiredWidth, widthSize);
+            width = Math.min(desiredWidth, widthSize);
         } else if (widthMode == MeasureSpec.UNSPECIFIED) {
-        	width = desiredWidth;
+            width = desiredWidth;
         }
         
         if (heightMode == MeasureSpec.EXACTLY) {
-        	height = heightSize;
+            height = heightSize;
         } else if (heightMode == MeasureSpec.AT_MOST) {
-        	height = Math.min(desiredHeight, heightSize);
+            height = Math.min(desiredHeight, heightSize);
         } else if (heightMode == MeasureSpec.UNSPECIFIED) {
-        	height = desiredHeight;
+            height = desiredHeight;
         }
 
         setMeasuredDimension(width, height);
@@ -174,7 +174,7 @@ public class RatingView extends View {
      * Sets the spacing to use between rating icons. A spacing below 0 will be treated as 0.
      */
     public void setRatingSpacing(int ratingSpacing) {
-    	mRatingSpacing = dpToPx(Math.max(ratingSpacing, 0));
+        mRatingSpacing = dpToPx(Math.max(ratingSpacing, 0));
         
         invalidate();
         requestLayout();
