@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/IdgamesList"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/background"
+    android:orientation="vertical" >
+
+    <RelativeLayout
+        android:id="@+id/IdgamesList_ToolContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true" >
+
+        <RelativeLayout
+            android:id="@+id/IdgamesList_BrowseTools"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" >
+
+            <TextView
+                android:id="@+id/IdgamesList_Path"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/Application"
+                android:ellipsize="start"
+                android:padding="@dimen/Padding"
+                android:text="@string/IdgamesList_PathDefault"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textColor="@android:color/white" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/IdgamesList_SearchTools"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/gray95"
+            android:paddingBottom="@dimen/PaddingMedium">
+
+            <AutoCompleteTextView
+                android:id="@+id/IdgamesList_SearchField"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/Padding"
+                android:layout_marginRight="@dimen/Padding"
+                android:layout_marginTop="@dimen/Padding"
+                android:hint="@string/SearchHint"
+                android:imeOptions="actionSearch"
+                android:inputType="text"
+                android:maxLines="1"
+                android:selectAllOnFocus="true"
+                android:textColor="@color/gray95"></AutoCompleteTextView>
+
+            <Spinner
+                android:id="@+id/IdgamesList_SearchSpinner"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/IdgamesList_SearchField"
+                android:layout_marginLeft="@dimen/Padding"
+                android:layout_marginRight="@dimen/Padding"
+                android:layout_marginTop="@dimen/PaddingSmall" />
+        </RelativeLayout>
+    </RelativeLayout>
+
+    <ImageView
+        android:id="@+id/IdgamesList_Progress"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:contentDescription="@string/Describe_Progress"
+        android:visibility="gone" />
+
+    <RelativeLayout
+        android:id="@+id/IdgamesList_MessageContainer"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/IdgamesList_ToolContainer"
+        android:layout_centerVertical="true"
+        android:visibility="gone" >
+
+        <TextView
+            android:id="@+id/IdgamesList_Message"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:layout_marginTop="@dimen/Padding"
+            android:gravity="center"
+            android:text="@string/IdgamesList_MessageDefault"
+            android:visibility="visible" />
+
+        <ImageView
+            android:id="@+id/IdgamesList_Caco"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@id/IdgamesList_Message"
+            android:layout_centerHorizontal="true"
+            android:contentDescription="@string/Caco"
+            android:src="@drawable/dead_caco" />
+    </RelativeLayout>
+
+    <ListView
+        android:id="@+id/IdgamesList_List"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/IdgamesList_ToolContainer"
+        android:background="@android:color/background_light"
+        android:fastScrollEnabled="true"
+        android:scrollingCache="true"
+        android:smoothScrollbar="true"
+        android:visibility="visible" >
+    </ListView>
+
+    <ImageView
+        android:id="@+id/IdgamesList_ListShadow"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/IdgamesList_List"
+        android:background="@drawable/shadow"
+        android:contentDescription="@string/Shadow"
+        android:visibility="gone" />
+
+    <ImageView
+        android:id="@+id/IdgamesList_ToolShadow"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/IdgamesList_ToolContainer"
+        android:background="@drawable/shadow"
+        android:contentDescription="@string/Shadow" />
+
+</RelativeLayout>

@@ -1,3 +1,12 @@
+Version 1.4.1
+-------------
+- Added: usernames for non-anonymous reviews.
+- Fixed: use HTTPS for API calls. No results were being returned because the Idgames API has switched to require HTTPS.
+- Fixed: extraneous margins for several layouts.
+- Changed: compiled with SDK 25 using Android Studio and latest build tools. This also means that Android 2.0, 2.1 and 2.2 are now no longer supported.
+- Changed: flipped order of a file's reviews so that the latest reviews are at the top.
+- Changed: general small style and layout tweaks.
+
 Version 1.4.0
 -------------
 - Added: display individual review ratings and user names (user names are all still "Anonymous" however).
@@ -20,7 +29,7 @@ Version 1.3.1
 - Fixed: reduced memory allocation when parsing responses containing a large text file.
 - Changed: file reviews have a slightly darker background now to be able to distinguish them better.
 - Changed: minor visual tweaks.
-- Changed: use API level 18. 
+- Changed: use API level 18.
 
 Version 1.3.0
 --------------

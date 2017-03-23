@@ -170,3 +170,17 @@ pip-log.txt
 bin
 gen
 android-support-v*.jar
+.gradle
+/local.properties
+.DS_Store
+build/
+captures/
+.externalNativeBuild
+*.apk
+*.ap_
+*.dex
+*.class
+local.properties
+*.iml
+.idea
+obj/
