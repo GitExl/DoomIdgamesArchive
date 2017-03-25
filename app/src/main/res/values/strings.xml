@@ -36,5 +36,6 @@
     <string name="IdgamesDetails_PluralVotes">%1$d votes</string>
     <string name="IdgamesDetails_InvalidTitle">Invalid file</string>
     <string name="IdgamesList_Directory">Directory</string>
+    <string name="IdgamesDetails_ToastNoDirectory">External storage directory could not be found or created.</string>
 
 </resources>

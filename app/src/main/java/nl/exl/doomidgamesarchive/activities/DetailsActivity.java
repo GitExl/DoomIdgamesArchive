@@ -26,6 +26,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -351,10 +352,12 @@ public class DetailsActivity extends Activity {
      */
     @SuppressLint("SdCardPath")
     private void downloadFile() {
-        int permission = ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE);
-        if (permission != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, PERMISSION_CALLBACK_DOWNLOAD);
-            return;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            int permission = ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE);
+            if (permission != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, PERMISSION_CALLBACK_DOWNLOAD);
+                return;
+            }
         }
 
         // Get the download mirror URL to use.
@@ -365,8 +368,13 @@ public class DetailsActivity extends Activity {
         DownloadManager.Request request = new DownloadManager.Request(Uri.parse(url));
         request.setTitle(mFileName);
         request.setDescription(mFileTitle);
-        request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, mFileName);
         request.setAllowedOverRoaming(false);
+
+        try {
+            request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, mFileName);
+        } catch (IllegalStateException e) {
+            Toast.makeText(this, this.getString(R.string.IdgamesDetails_ToastNoDirectory), Toast.LENGTH_SHORT).show();
+        }
 
         DownloadManager manager = (DownloadManager)getSystemService(Context.DOWNLOAD_SERVICE);
         manager.enqueue(request);
