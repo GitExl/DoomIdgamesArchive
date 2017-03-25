@@ -49,7 +49,7 @@
                 android:inputType="text"
                 android:maxLines="1"
                 android:selectAllOnFocus="true"
-                android:textColor="@color/gray95"></AutoCompleteTextView>
+                android:textColor="?android:attr/textColorPrimary"></AutoCompleteTextView>
 
             <Spinner
                 android:id="@+id/IdgamesList_SearchSpinner"
@@ -111,21 +111,5 @@
         android:visibility="visible" >
     </ListView>
 
-    <ImageView
-        android:id="@+id/IdgamesList_ListShadow"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/IdgamesList_List"
-        android:background="@drawable/shadow"
-        android:contentDescription="@string/Shadow"
-        android:visibility="gone" />
-
-    <ImageView
-        android:id="@+id/IdgamesList_ToolShadow"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/IdgamesList_ToolContainer"
-        android:background="@drawable/shadow"
-        android:contentDescription="@string/Shadow" />
 
 </RelativeLayout>

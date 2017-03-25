@@ -1,13 +1,13 @@
 package nl.exl.doomidgamesarchive.idgamesapi;
 
-import java.util.ArrayList;
-import java.util.List;
+import android.util.Log;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import android.util.Log;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Manages a single response from the Idgames web API.
@@ -33,7 +33,7 @@ public class Response {
     private List<Entry> mEntries;
     
     
-    public Response() {
+    Response() {
         mEntries = new ArrayList<Entry>();
     }
     
@@ -42,7 +42,7 @@ public class Response {
      * 
      * @return A JSON object containing this response.
      */
-    public JSONObject toJSON() {
+    JSONObject toJSON() {
         JSONObject json = new JSONObject();
         
         try {
@@ -91,7 +91,7 @@ public class Response {
      * 
      * @param json THe JSON object to restore state from.
      */
-    public void fromJSON(JSONObject json) {
+    void fromJSON(JSONObject json) {
         try { 
             mVersion = (float)json.getDouble("version");
             
@@ -148,7 +148,7 @@ public class Response {
         return this.mErrorType;
     }
     
-    public void setErrorType(String newErrorType) {
+    void setErrorType(String newErrorType) {
         this.mErrorType = newErrorType;
     }
     
@@ -156,11 +156,11 @@ public class Response {
         return this.mWarningType;
     }
     
-    public void setWarningType(String newWarningType) {
+    void setWarningType(String newWarningType) {
         this.mWarningType = newWarningType;
     }
 
-    public void addEntry(Entry entry) { 
+    void addEntry(Entry entry) {
         this.mEntries.add(entry);
     }
     
@@ -172,15 +172,11 @@ public class Response {
         return mErrorMessage;
     }
 
-    public void setErrorMessage(String errorMessage) {
+    void setErrorMessage(String errorMessage) {
         this.mErrorMessage = errorMessage;
     }
 
-    public String getWarningMessage() {
-        return mWarningMessage;
-    }
-
-    public void setWarningMessage(String warningMessage) {
+    void setWarningMessage(String warningMessage) {
         this.mWarningMessage = warningMessage;
     }
 }

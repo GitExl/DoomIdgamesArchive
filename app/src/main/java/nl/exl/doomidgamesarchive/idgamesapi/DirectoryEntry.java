@@ -1,10 +1,10 @@
 package nl.exl.doomidgamesarchive.idgamesapi;
 
-import java.io.File;
-import java.util.regex.Pattern;
-
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.io.File;
+import java.util.regex.Pattern;
 
 /**
  * IdgamesApi directory entry.
@@ -39,7 +39,7 @@ public class DirectoryEntry extends Entry {
         mId = id;
     }
 
-    public void addName(String name) {
+    void addName(String name) {
         if (mName == null) {
             mName = name;
         } else {

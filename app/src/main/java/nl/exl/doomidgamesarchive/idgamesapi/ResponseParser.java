@@ -1,11 +1,6 @@
 package nl.exl.doomidgamesarchive.idgamesapi;
 
-import java.io.IOException;
-import java.io.InputStream;
-
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.parsers.SAXParser;
-import javax.xml.parsers.SAXParserFactory;
+import android.util.Log;
 
 import org.xml.sax.Attributes;
 import org.xml.sax.InputSource;
@@ -13,12 +8,17 @@ import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.DefaultHandler;
 
-import android.util.Log;
+import java.io.IOException;
+import java.io.InputStream;
+
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.parsers.SAXParser;
+import javax.xml.parsers.SAXParserFactory;
 
 /**
  * Parses XML from an input stream into an Idgames mResponse object.
  */
-public class ResponseParser {
+class ResponseParser {
     // The XML mReader object.
     private XMLReader mReader;
     
@@ -26,7 +26,7 @@ public class ResponseParser {
     private ResponseHandler mHandler; 
     
 
-    public ResponseParser() {
+    ResponseParser() {
         try {
             // Instantiate the parsers and readers.
             SAXParserFactory factory = SAXParserFactory.newInstance();
@@ -47,7 +47,7 @@ public class ResponseParser {
      * 
      * @param input The XML input to parse.
      */
-    public void parse(InputStream input) {
+    void parse(InputStream input) {
         try {
             mReader.parse(new InputSource(input));
         } catch (SAXException e) {
@@ -57,11 +57,11 @@ public class ResponseParser {
         }
     }
     
-    public void setContainsSingleFile(boolean containsSingleFile) {
+    void setContainsSingleFile(boolean containsSingleFile) {
         mHandler.setContainsSingleFile(containsSingleFile);
     }
     
-    public Response getResponse() {
+    Response getResponse() {
         return mHandler.getResponse();
     }
     
@@ -108,11 +108,11 @@ public class ResponseParser {
             mResponse = new Response();
         }
         
-        public Response getResponse() {
+        Response getResponse() {
             return mResponse;
         }
         
-        public void setContainsSingleFile(boolean containsSingleFile) {
+        void setContainsSingleFile(boolean containsSingleFile) {
             mContainsSingleFile = containsSingleFile;
         }
         
@@ -173,7 +173,7 @@ public class ResponseParser {
             // Content.
             } else if (mState == STATE_CONTENT && localName.equals("content")) {
                 mState = STATE_UNKNOWN;
-            } else if (mContainsSingleFile == true && mState == STATE_FILE && localName.equals("content")) {
+            } else if (mContainsSingleFile && mState == STATE_FILE && localName.equals("content")) {
                 mState = STATE_UNKNOWN;
                 
                 mFileEntry.addTextFileContents(mTextFileContents.toString());

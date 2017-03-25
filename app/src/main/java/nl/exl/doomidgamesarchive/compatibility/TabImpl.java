@@ -1,38 +1,33 @@
 package nl.exl.doomidgamesarchive.compatibility;
 
-import android.annotation.TargetApi;
 import android.app.ActionBar;
-import android.os.Build;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
 
-/**
- * A tab object for Honeycomb SDKs and up.
- */
-@TargetApi(Build.VERSION_CODES.HONEYCOMB)
-public class TabHoneycomb extends Tab implements ActionBar.TabListener {
+
+class TabImpl extends Tab implements ActionBar.TabListener {
     private ActionBar.Tab mTab;
     private FragmentActivity mActivity;
     private Tab.TabListener mListener;
     private Fragment mFragment;
     private String mTag;
-    
-    
-    protected TabHoneycomb(FragmentActivity activity, Fragment fragment, String tag) {
+
+
+    TabImpl(FragmentActivity activity, Fragment fragment, String tag) {
         mActivity = activity;
         mFragment = fragment;
         mTag = tag;
-        
+
         mTab = activity.getActionBar().newTab();
         mTab.setTabListener(this);
     }
-    
+
     @Override
     public void setText(int textResource) {
         mTab.setText(textResource);
     }
-    
+
     @Override
     public String getText() {
         return mTab.getText().toString();
@@ -42,7 +37,7 @@ public class TabHoneycomb extends Tab implements ActionBar.TabListener {
     public void setListener(TabListener listener) {
         mListener = listener;
     }
-    
+
     @Override
     public TabListener getListener() {
         return mListener;
@@ -62,7 +57,7 @@ public class TabHoneycomb extends Tab implements ActionBar.TabListener {
     public Fragment getFragment() {
         return mFragment;
     }
-    
+
     @Override
     public void setFragment(Fragment fragment) {
         mFragment = fragment;

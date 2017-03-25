@@ -16,7 +16,7 @@
         android:lineSpacingMultiplier="1.2"
         android:padding="@dimen/Padding"
         android:text="@string/IdgamesListText_TextDefault"
-        android:textAppearance="?android:attr/textAppearanceSmall"></TextView>
+        android:textAppearance="?android:attr/textAppearanceSmall" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -33,19 +33,20 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            app:drawableEmpty="@drawable/rating_skull_small_empty"
-            app:drawableFull="@drawable/rating_skull_small_full"
-            app:drawableHalf="@drawable/rating_skull_small_half"
+            app:drawableEmpty="@drawable/rating_skull_empty"
+            app:drawableFull="@drawable/rating_skull_full"
+            app:drawableHalf="@drawable/rating_skull_half"
             app:rating="3.5"
             app:ratingMax="5"
-            app:ratingSpacing="1dp" />
+            app:ratingSpacing="1dp"
+            app:scale="0.4" />
 
         <TextView
             android:id="@+id/IdgamesListReview_Username"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:gravity="right|center_vertical"
+            android:gravity="end|center_vertical"
             android:text="@string/IdgamesListText_TextDefault"
             android:textSize="@dimen/TextSizeSmall" />
     </LinearLayout>

@@ -1,18 +1,5 @@
 package nl.exl.doomidgamesarchive.activities;
 
-import nl.exl.doomidgamesarchive.Config;
-import nl.exl.doomidgamesarchive.IdgamesListFragment;
-import nl.exl.doomidgamesarchive.IdgamesListFragment.IdgamesListener;
-import nl.exl.doomidgamesarchive.R;
-import nl.exl.doomidgamesarchive.SettingsMenu;
-import nl.exl.doomidgamesarchive.compatibility.Tab;
-import nl.exl.doomidgamesarchive.compatibility.TabActivity;
-import nl.exl.doomidgamesarchive.compatibility.TabHelper;
-import nl.exl.doomidgamesarchive.idgamesapi.DirectoryEntry;
-import nl.exl.doomidgamesarchive.idgamesapi.Entry;
-import nl.exl.doomidgamesarchive.idgamesapi.FileEntry;
-import nl.exl.doomidgamesarchive.idgamesapi.Request;
-import nl.exl.doomidgamesarchive.idgamesapi.VoteEntry;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -30,6 +17,20 @@ import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+
+import nl.exl.doomidgamesarchive.Config;
+import nl.exl.doomidgamesarchive.IdgamesListFragment;
+import nl.exl.doomidgamesarchive.IdgamesListFragment.IdgamesListener;
+import nl.exl.doomidgamesarchive.R;
+import nl.exl.doomidgamesarchive.SettingsMenu;
+import nl.exl.doomidgamesarchive.compatibility.Tab;
+import nl.exl.doomidgamesarchive.compatibility.TabActivity;
+import nl.exl.doomidgamesarchive.compatibility.TabHelper;
+import nl.exl.doomidgamesarchive.idgamesapi.DirectoryEntry;
+import nl.exl.doomidgamesarchive.idgamesapi.Entry;
+import nl.exl.doomidgamesarchive.idgamesapi.FileEntry;
+import nl.exl.doomidgamesarchive.idgamesapi.Request;
+import nl.exl.doomidgamesarchive.idgamesapi.VoteEntry;
 
 /**
  * The main activity, containing the tabbed interface. Also instantiates the list fragments.
@@ -74,7 +75,7 @@ public class MainActivity extends TabActivity implements IdgamesListener, OnShar
         }
         
         // Finish this activity if the fragment back press function cannot go back any further.
-        if (fragment.enterParentDirectory() == false) {
+        if (!fragment.enterParentDirectory()) {
             this.finish();
         }
     };
@@ -87,7 +88,7 @@ public class MainActivity extends TabActivity implements IdgamesListener, OnShar
         ConnectivityManager connMgr = (ConnectivityManager)getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
         
-        if (networkInfo == null || networkInfo.isConnected() == false) {
+        if (networkInfo == null || !networkInfo.isConnected()) {
             AlertDialog alertDialog = new AlertDialog.Builder(this)
                 .setTitle("No data connection available")
                 .setMessage("Turn on data access or connect to a network to be able to use this application.")
@@ -221,7 +222,7 @@ public class MainActivity extends TabActivity implements IdgamesListener, OnShar
             if (entry instanceof FileEntry) {
                 FileEntry fileEntry = (FileEntry)entry;
                 id = fileEntry.getId(); 
-            } else if (entry instanceof VoteEntry) {
+            } else {
                 VoteEntry voteEntry = (VoteEntry)entry;
                 id = voteEntry.getFileId();
             }

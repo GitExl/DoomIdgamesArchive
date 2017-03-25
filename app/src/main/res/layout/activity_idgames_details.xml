@@ -33,11 +33,12 @@
             android:layout_marginRight="@dimen/Padding"
             android:layout_marginTop="@dimen/Padding"
             custom:drawableEmpty="@drawable/rating_skull_empty"
-            custom:drawableFull="@drawable/rating_skull_full"
-            custom:drawableHalf="@drawable/rating_skull_half"
+            custom:drawableFull="@drawable/rating_skull_blue_full"
+            custom:drawableHalf="@drawable/rating_skull_blue_half"
             custom:rating="2.5"
             custom:ratingMax="5"
-            custom:ratingSpacing="2dp" />
+            custom:ratingSpacing="2dp"
+            custom:scale="0.5" />
 
         <TextView
             android:id="@+id/IdgamesDetails_VoteCount"
@@ -87,14 +88,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/IdgamesDetails_TitleLayout"
-        android:background="@drawable/shadow"
-        android:contentDescription="@string/Shadow" />
-
-    <ImageView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/IdgamesDetails_Scroller"
-        android:background="@drawable/shadow"
         android:contentDescription="@string/Shadow" />
 
 </RelativeLayout>

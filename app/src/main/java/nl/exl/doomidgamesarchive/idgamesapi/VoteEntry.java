@@ -61,7 +61,7 @@ public class VoteEntry extends Entry {
         mId = id;
     }
     
-    public void setFileId(int fileId) {
+    void setFileId(int fileId) {
         mFileId = fileId;
     }
 
@@ -69,7 +69,7 @@ public class VoteEntry extends Entry {
         mTitle = title;
     }
     
-    public void addTitle(String title) {
+    void addTitle(String title) {
         if (mTitle == null) {
             mTitle = title;
         } else {
@@ -77,7 +77,7 @@ public class VoteEntry extends Entry {
         }
     }
 
-    public void addAuthor(String author) {
+    void addAuthor(String author) {
         if (mAuthor == null) {
             mAuthor = author;
         } else {
@@ -85,7 +85,7 @@ public class VoteEntry extends Entry {
         }
     }
 
-    public void addDescription(String description) {
+    void addDescription(String description) {
         if (mDescription == null) {
             mDescription = description;
         } else {
@@ -93,7 +93,7 @@ public class VoteEntry extends Entry {
         }
     }
     
-    public void addReviewText(String reviewText) {
+    void addReviewText(String reviewText) {
         if (mReviewText == null) {
             mReviewText = reviewText;
         } else {
@@ -117,17 +117,6 @@ public class VoteEntry extends Entry {
         return mTitle;
     }
 
-    public String getAuthor() {
-        if (mAuthor == null || mAuthor.length() == 0)
-            return "Unknown";
-        else
-            return mAuthor;
-    }
-
-    public String getDescription() {
-        return mDescription;
-    }
-    
     public String getReviewText() {
         return mReviewText;
     }

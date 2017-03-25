@@ -1,3 +1,11 @@
+Version 1.4.2
+-------------
+- Fixed: downloads work again on Android 6.0 and newer devices. The required permission was not being requested.
+- Fixed: search input text was white and barely visible.
+- Changed: updated the list of Idgames mirrors.
+- Changed: some layout tweaks, mostly to rating icon dimensions and colors.
+- Changed: removed last remnants of compatibility for Android 2 and 3. Only Android version 4 and newer are supported.
+
 Version 1.4.1
 -------------
 - Added: usernames for non-anonymous reviews.

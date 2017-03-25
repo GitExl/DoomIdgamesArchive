@@ -3,8 +3,6 @@ package nl.exl.doomidgamesarchive.idgamesapi;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-
-
 /**
  * Describes a single Idgames API review.
  */
@@ -35,7 +33,7 @@ public class Review {
         mText = text;
     }
     
-    public void addText(String text) {
+    void addText(String text) {
         if (mText == null) {
             mText = text;
         } else {
@@ -43,7 +41,7 @@ public class Review {
         }
     }
     
-    public void setUsername(String username) {
+    void setUsername(String username) {
         mUsername = username;
     }
     
@@ -55,7 +53,7 @@ public class Review {
     /**
      * Reads this review object from a JSON object.
      */
-    public void fromJSON(JSONObject obj) {
+    void fromJSON(JSONObject obj) {
         mText = obj.optString("text", null);
         mRating = (float)obj.optDouble("rating", 0.0d);
         mUsername = obj.optString("username", null);
@@ -67,7 +65,7 @@ public class Review {
     /**
      * Stores this review object into a JSON object.
      */
-    public void toJSON(JSONObject obj) throws JSONException {
+    void toJSON(JSONObject obj) throws JSONException {
         obj.put("text", mText);
         obj.put("rating", mRating);
         obj.put("username", mUsername);

@@ -23,13 +23,13 @@ public class Request {
     
     // Search categories.
     public static final int CATEGORY_FILENAME = 0;
-    public static final int CATEGORY_TITLE = 1;
-    public static final int CATEGORY_AUTHOR = 2;
-    public static final int CATEGORY_EMAIL = 3;
-    public static final int CATEGORY_DESCRIPTION = 4;
-    public static final int CATEGORY_CREDITS = 5;
-    public static final int CATEGORY_EDITORS = 6;
-    public static final int CATEGORY_TEXTFILE = 7;
+    private static final int CATEGORY_TITLE = 1;
+    private static final int CATEGORY_AUTHOR = 2;
+    private static final int CATEGORY_EMAIL = 3;
+    private static final int CATEGORY_DESCRIPTION = 4;
+    private static final int CATEGORY_CREDITS = 5;
+    private static final int CATEGORY_EDITORS = 6;
+    private static final int CATEGORY_TEXTFILE = 7;
     
     // The action to execute.
     private int mAction;
@@ -87,10 +87,11 @@ public class Request {
     /**
      * Returns a string from a Bundle object. Supports returning a default value.
      * 
-     * @param bundle
-     * @param key
-     * @param defaultValue
-     * @return
+     * @param bundle The Bundle to return a string from.
+     * @param key The key in the bundle.
+     * @param defaultValue The default value if key does not exist.
+     *
+     * @return Either the default value if the key did not exist or the key.
      */
     private String getBundleString(Bundle bundle, String key, String defaultValue) {
         String value = bundle.getString(key);
@@ -126,16 +127,12 @@ public class Request {
         this.mMaxAge = maxAge;
     }
     
-    public long getMaxAge() {
+    long getMaxAge() {
         return this.mMaxAge;
     }
     
     public String getDirectoryName() {
         return mDirectoryName;
-    }
-    
-    public int getFileId() {
-        return mFileId;
     }
 
     public void setFileId(int fileId) {
@@ -152,7 +149,7 @@ public class Request {
      * 
      * @return The hash string.
      */
-    public String getHash() {
+    String getHash() {
         return "request_" + getURL().hashCode();
     }
     
@@ -161,7 +158,7 @@ public class Request {
      * 
      * @return The HTTP URL string to make this request with.
      */
-    public String getURL() {
+    String getURL() {
         Builder builder = Uri.parse(API_URL).buildUpon();
         
         switch (mAction) {

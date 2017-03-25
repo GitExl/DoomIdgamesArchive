@@ -67,8 +67,8 @@ public class FileEntry extends Entry {
     private List<Review> reviews;
     
     
-    public FileEntry() {
-        reviews = new ArrayList<Review>();
+    FileEntry() {
+        reviews = new ArrayList<>();
     }
     
     /**
@@ -166,7 +166,7 @@ public class FileEntry extends Entry {
         mId = id;
     }
 
-    public void addTitle(String title) {
+    void addTitle(String title) {
         if (mTitle == null) {
             mTitle = title;
         } else {
@@ -174,7 +174,7 @@ public class FileEntry extends Entry {
         }
     }
 
-    public void addAuthor(String author) {
+    void addAuthor(String author) {
         if (mAuthor == null) {
             mAuthor = author;
         } else {
@@ -182,7 +182,7 @@ public class FileEntry extends Entry {
         }
     }
 
-    public void addDescription(String description) {
+    void addDescription(String description) {
         if (mDescription == null) {
             mDescription = description;
         } else {
@@ -190,7 +190,7 @@ public class FileEntry extends Entry {
         }
     }
 
-    public void addEmail(String email) {
+    void addEmail(String email) {
         if (mEmail == null) {
             mEmail = email;
         } else {
@@ -198,7 +198,7 @@ public class FileEntry extends Entry {
         }
     }
 
-    public void addFileName(String fileName) {
+    void addFileName(String fileName) {
         if (mFileName == null) {
             mFileName = fileName;
         } else {
@@ -206,7 +206,7 @@ public class FileEntry extends Entry {
         }
     }
 
-    public void addFilePath(String filePath) {
+    void addFilePath(String filePath) {
         if (mFilePath == null) {
             mFilePath = filePath;
         } else {
@@ -214,15 +214,15 @@ public class FileEntry extends Entry {
         }
     }
 
-    public void setFileSize(int fileSize) {
+    void setFileSize(int fileSize) {
         mFileSize = fileSize;
     }
 
-    public void setTimeStamp(int timeStamp) {
+    void setTimeStamp(int timeStamp) {
         mTimestamp = timeStamp;
     }
 
-    public void addDate(String date) {
+    void addDate(String date) {
         if (mDate == null) {
             mDate = date;
         } else {
@@ -234,11 +234,11 @@ public class FileEntry extends Entry {
         mRating = rating;
     }
 
-    public void setVoteCount(int voteCount) {
+    void setVoteCount(int voteCount) {
         mVoteCount = voteCount;
     }
 
-    public void addUrl(String url) {
+    void addUrl(String url) {
         if (mUrl == null) {
             mUrl = url;
         } else {
@@ -246,7 +246,7 @@ public class FileEntry extends Entry {
         }
     }
 
-    public void addIdgamesUrl(String idgamesUrl) {
+    void addIdgamesUrl(String idgamesUrl) {
         if (mIdgamesUrl == null) {
             mIdgamesUrl = idgamesUrl;
         } else {
@@ -254,7 +254,7 @@ public class FileEntry extends Entry {
         }
     }
 
-    public void addCredits(String credits) {
+    void addCredits(String credits) {
         if (mCredits == null) {
             mCredits = credits;
         } else {
@@ -262,7 +262,7 @@ public class FileEntry extends Entry {
         }
     }
 
-    public void addBase(String base) {
+    void addBase(String base) {
         if (mBase == null) {
             mBase = base;
         } else {
@@ -270,7 +270,7 @@ public class FileEntry extends Entry {
         }
     }
 
-    public void addBuildTime(String buildTime) {
+    void addBuildTime(String buildTime) {
         if (mBuildTime == null) {
             mBuildTime = buildTime;
         } else {
@@ -278,7 +278,7 @@ public class FileEntry extends Entry {
         }
     }
 
-    public void addEditorsUsed(String editorsUsed) {
+    void addEditorsUsed(String editorsUsed) {
         if (mEditorsUsed == null) {
             mEditorsUsed = editorsUsed;
         } else {
@@ -286,7 +286,7 @@ public class FileEntry extends Entry {
         }
     }
 
-    public void addBugs(String bugs) {
+    void addBugs(String bugs) {
         if (mBugs == null) {
             mBugs = bugs;
         } else {
@@ -294,7 +294,7 @@ public class FileEntry extends Entry {
         }
     }
 
-    public void addTextFileContents(String textFileContents) {
+    void addTextFileContents(String textFileContents) {
         if (mTextFileContents == null) {
             mTextFileContents = textFileContents;
         } else {
@@ -302,7 +302,7 @@ public class FileEntry extends Entry {
         }
     }
 
-    public void addReview(Review review) {
+    void addReview(Review review) {
         reviews.add(review);
     }
 
@@ -350,7 +350,7 @@ public class FileEntry extends Entry {
     /**
      * Returns the size of this file as a formatted size string.
      *  
-     * @return
+     * @return The file size.
      */
     public String getFileSizeString() {
         if (mFileSize < 1024) {
@@ -363,14 +363,6 @@ public class FileEntry extends Entry {
         return String.format(Locale.getDefault(), "%.1f %sB", mFileSize / Math.pow(1024, exp), pre);
     }
 
-    public int getTimeStamp() {
-        return mTimestamp;
-    }
-
-    public String getDate() {
-        return mDate;
-    }
-    
     /**
      * Returns this entry's date as a locale formatted date.
      * 
@@ -409,14 +401,6 @@ public class FileEntry extends Entry {
 
     public int getVoteCount() {
         return mVoteCount;
-    }
-
-    public String getUrl() {
-        return mUrl;
-    }
-
-    public String getIdgamesUrl() {
-        return mIdgamesUrl;
     }
 
     public String getCredits() {

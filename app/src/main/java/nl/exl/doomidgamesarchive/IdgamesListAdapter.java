@@ -1,5 +1,13 @@
 package nl.exl.doomidgamesarchive;
 
+import android.content.Context;
+import android.support.annotation.NonNull;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.TextView;
+
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.Set;
@@ -11,17 +19,11 @@ import nl.exl.doomidgamesarchive.idgamesapi.Request;
 import nl.exl.doomidgamesarchive.idgamesapi.Response;
 import nl.exl.doomidgamesarchive.idgamesapi.ResponseTask;
 import nl.exl.doomidgamesarchive.idgamesapi.VoteEntry;
-import android.content.Context;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.TextView;
 
 /**
  * Provides list item Views from IdgamesApi entries for a ListView.
  */
-public class IdgamesListAdapter extends ArrayAdapter<Entry> {
+class IdgamesListAdapter extends ArrayAdapter<Entry> {
     // Adds list indices in front of listitem titles if true.
     private boolean mAddListIndex = false;
     
@@ -48,7 +50,7 @@ public class IdgamesListAdapter extends ArrayAdapter<Entry> {
     /**
      * Helper class to keep view references in a view, preventing repeated lookups.
      */
-    public static class ViewHolder {
+    private static class ViewHolder {
         TextView title;
         TextView subtitle;
         TextView date;
@@ -56,19 +58,19 @@ public class IdgamesListAdapter extends ArrayAdapter<Entry> {
     }
     
     
-    public IdgamesListAdapter(Context context) {
+    IdgamesListAdapter(Context context) {
         super(context, R.layout.idgames_listitem, R.id.IdgamesListItem_Title);
         
         mInflater = (LayoutInflater)this.getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
-    
+
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public @NonNull View getView(int position, View convertView, @NonNull ViewGroup parent) {
         ViewHolder holder = null;
         
         // Create a new listitem View.
         if (convertView == null) {
-            convertView = mInflater.inflate(R.layout.idgames_listitem, null);
+            convertView = mInflater.inflate(R.layout.idgames_listitem, parent, false);
             
             // Store holder class with references to child views.
             holder = new ViewHolder();
@@ -96,7 +98,7 @@ public class IdgamesListAdapter extends ArrayAdapter<Entry> {
         
         // Set the View's title.
         String title = null;
-        if (mAddListIndex == true) {
+        if (mAddListIndex) {
             title = Integer.toString(position + 1) + ". " + entry.toString();
         } else {
             title = entry.toString();
@@ -105,7 +107,7 @@ public class IdgamesListAdapter extends ArrayAdapter<Entry> {
         
         // Fill view with directory info.
         if (entry instanceof DirectoryEntry) {
-            holder.subtitle.setText("Directory");
+            holder.subtitle.setText(R.string.IdgamesList_Directory);
             holder.subtitle.setMaxLines(1);
 
         // Fill view with file info.
@@ -163,7 +165,7 @@ public class IdgamesListAdapter extends ArrayAdapter<Entry> {
     /**
      * Loads additional entry information for vote entries that have no title.
      */
-    public void fixVotes() {
+    void fixVotes() {
         Entry entry;
         VoteEntry voteEntry;
         ResponseTask responseTask;
@@ -208,7 +210,7 @@ public class IdgamesListAdapter extends ArrayAdapter<Entry> {
     /**
      * Updates an individual IdgamesApi vote in this adapter's data.
      * 
-     * @param fileEntry
+     * @param fileEntry The file entry to update a vote list item with.
      */
     private void updateVote(FileEntry fileEntry) {
         Entry entry;
@@ -235,11 +237,11 @@ public class IdgamesListAdapter extends ArrayAdapter<Entry> {
     /**
      * Sorts this adapter's data.
      */
-    public void sort() {
+    void sort() {
         this.sort(new EntryComparator());
     }
     
-    public void setAddListIndex(boolean addListIndex) {
+    void setAddListIndex(boolean addListIndex) {
         this.mAddListIndex = addListIndex;
     }
 }

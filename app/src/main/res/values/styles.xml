@@ -1,1 +1,7 @@
-<resources xmlns:android="http://schemas.android.com/apk/res/android">    <style name="AppTheme" parent="android:Theme.Light">    </style>    <style name="CustomRatingBar" parent="@android:style/Widget.RatingBar">        <item name="android:progressDrawable">@drawable/rating_star</item>        <item name="android:minHeight">22dip</item>        <item name="android:maxHeight">22dip</item>    </style></resources>
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="AppTheme" parent="android:Theme.Holo.Light.DarkActionBar">
+    </style>
+
+</resources>

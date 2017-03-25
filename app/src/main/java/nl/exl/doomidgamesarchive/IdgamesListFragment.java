@@ -1,14 +1,5 @@
 package nl.exl.doomidgamesarchive;
 
-import java.io.File;
-import java.util.List;
-
-import nl.exl.doomidgamesarchive.idgamesapi.DirectoryEntry;
-import nl.exl.doomidgamesarchive.idgamesapi.Entry;
-import nl.exl.doomidgamesarchive.idgamesapi.Request;
-import nl.exl.doomidgamesarchive.idgamesapi.Response;
-import nl.exl.doomidgamesarchive.idgamesapi.ResponseTask;
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.graphics.drawable.AnimationDrawable;
@@ -36,6 +27,15 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.File;
+import java.util.List;
+
+import nl.exl.doomidgamesarchive.idgamesapi.DirectoryEntry;
+import nl.exl.doomidgamesarchive.idgamesapi.Entry;
+import nl.exl.doomidgamesarchive.idgamesapi.Request;
+import nl.exl.doomidgamesarchive.idgamesapi.Response;
+import nl.exl.doomidgamesarchive.idgamesapi.ResponseTask;
+
 /**
  * A fragment containing a list of IdGamesApi entries.
  * It will adapt what it displays based on the API mRequest type.
@@ -61,8 +61,7 @@ public class IdgamesListFragment extends Fragment implements OnItemClickListener
     private Spinner mSearchSpinner;
     private RelativeLayout mMessageContainer;
     private TextView mMessage;
-    private ImageView mListShadow;
-    
+
     // Search spinner adapter.
     private ArrayAdapter<CharSequence> mSearchSpinnerAdapter;
     
@@ -85,7 +84,7 @@ public class IdgamesListFragment extends Fragment implements OnItemClickListener
      * Interface for implementing events coming from this fragment.
      */
     public interface IdgamesListener {
-        public void onEntrySelected(IdgamesListFragment fragment, Entry entry);
+        void onEntrySelected(IdgamesListFragment fragment, Entry entry);
     }
     
     
@@ -122,8 +121,7 @@ public class IdgamesListFragment extends Fragment implements OnItemClickListener
         
         mMessageContainer = (RelativeLayout)view.findViewById(R.id.IdgamesList_MessageContainer);
         mMessage = (TextView)view.findViewById(R.id.IdgamesList_Message);
-        mListShadow = (ImageView)view.findViewById(R.id.IdgamesList_ListShadow);
-        
+
         mPathText = (TextView)view.findViewById(R.id.IdgamesList_Path);
         mBrowseTools = (RelativeLayout)view.findViewById(R.id.IdgamesList_BrowseTools);
         
@@ -209,20 +207,20 @@ public class IdgamesListFragment extends Fragment implements OnItemClickListener
     };
     
     @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
+    public void onAttach(Context context) {
+        super.onAttach(context);
 
         try {
-            mListener = (IdgamesListener)activity;
+            mListener = (IdgamesListener)context;
         } catch (ClassCastException e) {
-            throw new ClassCastException(activity.toString() + " must implement IdgamesListener");
+            throw new ClassCastException(context.toString() + " must implement IdgamesListener");
         }
     }
     
     /**
      * Sets the maximum amount of entries to display in this list. Modified the mRequest to do so.
      * 
-     * @param limit
+     * @param limit The maximum number of entries to display.
      */
     public void setLimit(int limit) {
         if (this.mRequest != null) {
@@ -279,7 +277,8 @@ public class IdgamesListFragment extends Fragment implements OnItemClickListener
         mTask = new ResponseTask(this.getActivity()) {
             @Override
             protected void onPostExecute(Response response) {
-                if (response.getWarningType() == "Limit Warning") {
+                String warning = response.getWarningType();
+                if (warning != null && warning.equals("Limit Warning")) {
                     Toast.makeText(getActivity(), "The search returned too many results. Not all of them are displayed.", Toast.LENGTH_LONG).show();
                 }
                 
@@ -292,7 +291,7 @@ public class IdgamesListFragment extends Fragment implements OnItemClickListener
                     mEntryAdapter.add(entries.get(i));
                 }
                 
-                if (mSort == true) {
+                if (mSort) {
                     mEntryAdapter.sort();
                 } else {
                     mEntryAdapter.notifyDataSetChanged();
@@ -336,8 +335,9 @@ public class IdgamesListFragment extends Fragment implements OnItemClickListener
             mBrowseTools.setVisibility(View.VISIBLE);
             mSearchTools.setVisibility(View.GONE);
             
-            mPathText.setText(" / " + mRequest.getDirectoryName().replace("/", " / "));
-        
+            String path = " / " + mRequest.getDirectoryName().replace("/", " / ");
+            mPathText.setText(path);
+
         // Others.
         } else {
             mBrowseTools.setVisibility(View.GONE);
@@ -358,7 +358,7 @@ public class IdgamesListFragment extends Fragment implements OnItemClickListener
         String dirName = mRequest.getDirectoryName();
         
         // If this is the root directory, we cannot go back.
-        if (dirName == "")
+        if (dirName.equals(""))
             return false;
 
         // Get the parent directory's name.
@@ -401,7 +401,6 @@ public class IdgamesListFragment extends Fragment implements OnItemClickListener
      */
     private void showProgressIndicator() {
         mEntryListView.setVisibility(View.GONE);
-        mListShadow.setVisibility(View.GONE);
         mProgress.setVisibility(View.VISIBLE);
         mMessageContainer.setVisibility(View.GONE);
         
@@ -425,19 +424,13 @@ public class IdgamesListFragment extends Fragment implements OnItemClickListener
             mEntryListView.setVisibility(View.VISIBLE);
             mMessageContainer.setVisibility(View.GONE);
         }
-
-        if (mEntryAdapter.getCount() == 0) {
-            mListShadow.setVisibility(View.GONE);
-        } else {
-            mListShadow.setVisibility(View.VISIBLE);
-        }
     }
 
     /**
      * List item click events are sent through to this fragment's IdgamesListener.  
      */
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        Entry entry = (Entry)mEntryAdapter.getItem(position);
+        Entry entry = mEntryAdapter.getItem(position);
         mListener.onEntrySelected(this, entry);
     }
 }

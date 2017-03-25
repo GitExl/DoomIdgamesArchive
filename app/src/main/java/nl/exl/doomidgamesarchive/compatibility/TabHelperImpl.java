@@ -1,8 +1,6 @@
 package nl.exl.doomidgamesarchive.compatibility;
 
-import android.annotation.TargetApi;
 import android.app.ActionBar;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -11,24 +9,22 @@ import android.view.Window;
 /**
  * Tab helper class for Honeycomb SDKs and up.
  */
-@TargetApi(Build.VERSION_CODES.HONEYCOMB)
-public class TabHelperHoneycomb extends TabHelper {
+class TabHelperImpl extends TabHelper {
     private ActionBar mActionBar;
     private FragmentActivity mActivity;
-    
-    
-    public TabHelperHoneycomb(FragmentActivity activity) {
+
+    TabHelperImpl(FragmentActivity activity) {
         mActivity = activity;
-        
+
         // Request the ActionBar feature for the associated activity.
         mActivity.getWindow().requestFeature(Window.FEATURE_ACTION_BAR);
-        
+
         // Setup the actionbar.
         mActionBar = activity.getActionBar();
         mActionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
         mActionBar.setDisplayShowTitleEnabled(true);
     }
-    
+
     @Override
     public void addTab(Tab tab) {
         mActionBar.addTab((ActionBar.Tab)tab.getTab());
@@ -36,7 +32,7 @@ public class TabHelperHoneycomb extends TabHelper {
 
     @Override
     public Tab newTab(Fragment fragment, String tag) {
-        return new TabHoneycomb(mActivity, fragment, tag);
+        return new TabImpl(mActivity, fragment, tag);
     }
 
     @Override

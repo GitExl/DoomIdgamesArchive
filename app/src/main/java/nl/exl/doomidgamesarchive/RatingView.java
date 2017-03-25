@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
+import android.support.v4.content.res.ResourcesCompat;
 import android.util.AttributeSet;
 import android.view.View;
 
@@ -20,7 +21,7 @@ public class RatingView extends View {
     
     // The space that is kept in between rating icons.
     private int mRatingSpacing;
-    
+
     // Rating icon drawables.
     private Drawable mDrawableEmpty;
     private Drawable mDrawableHalf;
@@ -37,10 +38,10 @@ public class RatingView extends View {
     /**
      * General exception raised by the RatingView class.
      */
-    public class RatingBarException extends Exception {
+    private class RatingBarException extends Exception {
         private static final long serialVersionUID = -3952282621756694962L;
         
-        public RatingBarException(String error) {
+        private RatingBarException(String error) {
             super(error);
         }
     }
@@ -48,39 +49,45 @@ public class RatingView extends View {
     
     public RatingView(Context context, AttributeSet attrs) throws RatingBarException {
         super(context, attrs);
+
+        float iconScale = 1.0f;
         
         // Retrieve view parameters.
         TypedArray a = context.getTheme().obtainStyledAttributes(attrs, R.styleable.RatingView, 0, 0);
         try {
             mRatingMax = a.getInt(R.styleable.RatingView_ratingMax, 5);
-            mRating = a.getFloat(R.styleable.RatingView_rating, (float)2.5);
+            mRating = a.getFloat(R.styleable.RatingView_rating, 2.5f);
             mRatingSpacing = a.getDimensionPixelSize(R.styleable.RatingView_ratingSpacing, 1);
+            iconScale = a.getFloat(R.styleable.RatingView_scale, iconScale);
             
-            // Get default drawables so this view is displayed in edit mode.
-            if (isInEditMode()) {
-                mDrawableEmpty = getResources().getDrawable(R.drawable.rating_skull_empty);
-                mDrawableHalf = getResources().getDrawable(R.drawable.rating_skull_half);
-                mDrawableFull = getResources().getDrawable(R.drawable.rating_skull_full);
-                
-            // Get drawables defined in XML.
-            } else {
-                mDrawableEmpty = a.getDrawable(R.styleable.RatingView_drawableEmpty);
-                mDrawableHalf = a.getDrawable(R.styleable.RatingView_drawableHalf);
-                mDrawableFull = a.getDrawable(R.styleable.RatingView_drawableFull);
+            mDrawableEmpty = a.getDrawable(R.styleable.RatingView_drawableEmpty);
+            mDrawableHalf = a.getDrawable(R.styleable.RatingView_drawableHalf);
+            mDrawableFull = a.getDrawable(R.styleable.RatingView_drawableFull);
+
+            // Use default drawables if none were specified.
+            if (mDrawableEmpty == null) {
+                mDrawableEmpty = ResourcesCompat.getDrawable(getResources(), R.drawable.rating_skull_empty, null);
             }
+            if (mDrawableHalf == null) {
+                mDrawableHalf = ResourcesCompat.getDrawable(getResources(), R.drawable.rating_skull_half, null);
+            }
+            if (mDrawableFull == null) {
+                mDrawableFull = ResourcesCompat.getDrawable(getResources(), R.drawable.rating_skull_full, null);
+            }
+
         } finally {
             a.recycle();
         }
         
         // Test if all icon drawables are specified.
         if (mDrawableEmpty == null) {
-            throw new RatingBarException("No empty icon drawable specified.");
+            throw new RatingBarException("No empty icon drawable.");
         }
         if (mDrawableHalf == null) {
-            throw new RatingBarException("No half icon drawable specified.");
+            throw new RatingBarException("No half icon drawable.");
         }
         if (mDrawableFull == null) {
-            throw new RatingBarException("No full icon drawable specified.");
+            throw new RatingBarException("No full icon drawable.");
         }
         
         // Cache drawables size.
@@ -94,6 +101,9 @@ public class RatingView extends View {
                 mIconHeight != mDrawableFull.getIntrinsicHeight()) {
             throw new RatingBarException("Icon drawables are not of equal width and height.");
         }
+
+        mIconWidth *= iconScale;
+        mIconHeight *= iconScale;
     }
     
     @Override
@@ -140,7 +150,7 @@ public class RatingView extends View {
         super.onDraw(canvas);
         
         int x = 0;
-        Drawable icon = null;
+        Drawable icon;
         
         // Draw all rating icons.
         for (int i = 0; i < mRatingMax; i++) {

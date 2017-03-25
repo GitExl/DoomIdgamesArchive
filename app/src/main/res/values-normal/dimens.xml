@@ -4,6 +4,6 @@
     <dimen name="Padding">8dp</dimen>
     <dimen name="PaddingSmall">4dp</dimen>
     <dimen name="PaddingMedium">16dp</dimen>
-    <dimen name="TextSizeSmall">9sp</dimen>
+    <dimen name="TextSizeSmall">10sp</dimen>
 
 </resources>

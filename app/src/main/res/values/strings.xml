@@ -31,5 +31,10 @@
     <string name="Shadow">Shadow</string>
     <string name="IdgamesList_MessageDefault">Message</string>
     <string name="Caco">Dead Cacodemon</string>
+    <string name="IdgamesDetails_NoVotes">No votes yet</string>
+    <string name="IdgamesDetails_SingleVote">1 vote</string>
+    <string name="IdgamesDetails_PluralVotes">%1$d votes</string>
+    <string name="IdgamesDetails_InvalidTitle">Invalid file</string>
+    <string name="IdgamesList_Directory">Directory</string>
 
 </resources>

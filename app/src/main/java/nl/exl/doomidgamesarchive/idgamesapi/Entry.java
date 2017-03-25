@@ -11,7 +11,7 @@ public abstract class Entry {
      * Adds the properties of this entry to a JSON object.
      * 
      * @param obj The object to add the JSON properties to.
-     * @throws JSONException
+     * @throws JSONException if a JSON object could not be generated.
      */
     public abstract void toJSON(JSONObject obj) throws JSONException;
     
@@ -19,7 +19,7 @@ public abstract class Entry {
      * Reads properties from a JSON object into this entry.
      * 
      * @param obj The JSON object to read properties from.
-     * @throws JSONException
+     * @throws JSONException if required properties are absent.
      */
     public abstract void fromJSON(JSONObject obj) throws JSONException;
 }

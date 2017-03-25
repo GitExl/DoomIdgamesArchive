@@ -1,15 +1,15 @@
 package nl.exl.doomidgamesarchive.idgamesapi;
 
+import android.content.Context;
+import android.os.AsyncTask;
+import android.util.Log;
+
 import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
-
-import android.content.Context;
-import android.os.AsyncTask;
-import android.util.Log;
 
 /**
  * Returns an Idgames web API response object, based on a request object.
@@ -19,7 +19,7 @@ public class ResponseTask extends AsyncTask<Request, Void, Response> {
     private static ResponseCache mCache;
 
     
-    public ResponseTask(Context context) {
+    protected ResponseTask(Context context) {
         // Instantiate the response cache if it does not yet exist.
         if (mCache == null) {
             mCache = new ResponseCache(context);
@@ -42,8 +42,6 @@ public class ResponseTask extends AsyncTask<Request, Void, Response> {
         
         // Fetch a response from the Idgames web API.
         if (response == null) {
-            //long startTime = System.currentTimeMillis();
-            
             try {
                 // Attempt a connection.
                 URL url = new URL(request.getURL());
@@ -65,10 +63,7 @@ public class ResponseTask extends AsyncTask<Request, Void, Response> {
                 
                 return response;
             }
-            
-            //Log.i("ResponseTask", "Download took " + (System.currentTimeMillis() - startTime) / 1000.0 + " seconds.");
-            //startTime = System.currentTimeMillis();
-    
+
             // Attempt to parse the response XML into a response object.
             ResponseParser responseParser = new ResponseParser();
             if (request.getAction() == Request.GET_FILE) {
@@ -76,9 +71,7 @@ public class ResponseTask extends AsyncTask<Request, Void, Response> {
             }
             responseParser.parse(content);
             response = responseParser.getResponse();
-            
-            //Log.i("ResponseTask", "Parsing took " + (System.currentTimeMillis() - startTime) / 1000.0 + " seconds.");
-            
+
             // If this task was cancelled, abort here so that any cancelled response does not end up in the cach.e
             if (isCancelled()) {
                 response = new Response();

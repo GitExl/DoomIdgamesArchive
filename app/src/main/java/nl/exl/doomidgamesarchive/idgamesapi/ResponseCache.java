@@ -1,5 +1,13 @@
 package nl.exl.doomidgamesarchive.idgamesapi;
 
+import android.content.Context;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager.NameNotFoundException;
+import android.util.Log;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -7,19 +15,11 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import android.content.Context;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager.NameNotFoundException;
-import android.util.Log;
-
 /**
  * A cache for IdgamesApi response objects. It stores serialized versions of response
  * objects on disk, while limiting the total size of the cache.
  */
-public class ResponseCache {
+class ResponseCache {
     // Maximum size of this cache, in bytes.
     private final static long MAX_SIZE = 1024 * 1024 * 5;
 
@@ -42,11 +42,11 @@ public class ResponseCache {
     private Map<String, File> mEntries;
 
     
-    public ResponseCache(Context context) {
+    ResponseCache(Context context) {
         mDirectory = context.getCacheDir();
         
         // Generate list of available entries and keep track of cache size.
-        mEntries = new HashMap<String, File>();
+        mEntries = new HashMap<>();
         for (File file : mDirectory.listFiles()) {
             if (file.getName().endsWith(CACHE_FILE_EXTENSION)) {
                 mEntries.put(file.getName(), file);
@@ -59,7 +59,7 @@ public class ResponseCache {
         }
         
         // Get app version code.
-        PackageInfo pInfo = null;
+        PackageInfo pInfo;
         try {
             pInfo = context.getPackageManager().getPackageInfo(context.getPackageName(), 0);
         } catch (NameNotFoundException e) {
@@ -82,12 +82,14 @@ public class ResponseCache {
      */
     private void clearCache(int newVersionCode) {
         // Clear the list of cache entries.
-        mEntries = new HashMap<String, File>();
+        mEntries = new HashMap<>();
 
         // Delete all files related to this cache.
         for (File file : mDirectory.listFiles()) {
             if (file.getName().endsWith(CACHE_FILE_EXTENSION) || file.getName().equals(CACHE_VERSION_FILE)) {
-                file.delete();
+                if (!file.delete()) {
+                    Log.w("ResponseCache", "Could not delete cache file.");
+                }
             }
         }
         
@@ -109,7 +111,6 @@ public class ResponseCache {
             writer.close();
         } catch (IOException e) {
             Log.e("ResponseCache", "Could not write version file: " + e.toString());
-            return;
         }
     }
     
@@ -125,8 +126,12 @@ public class ResponseCache {
         char[] versionBuffer = new char[(int)file.length()];
         try {
             reader = new FileReader(file);
-            reader.read(versionBuffer, 0, (int)file.length());
+            int readBytes = reader.read(versionBuffer, 0, (int)file.length());
             reader.close();
+
+            if (readBytes != file.length()) {
+                Log.w("ResponseCache", "Did not read entire cache file.");
+            }
         } catch (IOException e) {
             Log.e("ResponseCache", "Could not read cache version file: " + e.toString());
             return;
@@ -134,7 +139,7 @@ public class ResponseCache {
         String versionData = new String(versionBuffer);
         
         // Parse version file into JSON.
-        JSONObject version = null;
+        JSONObject version;
         try {
             version = new JSONObject(versionData);
         } catch (JSONException e) {
@@ -149,11 +154,11 @@ public class ResponseCache {
      * Will query the cache for a response to the request.
      * 
      * @param request The IdGamesApiRequest object to query for.
-     * @param maxage The maximum age of the response, in milliseconds.
+     * @param maxAge The maximum age of the response, in milliseconds.
      * @return An IdGamesApiResponse object if one was in the cache. null if the response is not in the cache or older than maxAge.
-     * @throws IOException 
+     * @throws IOException if any IO error occurred.
      */
-    public Response get(Request request, long maxAge) throws IOException {
+    Response get(Request request, long maxAge) throws IOException {
         String hash = request.getHash() + CACHE_FILE_EXTENSION;
         
         // Test whether the request exists in this cache.
@@ -168,8 +173,13 @@ public class ResponseCache {
             // Read response data into a string.
             char[] responseBuffer = new char[(int)entry.length()];
             FileReader reader = new FileReader(entry);
-            reader.read(responseBuffer, 0, (int)entry.length());
+            int bytesRead = reader.read(responseBuffer, 0, (int)entry.length());
             reader.close();
+
+            if (bytesRead != entry.length()) {
+                Log.w("ResponseCache", "Did not read entire response file from cache.");
+            }
+
             String responseData = new String(responseBuffer);
             
             // Create a new response with data from cache.
@@ -192,9 +202,9 @@ public class ResponseCache {
      * 
      * @param request The original request object that was used to generate the response.
      * @param response The response object generated from the request.
-     * @throws IOException 
+     * @throws IOException if an IO error occurred.
      */
-    public void put(Request request, Response response) throws IOException {
+    void put(Request request, Response response) throws IOException {
         // Create new cache file.
         String filePath = mDirectory.getPath() + "/" + request.getHash() + CACHE_FILE_EXTENSION;
         File entry = new File(filePath);
@@ -247,7 +257,9 @@ public class ResponseCache {
     private void removeEntry(File entry) {
         mCurrentSize -= entry.length();
         mEntries.remove(entry.getName());
-        entry.delete();
+        if (!entry.delete()) {
+            Log.w("ResponseCache", "Could not remove entry.");
+        }
     }
     
     /**
