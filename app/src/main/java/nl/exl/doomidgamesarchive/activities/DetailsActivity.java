@@ -19,6 +19,7 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.text.Html;
+import android.text.util.Linkify;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -132,7 +133,7 @@ public class DetailsActivity extends Activity {
             request.setMaxAge(Config.MAXAGE_DETAILS);
 
             // Run task to fetch file info.
-            ResponseTask responseTask = new ResponseTask(this) {
+            ResponseTask responseTask = new ResponseTask() {
                 @Override
                 protected void onPostExecute(Response response) {
                     if (response.getErrorMessage() == null) {
@@ -201,14 +202,14 @@ public class DetailsActivity extends Activity {
         }
         
         // Create individual sections.
-        createSection("Description", fileEntry.getDescription());
-        createSection("Author", fileEntry.getAuthor(), fileEntry.getEmail());
-        createSection("File", fileEntry.getFileName(), fileEntry.getFileSizeString(), fileEntry.getLocaleDate());
-        createSection("Credits", fileEntry.getCredits());
-        createSection("Based on", fileEntry.getBase());
-        createSection("Build time", fileEntry.getBuildTime());
-        createSection("Editors used", fileEntry.getEditorsUsed());
-        createSection("Bugs", fileEntry.getBugs());
+        createSection("Description", true, fileEntry.getDescription());
+        createSection("Author", true, fileEntry.getAuthor(), fileEntry.getEmail());
+        createSection("File", false, fileEntry.getFileName(), fileEntry.getFileSizeString(), fileEntry.getLocaleDate());
+        createSection("Credits", true, fileEntry.getCredits());
+        createSection("Based on", false, fileEntry.getBase());
+        createSection("Build time", false, fileEntry.getBuildTime());
+        createSection("Editors used", false, fileEntry.getEditorsUsed());
+        createSection("Bugs", false, fileEntry.getBugs());
         
         List<Review> reviews = fileEntry.getReviews();
         addHeader("Reviews", 0);
@@ -219,7 +220,7 @@ public class DetailsActivity extends Activity {
                 addReview(review);
             }
         } else {
-            addText("This file has no reviews.", R.layout.idgames_details_listtext);
+            addText("This file has no reviews.", R.layout.idgames_details_listtext, false);
         }
         
         // Store this info for use in other UI functions.
@@ -236,7 +237,7 @@ public class DetailsActivity extends Activity {
      * @param title The title of the section to create.
      * @param texts Variable number of strings to place under this section.
      */
-    private void createSection(String title, String... texts) {
+    private void createSection(String title, boolean parseLinks, String... texts) {
         List<String> items = new ArrayList<>();
         
         for (String text : texts) {
@@ -259,7 +260,7 @@ public class DetailsActivity extends Activity {
                 total.append(text);
             }
         }
-        addText(total.substring(2), R.layout.idgames_details_listtext);
+        addText(total.substring(2), R.layout.idgames_details_listtext, parseLinks);
     }
     
     /**
@@ -291,7 +292,7 @@ public class DetailsActivity extends Activity {
      * @param text The text to add.
      * @param resource The resource id of the layout to use.
      */
-    private void addText(String text, int resource) {
+    private void addText(String text, int resource, boolean parseLinks) {
         text = text.trim();
         
         // Do not create empty text layouts at all.
@@ -303,6 +304,11 @@ public class DetailsActivity extends Activity {
         View view = getLayoutInflater().inflate(resource, mLayout, false);
         
         TextView textView = (TextView)view.findViewById(R.id.IdgamesListText_Text);
+        if (parseLinks) {
+            textView.setAutoLinkMask(Linkify.EMAIL_ADDRESSES | Linkify.WEB_URLS);
+        } else {
+            textView.setAutoLinkMask(0);
+        }
         textView.setText(Html.fromHtml(text));
         
         mLayout.addView(view);
