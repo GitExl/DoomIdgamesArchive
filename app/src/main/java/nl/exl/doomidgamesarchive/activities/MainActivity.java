@@ -9,6 +9,7 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.http.HttpResponseCache;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
@@ -17,6 +18,9 @@ import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+
+import java.io.File;
+import java.io.IOException;
 
 import nl.exl.doomidgamesarchive.Config;
 import nl.exl.doomidgamesarchive.IdgamesListFragment;
@@ -48,7 +52,15 @@ public class MainActivity extends TabActivity implements IdgamesListener, OnShar
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        
+
+        try {
+            File httpCacheDir = new File(this.getCacheDir(), "https");
+            long httpCacheSize = 5 * 1024 * 1024;
+            HttpResponseCache.install(httpCacheDir, httpCacheSize);
+        } catch (IOException e) {
+            Log.i("MainActivity", "HTTP response cache installation failed: " + e);
+        }
+
         setContentView(R.layout.main);
         
         // Check for a network connection
@@ -275,6 +287,16 @@ public class MainActivity extends TabActivity implements IdgamesListener, OnShar
         }
         
         ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+
+        HttpResponseCache cache = HttpResponseCache.getInstalled();
+        if (cache != null) {
+            cache.flush();
+        }
     }
 
     @Override

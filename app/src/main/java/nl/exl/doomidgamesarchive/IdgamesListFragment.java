@@ -274,7 +274,7 @@ public class IdgamesListFragment extends Fragment implements OnItemClickListener
         mEntryAdapter.clear();
         
         // Construct a new IdgamesApi mTask.
-        mTask = new ResponseTask(this.getActivity()) {
+        mTask = new ResponseTask() {
             @Override
             protected void onPostExecute(Response response) {
                 String warning = response.getWarningType();
