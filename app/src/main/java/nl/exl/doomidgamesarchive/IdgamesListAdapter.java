@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import java.util.Comparator;
 import java.util.HashSet;
+import java.util.Locale;
 import java.util.Set;
 
 import nl.exl.doomidgamesarchive.idgamesapi.DirectoryEntry;
@@ -51,6 +52,7 @@ class IdgamesListAdapter extends ArrayAdapter<Entry> {
      * Helper class to keep view references in a view, preventing repeated lookups.
      */
     private static class ViewHolder {
+        TextView index;
         TextView title;
         TextView subtitle;
         TextView date;
@@ -66,7 +68,8 @@ class IdgamesListAdapter extends ArrayAdapter<Entry> {
 
     @Override
     public @NonNull View getView(int position, View convertView, @NonNull ViewGroup parent) {
-        ViewHolder holder = null;
+        Locale locale = this.getContext().getResources().getConfiguration().locale;
+        ViewHolder holder;
         
         // Create a new listitem View.
         if (convertView == null) {
@@ -74,6 +77,7 @@ class IdgamesListAdapter extends ArrayAdapter<Entry> {
             
             // Store holder class with references to child views.
             holder = new ViewHolder();
+            holder.index = (TextView)convertView.findViewById(R.id.IdgamesListItem_Index);
             holder.title = (TextView)convertView.findViewById(R.id.IdgamesListItem_Title);
             holder.subtitle = (TextView)convertView.findViewById(R.id.IdgamesListItem_Subtitle);
             holder.date = (TextView)convertView.findViewById(R.id.IdgamesListItem_Date);
@@ -84,11 +88,17 @@ class IdgamesListAdapter extends ArrayAdapter<Entry> {
         } else {
             holder = (ViewHolder)convertView.getTag();
         }
-        
+
+        // Hide views that might or might not receive content, if they exist at all.
         if (holder.date != null) {
             holder.date.setVisibility(View.GONE);
         }
-        holder.rating.setVisibility(View.GONE);
+        if (holder.index != null) {
+            holder.index.setVisibility(View.GONE);
+        }
+        if (holder.rating != null) {
+            holder.rating.setVisibility(View.GONE);
+        }
 
         // Get the IdgamesApi entry for this list position.
         Entry entry = this.getItem(position);
@@ -97,13 +107,11 @@ class IdgamesListAdapter extends ArrayAdapter<Entry> {
         }
         
         // Set the View's title.
-        String title = null;
         if (mAddListIndex) {
-            title = Integer.toString(position + 1) + ". " + entry.toString();
-        } else {
-            title = entry.toString();
+            holder.index.setText(String.format(locale, "%1$d", position + 1));
+            holder.index.setVisibility(View.VISIBLE);
         }
-        holder.title.setText(title);
+        holder.title.setText(entry.toString());
         
         // Fill view with directory info.
         if (entry instanceof DirectoryEntry) {
@@ -191,7 +199,7 @@ class IdgamesListAdapter extends ArrayAdapter<Entry> {
                     request.setMaxAge(Config.MAXAGE_NEWVOTES);
                     request.setFileId(voteEntry.getFileId());
                     
-                    responseTask = new ResponseTask(getContext()) {
+                    responseTask = new ResponseTask() {
                         @Override
                         protected void onPostExecute(Response response) {
                             // Update the corresponding vote with a new title.

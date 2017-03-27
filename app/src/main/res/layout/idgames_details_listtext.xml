@@ -15,6 +15,7 @@
         android:autoLink="web|email"
         android:lineSpacingMultiplier="1.2"
         android:text="@string/IdgamesListText_TextDefault"
-        android:textAppearance="?android:attr/textAppearanceSmall"></TextView>
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:textIsSelectable="true"></TextView>
 
 </RelativeLayout>

@@ -10,7 +10,7 @@
     <string name="IdgamesList_PathDefault"> / </string>
     <string name="IdgamesListItem_TitleDefault">Title</string>
     <string name="IdgamesListItem_SubTitleDefault">Subtitle</string>
-    <string name="IdgamesListItem_DateDefault">17&#8211;05&#8211;1987</string>
+    <string name="IdgamesListItem_DateDefault">17 may, 1987</string>
     <string name="IdgamesListHeader_TitleDefault">List Header Title</string>
     <string name="IdgamesDetails_TitleDefault">Title</string>
     <string name="IdgamesListText_TextDefault">Lorem ipsum.</string>
