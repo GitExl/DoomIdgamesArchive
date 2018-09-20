@@ -104,7 +104,7 @@ class ResponseParser {
         
         
         @Override
-        public void startDocument() throws SAXException {
+        public void startDocument() {
             mResponse = new Response();
         }
         
@@ -117,7 +117,7 @@ class ResponseParser {
         }
         
         @Override
-        public void startElement(String namespaceURI, String localName, String qName, Attributes atts) throws SAXException {
+        public void startElement(String namespaceURI, String localName, String qName, Attributes atts) {
             if (localName.equals("idgames-response")) {
                 mResponse.setVersion(Float.parseFloat(atts.getValue("version")));
             
@@ -163,7 +163,7 @@ class ResponseParser {
         }
         
         @Override
-        public void endElement(String namespaceURI, String localName, String qName) throws SAXException {
+        public void endElement(String namespaceURI, String localName, String qName) {
             // Messages.
             if (mState == STATE_ERROR && localName.equals("error")) {
                 mState = STATE_UNKNOWN;

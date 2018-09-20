@@ -87,13 +87,13 @@ public class DetailsActivity extends Activity {
         setContentView(R.layout.activity_idgames_details);
 
         // Get mLayout references.
-        mLayout = (LinearLayout)findViewById(R.id.IdgamesDetails_Layout);
-        mTitleLayout = (RelativeLayout)findViewById(R.id.IdgamesDetails_TitleLayout);
-        mTitleText = (TextView)findViewById(R.id.IdgamesDetails_Title);
-        mRatingView = (RatingView)findViewById(R.id.IdgamesDetails_Rating);
-        mVoteCount = (TextView)findViewById(R.id.IdgamesDetails_VoteCount);
+        mLayout = findViewById(R.id.IdgamesDetails_Layout);
+        mTitleLayout = findViewById(R.id.IdgamesDetails_TitleLayout);
+        mTitleText = findViewById(R.id.IdgamesDetails_Title);
+        mRatingView = findViewById(R.id.IdgamesDetails_Rating);
+        mVoteCount = findViewById(R.id.IdgamesDetails_VoteCount);
         
-        mProgress = (ImageView)findViewById(R.id.IdgamesDetails_Progress);
+        mProgress = findViewById(R.id.IdgamesDetails_Progress);
         mProgress.setBackgroundResource(R.drawable.cacodemon);
         
         // Restore state from a saved instance.
@@ -212,7 +212,7 @@ public class DetailsActivity extends Activity {
         createSection("Bugs", false, fileEntry.getBugs());
         
         List<Review> reviews = fileEntry.getReviews();
-        addHeader("Reviews", 0);
+        addHeader("Reviews");
         if (reviews.size() > 0) {
             Review review;
             for (int i = 0; i < reviews.size(); i++) {
@@ -250,7 +250,7 @@ public class DetailsActivity extends Activity {
             return;
         }
         
-        addHeader(title, 0);
+        addHeader(title);
         
         StringBuilder total = new StringBuilder();
         for (String text : items) {
@@ -269,17 +269,15 @@ public class DetailsActivity extends Activity {
      * @param title The title to give this header.
      * @param resource The resource ID to construct this header from. An ID of 0 will use the default idgames_details_listheader.
      */
-    private void addHeader(String title, int resource) {
+    private void addHeader(String title) {
         // Do not create empty headers at all.
         if (title == null || title.length() == 0) {
             return;
         }
         
         // Get resource ID to inflate.
-        if (resource == 0) {
-            resource = R.layout.idgames_details_listheader;
-        }
-        
+        int resource = R.layout.idgames_details_listheader;
+
         // Build view.
         View view = getLayoutInflater().inflate(resource, mLayout, false);
         ((TextView)view.findViewById(R.id.IdgamesListHeader_Title)).setText(title);
@@ -303,7 +301,7 @@ public class DetailsActivity extends Activity {
         // Build view.
         View view = getLayoutInflater().inflate(resource, mLayout, false);
         
-        TextView textView = (TextView)view.findViewById(R.id.IdgamesListText_Text);
+        TextView textView = view.findViewById(R.id.IdgamesListText_Text);
         if (parseLinks) {
             textView.setAutoLinkMask(Linkify.EMAIL_ADDRESSES | Linkify.WEB_URLS);
         } else {
@@ -317,9 +315,9 @@ public class DetailsActivity extends Activity {
     private void addReview(Review review) {
         View view = getLayoutInflater().inflate(R.layout.idgames_details_listreview, mLayout, false);
         
-        TextView textView = (TextView)view.findViewById(R.id.IdgamesListReview_Text);
-        TextView usernameView = (TextView)view.findViewById(R.id.IdgamesListReview_Username);
-        RatingView ratingView = (RatingView)view.findViewById(R.id.IdgamesListReview_Rating);
+        TextView textView = view.findViewById(R.id.IdgamesListReview_Text);
+        TextView usernameView = view.findViewById(R.id.IdgamesListReview_Username);
+        RatingView ratingView = view.findViewById(R.id.IdgamesListReview_Rating);
         
         textView.setText(Html.fromHtml(review.getText()));
         usernameView.setText(review.getUsername());

@@ -77,11 +77,11 @@ class IdgamesListAdapter extends ArrayAdapter<Entry> {
             
             // Store holder class with references to child views.
             holder = new ViewHolder();
-            holder.index = (TextView)convertView.findViewById(R.id.IdgamesListItem_Index);
-            holder.title = (TextView)convertView.findViewById(R.id.IdgamesListItem_Title);
-            holder.subtitle = (TextView)convertView.findViewById(R.id.IdgamesListItem_Subtitle);
-            holder.date = (TextView)convertView.findViewById(R.id.IdgamesListItem_Date);
-            holder.rating = (RatingView)convertView.findViewById(R.id.IdgamesListItem_Rating);
+            holder.index = convertView.findViewById(R.id.IdgamesListItem_Index);
+            holder.title = convertView.findViewById(R.id.IdgamesListItem_Title);
+            holder.subtitle = convertView.findViewById(R.id.IdgamesListItem_Subtitle);
+            holder.date = convertView.findViewById(R.id.IdgamesListItem_Date);
+            holder.rating = convertView.findViewById(R.id.IdgamesListItem_Rating);
             convertView.setTag(holder);
             
         // Reuse an existing listitem View.

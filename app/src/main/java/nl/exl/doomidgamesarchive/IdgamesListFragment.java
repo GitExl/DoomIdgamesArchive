@@ -116,18 +116,18 @@ public class IdgamesListFragment extends Fragment implements OnItemClickListener
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_idgames_list, container, false);
         
-        mProgress = (ImageView)view.findViewById(R.id.IdgamesList_Progress);
+        mProgress = view.findViewById(R.id.IdgamesList_Progress);
         mProgress.setBackgroundResource(R.drawable.cacodemon);
         
-        mMessageContainer = (RelativeLayout)view.findViewById(R.id.IdgamesList_MessageContainer);
-        mMessage = (TextView)view.findViewById(R.id.IdgamesList_Message);
+        mMessageContainer = view.findViewById(R.id.IdgamesList_MessageContainer);
+        mMessage = view.findViewById(R.id.IdgamesList_Message);
 
-        mPathText = (TextView)view.findViewById(R.id.IdgamesList_Path);
-        mBrowseTools = (RelativeLayout)view.findViewById(R.id.IdgamesList_BrowseTools);
+        mPathText = view.findViewById(R.id.IdgamesList_Path);
+        mBrowseTools = view.findViewById(R.id.IdgamesList_BrowseTools);
         
-        mSearchField = (AutoCompleteTextView)view.findViewById(R.id.IdgamesList_SearchField);
-        mSearchSpinner = (Spinner)view.findViewById(R.id.IdgamesList_SearchSpinner);
-        mSearchTools = (RelativeLayout)view.findViewById(R.id.IdgamesList_SearchTools); 
+        mSearchField = view.findViewById(R.id.IdgamesList_SearchField);
+        mSearchSpinner = view.findViewById(R.id.IdgamesList_SearchSpinner);
+        mSearchTools = view.findViewById(R.id.IdgamesList_SearchTools);
         
         // Set up search field actions.
         mSearchField.setOnEditorActionListener(new TextView.OnEditorActionListener() {
@@ -184,7 +184,7 @@ public class IdgamesListFragment extends Fragment implements OnItemClickListener
         
         // Set up entry ListView and adapter.
         mEntryAdapter = new IdgamesListAdapter(this.getActivity());
-        mEntryListView = (ListView)view.findViewById(R.id.IdgamesList_List);
+        mEntryListView = view.findViewById(R.id.IdgamesList_List);
         mEntryListView.setAdapter(mEntryAdapter);
         mEntryListView.setOnItemClickListener(this);
         

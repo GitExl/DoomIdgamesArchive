@@ -34,7 +34,7 @@ public class Response {
     
     
     Response() {
-        mEntries = new ArrayList<Entry>();
+        mEntries = new ArrayList<>();
     }
     
     /**

@@ -75,7 +75,7 @@ public class MainActivity extends TabActivity implements IdgamesListener, OnShar
         SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
         sharedPrefs.registerOnSharedPreferenceChangeListener(this);
     }
-    
+
     @Override
     public void onBackPressed() {
         // Find the currently active fragment.
@@ -229,7 +229,7 @@ public class MainActivity extends TabActivity implements IdgamesListener, OnShar
                     
         // Display the details activity.
         } else if (entry instanceof FileEntry || entry instanceof VoteEntry) {
-            int id = -1;
+            int id;
             
             if (entry instanceof FileEntry) {
                 FileEntry fileEntry = (FileEntry)entry;
@@ -276,16 +276,16 @@ public class MainActivity extends TabActivity implements IdgamesListener, OnShar
     @Override
     public void onTabSelected(Tab tab, FragmentTransaction ft) {
         mSelectedTabTag = tab.getTag();
-        
+
         FragmentManager manager = getSupportFragmentManager();
         Fragment fragment = manager.findFragmentByTag(mSelectedTabTag);
-        
+
         if (fragment == null) {
             ft.add(android.R.id.tabcontent, tab.getFragment(), mSelectedTabTag);
         } else {
             ft.attach(tab.getFragment());
         }
-        
+
         ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
     }
 
