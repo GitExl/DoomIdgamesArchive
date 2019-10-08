@@ -23,5 +23,5 @@ public final class Config {
     public static final int CATEGORY_DEFAULT = Request.CATEGORY_FILENAME;
     
     // Default HTTP idgames mirror URL.
-    public static final String IDGAMES_MIRROR_DEFAULT = "http://ftp.ntua.gr/pub/vendors/idgames/";
+    public static final String IDGAMES_MIRROR_DEFAULT = "https://www.quaddicted.com/files/idgames/";
 }

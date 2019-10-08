@@ -2,16 +2,14 @@
 <resources>
 
     <string-array name="download_mirrors">
-        <item>Greece (NTUA)</item>
-        <item>Texas (Mancubus.net)</item>
         <item>Germany (Quaddicted)</item>
         <item>US, Virginia (Gamers.org)</item>
+        <item>US, New York (youfailit.net)</item>
     </string-array>
     <string-array name="download_mirrors_values">
-        <item>http://ftp.ntua.gr/pub/vendors/idgames/</item>
-        <item>http://ftp.mancubus.net/pub/idgames/</item>
         <item>https://www.quaddicted.com/files/idgames/</item>
         <item>http://www.gamers.org/pub/idgames/</item>
+        <item>http://youfailit.net/pub/idgames/</item>
     </string-array>
     
     <string-array name="list_limits">
