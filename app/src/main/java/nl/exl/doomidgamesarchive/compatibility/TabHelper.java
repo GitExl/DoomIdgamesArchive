@@ -1,7 +1,7 @@
 package nl.exl.doomidgamesarchive.compatibility;
 
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
+import androidx.fragment.app.Fragment;
 
 /**
  * Abstract class of a tab helper.
