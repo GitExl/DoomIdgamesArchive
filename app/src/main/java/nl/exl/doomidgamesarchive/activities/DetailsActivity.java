@@ -373,6 +373,7 @@ public class DetailsActivity extends Activity {
         request.setTitle(mFileName);
         request.setDescription(mFileTitle);
         request.setAllowedOverRoaming(false);
+        request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
 
         try {
             request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, mFileName);
