@@ -11,6 +11,7 @@ import nl.exl.doomidgamesarchive.Config;
  * Generates an Idgames API request URL from an action and a number of parameters.  
  */
 public class Request {
+
     // The URL of the Idgames API
     private static final String API_URL = "https://www.doomworld.com/idgames/api/api.php?";
     
@@ -61,9 +62,9 @@ public class Request {
      */
     public void restoreFromBundle(Bundle bundle) {
         mAction = bundle.getInt("action", -1);
-        mDirectoryName = getBundleString(bundle, "directoryName", null);
+        mDirectoryName = bundle.getString("directoryName");
         mFileId = bundle.getInt("fileId", -1);
-        mQuery = getBundleString(bundle, "query", null);
+        mQuery = bundle.getString("query");
         mCategory = bundle.getInt("category", Config.CATEGORY_DEFAULT);
         mLimit = bundle.getInt("limit", Config.LIMIT_DEFAULT);
         mMaxAge = bundle.getLong("maxAge", Config.MAXAGE_DEFAULT);
@@ -83,26 +84,7 @@ public class Request {
         out.putInt("limit", mLimit);
         out.putLong("maxAge", mMaxAge);
     }
-    
-    /**
-     * Returns a string from a Bundle object. Supports returning a default value.
-     * 
-     * @param bundle The Bundle to return a string from.
-     * @param key The key in the bundle.
-     * @param defaultValue The default value if key does not exist.
-     *
-     * @return Either the default value if the key did not exist or the key.
-     */
-    private String getBundleString(Bundle bundle, String key, String defaultValue) {
-        String value = bundle.getString(key);
-        
-        if (value == null) {
-            return defaultValue;
-        } else {
-            return value;
-        }
-    }
-    
+
     public void setAction(int action) {
         this.mAction = action;
     }
@@ -126,11 +108,7 @@ public class Request {
     public void setMaxAge(long maxAge) {
         this.mMaxAge = maxAge;
     }
-    
-    long getMaxAge() {
-        return this.mMaxAge;
-    }
-    
+
     public String getDirectoryName() {
         return mDirectoryName;
     }
@@ -142,17 +120,7 @@ public class Request {
     public int getAction() {
         return mAction;
     }
-    
-    /**
-     * Returns a hash string that describes this request. The hash is based on the URL that
-     * this request generates. 
-     * 
-     * @return The hash string.
-     */
-    String getHash() {
-        return "request_" + getURL().hashCode();
-    }
-    
+
     /**
      * Returns the HTTP URL to execute for this request.
      * 
@@ -165,7 +133,7 @@ public class Request {
             // Action for retrieving the contents of a directory.
             case GET_CONTENTS:
                 builder.appendQueryParameter("action", "getcontents");
-                if (mDirectoryName == null || mDirectoryName.equals(""))
+                if (mDirectoryName == null || mDirectoryName.isEmpty())
                     builder.appendQueryParameter("id", "0");
                 else
                     builder.appendQueryParameter("name", mDirectoryName);

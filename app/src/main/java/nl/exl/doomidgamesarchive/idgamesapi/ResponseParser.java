@@ -19,12 +19,12 @@ import javax.xml.parsers.SAXParserFactory;
  * Parses XML from an input stream into an Idgames mResponse object.
  */
 class ResponseParser {
+
     // The XML mReader object.
     private XMLReader mReader;
     
     // The mHandler for SAX responses.
     private ResponseHandler mHandler; 
-    
 
     ResponseParser() {
         try {
@@ -57,8 +57,8 @@ class ResponseParser {
         }
     }
     
-    void setContainsSingleFile(boolean containsSingleFile) {
-        mHandler.setContainsSingleFile(containsSingleFile);
+    void setContainsSingleFile() {
+        mHandler.setContainsSingleFile();
     }
     
     Response getResponse() {
@@ -112,8 +112,8 @@ class ResponseParser {
             return mResponse;
         }
         
-        void setContainsSingleFile(boolean containsSingleFile) {
-            mContainsSingleFile = containsSingleFile;
+        void setContainsSingleFile() {
+            mContainsSingleFile = true;
         }
         
         @Override
@@ -216,7 +216,7 @@ class ResponseParser {
         }
         
         @Override
-        public void characters(char ch[], int start, int length) {
+        public void characters(char[] ch, int start, int length) {
             if (mElement == null)
                 return;
             
@@ -224,48 +224,43 @@ class ResponseParser {
             
             // File or content file (single file) entry.
             if (mState == STATE_FILE) {
-                if (mElement.equals("id"))
+                if (mElement.equals("id")) {
                     mFileEntry.setId(Integer.parseInt(chars));
-                else if (mElement.equals("title"))
+                } else if (mElement.equals("title")) {
                     mFileEntry.addTitle(chars);
-                else if (mElement.equals("dir"))
+                } else if (mElement.equals("dir")) {
                     mFileEntry.addFilePath(chars);
-                else if (mElement.equals("filename"))
+                } else if (mElement.equals("filename")) {
                     mFileEntry.addFileName(chars);
-                else if (mElement.equals("size"))
+                } else if (mElement.equals("size")) {
                     mFileEntry.setFileSize(Integer.parseInt(chars));
-                else if (mElement.equals("age"))
-                    mFileEntry.setTimeStamp(Integer.parseInt(chars));
-                else if (mElement.equals("date"))
+                } else if (mElement.equals("date")) {
                     mFileEntry.addDate(chars);
-                else if (mElement.equals("author"))
+                } else if (mElement.equals("author")) {
                     mFileEntry.addAuthor(chars);
-                else if (mElement.equals("email"))
+                } else if (mElement.equals("email")) {
                     mFileEntry.addEmail(chars);
-                else if (mElement.equals("description"))
+                } else if (mElement.equals("description")) {
                     mFileEntry.addDescription(chars);
-                else if (mElement.equals("rating"))
+                } else if (mElement.equals("rating")) {
                     mFileEntry.setRating(Double.parseDouble(chars));
-                else if (mElement.equals("votes"))
+                } else if (mElement.equals("votes")) {
                     mFileEntry.setVoteCount(Integer.parseInt(chars));
-                else if (mElement.equals("url"))
-                    mFileEntry.addUrl(chars);
-                else if (mElement.equals("idgamesurl"))
-                    mFileEntry.addIdgamesUrl(chars);
-                
+
                 // Single file tags only.
-                else if (mElement.equals("credits"))
+                } else if (mElement.equals("credits")) {
                     mFileEntry.addCredits(chars);
-                else if (mElement.equals("base"))
+                } else if (mElement.equals("base")) {
                     mFileEntry.addBase(chars);
-                else if (mElement.equals("buildtime"))
+                } else if (mElement.equals("buildtime")) {
                     mFileEntry.addBuildTime(chars);
-                else if (mElement.equals("editors"))
+                } else if (mElement.equals("editors")) {
                     mFileEntry.addEditorsUsed(chars);
-                else if (mElement.equals("bugs"))
+                } else if (mElement.equals("bugs")) {
                     mFileEntry.addBugs(chars);
-                else if (mElement.equals("textfile"))
+                } else if (mElement.equals("textfile")) {
                     mTextFileContents.append(chars);
+                }
             }
 
             // Review.
@@ -280,41 +275,37 @@ class ResponseParser {
                 
             // Vote.
             } else if (mState == STATE_VOTE) {
-                if (mElement.equals("id"))
+                if (mElement.equals("id")) {
                     mVoteEntry.setId(Integer.parseInt(chars));
-                else if (mElement.equals("file"))
+                } else if (mElement.equals("file")) {
                     mVoteEntry.setFileId(Integer.parseInt(chars));
-                else if (mElement.equals("reviewtext"))
+                } else if (mElement.equals("reviewtext")) {
                     mVoteEntry.addReviewText(chars);
-                else if (mElement.equals("title"))
+                } else if (mElement.equals("title")) {
                     mVoteEntry.addTitle(chars);
-                else if (mElement.equals("author"))
-                    mVoteEntry.addAuthor(chars);
-                else if (mElement.equals("description"))
-                    mVoteEntry.addDescription(chars);
-                else if (mElement.equals("rating"))
+                } else if (mElement.equals("rating")) {
                     mVoteEntry.setRating(Double.parseDouble(chars));
+                }
                 
             // Directory.
             } else if (mState == STATE_DIRECTORY) {
-                if (mElement.equals("id"))
+                if (mElement.equals("id")) {
                     mDirectoryEntry.setId(Integer.parseInt(chars));
-                else if (mElement.equals("name"))
+                } else if (mElement.equals("name")) {
                     mDirectoryEntry.addName(chars);
+                }
 
             // Error.
             } else if (mState == STATE_ERROR) {
-                if (mElement.equals("type"))
-                    mResponse.setErrorType(chars);
-                else if (mElement.equals("warning"))
+                if (mElement.equals("warning")) {
                     mResponse.setErrorMessage(chars);
+                }
                 
             // Warning.
             } else if (mState == STATE_WARNING) {
-                if (mElement.equals("type"))
+                if (mElement.equals("type")) {
                     mResponse.setWarningType(chars);
-                else if (mElement.equals("warning"))
-                    mResponse.setWarningMessage(chars);
+                }
             }
         }
     }

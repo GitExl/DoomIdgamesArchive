@@ -2,7 +2,6 @@ package nl.exl.doomidgamesarchive.activities;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
-import android.annotation.TargetApi;
 import android.app.DownloadManager;
 import android.content.Context;
 import android.content.Intent;
@@ -45,7 +44,6 @@ import nl.exl.doomidgamesarchive.responsetasks.FileInfoFetchTask;
  * Displays details from an IdgamesApi file.
  * Builds a number of views to form a custom mLayout.
  */
-@TargetApi(Build.VERSION_CODES.HONEYCOMB)
 public class DetailsActivity extends AppCompatActivity {
 
     // Activity states for UI choices.
@@ -340,6 +338,8 @@ public class DetailsActivity extends AppCompatActivity {
      */
     @SuppressLint("SdCardPath")
     private void downloadFile() {
+
+        // Ask for permission if needed.
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             int permission = ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE);
             if (permission != PackageManager.PERMISSION_GRANTED) {

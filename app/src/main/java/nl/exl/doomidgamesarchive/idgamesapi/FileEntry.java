@@ -2,10 +2,6 @@ package nl.exl.doomidgamesarchive.idgamesapi;
 
 import android.util.Log;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -14,54 +10,50 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
+import androidx.annotation.NonNull;
+
 /**
  * An IdgamesApi file entry. Contains a title, author, description, rating and more.
  */
 public class FileEntry extends Entry {
+
     // File database id.
     private int mId = -1;
     
     // Title of this entry.
-    private String mTitle;
+    private String mTitle = "";
     
     // The author of this entry.
-    private String mAuthor;
+    private String mAuthor = "";
     
     // The email of this entry's author.
-    private String mEmail;
+    private String mEmail = "";
     
     // A description of this entry.
-    private String mDescription;
+    private String mDescription = "";
     
     // File info of this entry.
-    private String mFileName;
-    private String mFilePath;
+    private String mFileName = "";
+    private String mFilePath = "";
     private int mFileSize;
     
-    // Temporal info of this entry. mDate can be null.
-    private int mTimestamp;
-    private String mDate;
-    private String mLocaleDate;
+    // Temporal info of this entry.
+    private String mDate = "";
+    private String mLocaleDate = "";
     
     // Rating info of this entry.
     private double mRating;
     private int mVoteCount;
-    
-    // The URL at which to view this entry. Points to doomworld.com/idgames
-    private String mUrl;
-    
-    // The idgames protocol URL of this entry.
-    private String mIdgamesUrl;
 
     // Miscellaneous info of this entry.
-    private String mCredits;
-    private String mBase;
-    private String mBuildTime;
-    private String mEditorsUsed;
-    private String mBugs;
+    private String mCredits = "";
+    private String mBase = "";
+    private String mBuildTime = "";
+    private String mEditorsUsed = "";
+    private String mBugs = "";
     
     // The complete contents of the text file describing this entry.
-    private String mTextFileContents;
+    private String mTextFileContents = "";
     
     // List of associated reviews
     private List<Review> reviews;
@@ -70,164 +62,41 @@ public class FileEntry extends Entry {
     FileEntry() {
         reviews = new ArrayList<>();
     }
-    
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void toJSON(JSONObject obj) throws JSONException {
-        obj.put("id", mId);
-        
-        obj.put("title", mTitle);
-        obj.put("author", mAuthor);
-        obj.put("description", mDescription);
-        obj.put("email", mEmail);
-        
-        obj.put("fileName", mFileName);
-        obj.put("filePath", mFilePath);
-        obj.put("fileSize", mFileSize);
-        
-        obj.put("timestamp", mTimestamp);
-        obj.put("date", mDate);
-        
-        obj.put("rating", mRating);
-        obj.put("voteCount", mVoteCount);
-        
-        obj.put("url", mUrl);
-        obj.put("idgamesUrl", mIdgamesUrl);
-        
-        obj.put("credits", mCredits);
-        obj.put("base", mBase);
-        obj.put("buildTime", mBuildTime);
-        obj.put("editorsUsed", mEditorsUsed);
-        obj.put("bugs", mBugs);
-        
-        obj.put("textFileContents", mTextFileContents);
-        
-        // Store reviews.
-        JSONObject reviewObj;
-        JSONArray reviewArray = new JSONArray();
-        
-        for (Review review : reviews) {
-            reviewObj = new JSONObject();
-            review.toJSON(reviewObj);
-            reviewArray.put(reviewObj);
-        }
-        obj.put("reviews", reviewArray);
-    }
-    
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void fromJSON(JSONObject obj) throws JSONException {
-        mId = obj.getInt("id");
-        
-        mTitle = obj.optString("title", null);
-        mAuthor = obj.optString("author", null);
-        mDescription = obj.optString("description", null);
-        mEmail = obj.optString("email", null);
-        
-        mFileName = obj.optString("fileName", null);
-        mFilePath = obj.optString("filePath", null);
-        mFileSize = obj.optInt("fileSize");
-        
-        mTimestamp = obj.optInt("timestamp");
-        mDate = obj.optString("date", null);
-        
-        mRating = obj.optDouble("rating");
-        mVoteCount = obj.optInt("voteCount");
-        
-        mUrl = obj.optString("url", null);
-        mIdgamesUrl = obj.optString("idgamesUrl", null);
-        
-        mCredits = obj.optString("credits", null);
-        mBase = obj.optString("base", null);
-        mBuildTime = obj.optString("buildTime", null);
-        mEditorsUsed = obj.optString("editorsUsed", null);
-        mBugs = obj.optString("bugs", null);
-        
-        mTextFileContents = obj.optString("textFileContents", null);
-        
-        // Read reviews.
-        JSONObject reviewObj;
-        JSONArray reviewArray = obj.optJSONArray("reviews");
-        for (int i = reviewArray.length() - 1; i >= 0; i--) {
-            reviewObj = reviewArray.getJSONObject(i);
-            
-            Review review = new Review();
-            review.fromJSON(reviewObj);
-            
-            reviews.add(review);
-        }
-    }
-    
+
     public void setId(int id) {
         mId = id;
     }
 
     void addTitle(String title) {
-        if (mTitle == null) {
-            mTitle = title;
-        } else {
-            mTitle += title;
-        }
+        mTitle += title;
     }
 
     void addAuthor(String author) {
-        if (mAuthor == null) {
-            mAuthor = author;
-        } else {
-            mAuthor += author;
-        }
+        mAuthor += author;
     }
 
     void addDescription(String description) {
-        if (mDescription == null) {
-            mDescription = description;
-        } else {
-            mDescription += description;
-        }
+        mDescription += description;
     }
 
     void addEmail(String email) {
-        if (mEmail == null) {
-            mEmail = email;
-        } else {
-            mEmail += email;
-        }
+        mEmail += email;
     }
 
     void addFileName(String fileName) {
-        if (mFileName == null) {
-            mFileName = fileName;
-        } else {
-            mFileName += fileName;
-        }
+        mFileName += fileName;
     }
 
     void addFilePath(String filePath) {
-        if (mFilePath == null) {
-            mFilePath = filePath;
-        } else {
-            mFilePath += filePath;
-        }
+        mFilePath += filePath;
     }
 
     void setFileSize(int fileSize) {
         mFileSize = fileSize;
     }
 
-    void setTimeStamp(int timeStamp) {
-        mTimestamp = timeStamp;
-    }
-
     void addDate(String date) {
-        if (mDate == null) {
-            mDate = date;
-        } else {
-            mDate += date;
-        }
+        mDate += date;
     }
     
     public void setRating(double rating) {
@@ -238,68 +107,28 @@ public class FileEntry extends Entry {
         mVoteCount = voteCount;
     }
 
-    void addUrl(String url) {
-        if (mUrl == null) {
-            mUrl = url;
-        } else {
-            mUrl += url;
-        }
-    }
-
-    void addIdgamesUrl(String idgamesUrl) {
-        if (mIdgamesUrl == null) {
-            mIdgamesUrl = idgamesUrl;
-        } else {
-            mIdgamesUrl += idgamesUrl;
-        }
-    }
-
     void addCredits(String credits) {
-        if (mCredits == null) {
-            mCredits = credits;
-        } else {
-            mCredits += credits;
-        }
+        mCredits += credits;
     }
 
     void addBase(String base) {
-        if (mBase == null) {
-            mBase = base;
-        } else {
-            mBase += base;
-        }
+        mBase += base;
     }
 
     void addBuildTime(String buildTime) {
-        if (mBuildTime == null) {
-            mBuildTime = buildTime;
-        } else {
-            mBuildTime += buildTime;
-        }
+        mBuildTime += buildTime;
     }
 
     void addEditorsUsed(String editorsUsed) {
-        if (mEditorsUsed == null) {
-            mEditorsUsed = editorsUsed;
-        } else {
-            mEditorsUsed += editorsUsed;
-        }
+        mEditorsUsed += editorsUsed;
     }
 
     void addBugs(String bugs) {
-        if (mBugs == null) {
-            mBugs = bugs;
-        } else {
-            mBugs += bugs;
-        }
+        mBugs += bugs;
     }
 
     void addTextFileContents(String textFileContents) {
-        if (mTextFileContents == null) {
-            mTextFileContents = textFileContents;
-        } else {
-            mTextFileContents += textFileContents;
-        }
+        mTextFileContents += textFileContents;
     }
 
     void addReview(Review review) {
@@ -320,7 +149,7 @@ public class FileEntry extends Entry {
      * @return "Unknown" if there is no author name, the author name otherwise.
      */
     public String getAuthor() {
-        if (mAuthor == null || mAuthor.length() == 0) {
+        if (mAuthor.isEmpty()) {
             return "Unknown";
         } else {
             return mAuthor;
@@ -369,8 +198,8 @@ public class FileEntry extends Entry {
      * @return The locale formatted date of this entry.
      */
     public String getLocaleDate() {
-        if (mDate == null) {
-            return null;
+        if (mDate.isEmpty()) {
+            return "";
         }
         
         // Parse the date string and construct a localized date string.
@@ -429,10 +258,13 @@ public class FileEntry extends Entry {
     
     /**
      * Returns this entry's title. If the entry has no title, the filename is returned instead.
+     *
+     * @return String
      */
+    @NonNull
     public String toString() {
-        if (mTitle == null || mTitle.length() == 0) {
-            if (mFileName == null || mFileName.length() == 0) {
+        if (mTitle.isEmpty()) {
+            if (mFileName.isEmpty()) {
                 return "Unknown";
             } else {
                 return mFileName;

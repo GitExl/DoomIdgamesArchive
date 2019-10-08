@@ -40,7 +40,6 @@ public class ResponseTask extends AsyncTask<Request, Void, Response> {
         // Return an error message in the response object if anything went wrong.
         if (failure != null) {
             response = new Response();
-            response.setErrorType("Exception");
             response.setErrorMessage(failure);
 
             return response;
@@ -49,7 +48,7 @@ public class ResponseTask extends AsyncTask<Request, Void, Response> {
         // Attempt to parse the response XML into a response object.
         ResponseParser responseParser = new ResponseParser();
         if (request.getAction() == Request.GET_FILE) {
-            responseParser.setContainsSingleFile(true);
+            responseParser.setContainsSingleFile();
         }
         responseParser.parse(content);
         response = responseParser.getResponse();
@@ -57,7 +56,6 @@ public class ResponseTask extends AsyncTask<Request, Void, Response> {
         // If this task was cancelled, abort here so that any cancelled response does not end up in the cach.e
         if (isCancelled()) {
             response = new Response();
-            response.setErrorType("Cancelled");
             response.setErrorMessage("ResponseTask was cancelled.");
 
             return response;
