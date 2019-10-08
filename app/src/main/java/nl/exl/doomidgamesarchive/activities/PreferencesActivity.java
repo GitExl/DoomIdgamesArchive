@@ -1,17 +1,19 @@
 package nl.exl.doomidgamesarchive.activities;
 
 import android.os.Bundle;
-import android.preference.PreferenceActivity;
 
+import androidx.appcompat.app.AppCompatActivity;
 import nl.exl.doomidgamesarchive.R;
+import nl.exl.doomidgamesarchive.fragments.PreferencesFragment;
 
-public class PreferencesActivity extends PreferenceActivity {
+public class PreferencesActivity extends AppCompatActivity {
 
-    // Since we target pre-Honeycomb APIs as well, we need to continue to use a
-    // PreferenceActivity instead of a PreferenceFragment.
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        addPreferencesFromResource(R.xml.preferences);
+        getSupportFragmentManager()
+            .beginTransaction()
+            .replace(R.id.Preferences, new PreferencesFragment())
+            .commit();
     }
 }

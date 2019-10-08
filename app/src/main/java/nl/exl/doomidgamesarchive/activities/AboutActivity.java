@@ -1,10 +1,11 @@
 package nl.exl.doomidgamesarchive.activities;
 
-import nl.exl.doomidgamesarchive.R;
-import android.app.Activity;
 import android.os.Bundle;
 
-public class AboutActivity extends Activity {
+import androidx.appcompat.app.AppCompatActivity;
+import nl.exl.doomidgamesarchive.R;
+
+public class AboutActivity extends AppCompatActivity {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {

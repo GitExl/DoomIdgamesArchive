@@ -1,25 +1,25 @@
 package nl.exl.doomidgamesarchive.compatibility;
 
-import android.app.ActionBar;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentTransaction;
 
 
 class TabImpl extends Tab implements ActionBar.TabListener {
     private ActionBar.Tab mTab;
-    private FragmentActivity mActivity;
+    private AppCompatActivity mActivity;
     private Tab.TabListener mListener;
     private Fragment mFragment;
     private String mTag;
 
 
-    TabImpl(FragmentActivity activity, Fragment fragment, String tag) {
+    TabImpl(AppCompatActivity activity, Fragment fragment, String tag) {
         mActivity = activity;
         mFragment = fragment;
         mTag = tag;
 
-        mTab = activity.getActionBar().newTab();
+        mTab = activity.getSupportActionBar().newTab();
         mTab.setTabListener(this);
     }
 
@@ -64,7 +64,7 @@ class TabImpl extends Tab implements ActionBar.TabListener {
     }
 
     @Override
-    public void onTabReselected(android.app.ActionBar.Tab tab, android.app.FragmentTransaction f) {
+    public void onTabReselected(ActionBar.Tab tab, FragmentTransaction f) {
         FragmentTransaction ft = mActivity.getSupportFragmentManager().beginTransaction();
         ft.disallowAddToBackStack();
         mListener.onTabReselected(this, ft);
@@ -72,7 +72,7 @@ class TabImpl extends Tab implements ActionBar.TabListener {
     }
 
     @Override
-    public void onTabSelected(android.app.ActionBar.Tab tab, android.app.FragmentTransaction f) {
+    public void onTabSelected(ActionBar.Tab tab, FragmentTransaction f) {
         FragmentTransaction ft = mActivity.getSupportFragmentManager().beginTransaction();
         ft.disallowAddToBackStack();
         mListener.onTabSelected(this, ft);
@@ -80,7 +80,7 @@ class TabImpl extends Tab implements ActionBar.TabListener {
     }
 
     @Override
-    public void onTabUnselected(android.app.ActionBar.Tab tab, android.app.FragmentTransaction f) {
+    public void onTabUnselected(ActionBar.Tab tab, FragmentTransaction f) {
         FragmentTransaction ft = mActivity.getSupportFragmentManager().beginTransaction();
         ft.disallowAddToBackStack();
         mListener.onTabUnselected(this, ft);

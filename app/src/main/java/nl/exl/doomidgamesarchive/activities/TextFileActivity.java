@@ -1,15 +1,15 @@
 package nl.exl.doomidgamesarchive.activities;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.widget.TextView;
 
+import androidx.appcompat.app.AppCompatActivity;
 import nl.exl.doomidgamesarchive.R;
 
 /**
  * Displays the contents of an IdgamesApi file's text file.
  */
-public class TextFileActivity extends Activity {
+public class TextFileActivity extends AppCompatActivity {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {

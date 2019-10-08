@@ -2,13 +2,13 @@
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android" >
 
     <item
-        android:id="@+android:id/background"
+        android:id="@+id/background"
         android:drawable="@drawable/rating_skull_empty"/>
     <item
-        android:id="@+android:id/secondaryProgress"
+        android:id="@+id/secondaryProgress"
         android:drawable="@drawable/rating_skull_half"/>
     <item
-        android:id="@+android:id/progress"
+        android:id="@+id/progress"
         android:drawable="@drawable/rating_skull_full"/>
 
 </layer-list>

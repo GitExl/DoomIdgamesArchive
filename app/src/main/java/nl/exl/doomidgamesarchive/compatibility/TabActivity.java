@@ -1,13 +1,14 @@
 package nl.exl.doomidgamesarchive.compatibility;
 
 import android.os.Bundle;
-import androidx.fragment.app.FragmentActivity;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 /**
  * Base class for an activity with a tab interface.
  * Initializes the appropriate tab helper for the current SDK version.
  */
-public abstract class TabActivity extends FragmentActivity {
+public abstract class TabActivity extends AppCompatActivity {
     TabHelper mTabHelper;
 
     @Override

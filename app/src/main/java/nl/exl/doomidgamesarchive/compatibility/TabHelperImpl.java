@@ -1,27 +1,27 @@
 package nl.exl.doomidgamesarchive.compatibility;
 
-import android.app.ActionBar;
 import android.os.Bundle;
 import android.view.Window;
 
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentActivity;
 
 /**
  * Tab helper class for Honeycomb SDKs and up.
  */
 class TabHelperImpl extends TabHelper {
     private ActionBar mActionBar;
-    private FragmentActivity mActivity;
+    private AppCompatActivity mActivity;
 
-    TabHelperImpl(FragmentActivity activity) {
+    TabHelperImpl(AppCompatActivity activity) {
         mActivity = activity;
 
         // Request the ActionBar feature for the associated activity.
         mActivity.getWindow().requestFeature(Window.FEATURE_ACTION_BAR);
 
         // Setup the actionbar.
-        mActionBar = activity.getActionBar();
+        mActionBar = activity.getSupportActionBar();
         mActionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
         mActionBar.setDisplayShowTitleEnabled(true);
     }

@@ -3,7 +3,6 @@ package nl.exl.doomidgamesarchive.activities;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
-import android.app.Activity;
 import android.app.DownloadManager;
 import android.content.Context;
 import android.content.Intent;
@@ -15,9 +14,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.preference.PreferenceManager;
-import androidx.annotation.NonNull;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 import android.text.Html;
 import android.text.util.Linkify;
 import android.view.Menu;
@@ -32,6 +28,10 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.List;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import nl.exl.doomidgamesarchive.Config;
 import nl.exl.doomidgamesarchive.R;
 import nl.exl.doomidgamesarchive.RatingView;
@@ -46,7 +46,7 @@ import nl.exl.doomidgamesarchive.responsetasks.FileInfoFetchTask;
  * Builds a number of views to form a custom mLayout.
  */
 @TargetApi(Build.VERSION_CODES.HONEYCOMB)
-public class DetailsActivity extends Activity {
+public class DetailsActivity extends AppCompatActivity {
 
     // Activity states for UI choices.
     public static final int STATE_INVALID = 0;
