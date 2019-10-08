@@ -11,6 +11,9 @@ public class PreferencesActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        setContentView(R.layout.activity_preferences);
+
         getSupportFragmentManager()
             .beginTransaction()
             .replace(R.id.Preferences, new PreferencesFragment())
