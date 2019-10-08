@@ -37,9 +37,9 @@ import nl.exl.doomidgamesarchive.R;
 import nl.exl.doomidgamesarchive.RatingView;
 import nl.exl.doomidgamesarchive.idgamesapi.FileEntry;
 import nl.exl.doomidgamesarchive.idgamesapi.Request;
-import nl.exl.doomidgamesarchive.idgamesapi.Response;
 import nl.exl.doomidgamesarchive.idgamesapi.ResponseTask;
 import nl.exl.doomidgamesarchive.idgamesapi.Review;
+import nl.exl.doomidgamesarchive.responsetasks.FileInfoFetchTask;
 
 /**
  * Displays details from an IdgamesApi file.
@@ -49,9 +49,9 @@ import nl.exl.doomidgamesarchive.idgamesapi.Review;
 public class DetailsActivity extends Activity {
 
     // Activity states for UI choices.
-    private static final int STATE_INVALID = 0;
-    private static final int STATE_LOADING = 1;
-    private static final int STATE_READY = 2;
+    public static final int STATE_INVALID = 0;
+    public static final int STATE_LOADING = 1;
+    public static final int STATE_READY = 2;
 
     // Invalid file.
     private static final int FILE_ID_INVALID = -1;
@@ -109,10 +109,15 @@ public class DetailsActivity extends Activity {
             // Test for idgames:// protocol link.
             Uri data = this.getIntent().getData();
             if (data != null && data.getScheme().equals("idgames")) {
-                try {
-                    mFileId = Integer.parseInt(data.getHost());
-                } catch (NumberFormatException e) {
+                String host = data.getHost();
+                if (host == null) {
                     mFileId = FILE_ID_INVALID;
+                } else {
+                    try {
+                        mFileId = Integer.parseInt(host);
+                    } catch (NumberFormatException e) {
+                        mFileId = FILE_ID_INVALID;
+                    }
                 }
 
             // Use the file id from the regular intent.
@@ -133,32 +138,11 @@ public class DetailsActivity extends Activity {
             request.setMaxAge(Config.MAXAGE_DETAILS);
 
             // Run task to fetch file info.
-            ResponseTask responseTask = new ResponseTask() {
-                @Override
-                protected void onPostExecute(Response response) {
-                    if (response.getErrorMessage() == null) {
-                        if (response.getEntries().size() > 0) {
-                            FileEntry responseFile = (FileEntry) response.getEntries().get(0);
-                            buildDetailView(responseFile);
-                        }
-                    }
-
-                    mState = STATE_READY;
-                    hideProgressIndicator();
-                    invalidateOptionsMenu();
-                }
-
-                @Override
-                protected void onPreExecute() {
-                    mState = STATE_LOADING;
-                    showProgressIndicator();
-                    invalidateOptionsMenu();
-                }
-            };
+            ResponseTask responseTask = new FileInfoFetchTask(this);
             responseTask.execute(request);
         }
     }
-    
+
     @Override
     public void onSaveInstanceState(Bundle savedInstanceState) {
         super.onSaveInstanceState(savedInstanceState);
@@ -184,8 +168,9 @@ public class DetailsActivity extends Activity {
      * @param fileEntry The file to display information from.
      */
     public void buildDetailView(FileEntry fileEntry) {
-        if (fileEntry == null)
+        if (fileEntry == null) {
             return;
+        }
         
         // Set title area contents.
         mTitleText.setText(fileEntry.toString());
@@ -267,7 +252,6 @@ public class DetailsActivity extends Activity {
      * Adds a header to the mLayout view.
      * 
      * @param title The title to give this header.
-     * @param resource The resource ID to construct this header from. An ID of 0 will use the default idgames_details_listheader.
      */
     private void addHeader(String title) {
         // Do not create empty headers at all.
@@ -373,6 +357,7 @@ public class DetailsActivity extends Activity {
         request.setTitle(mFileName);
         request.setDescription(mFileTitle);
         request.setAllowedOverRoaming(false);
+        request.setVisibleInDownloadsUi(true);
         request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
 
         try {
@@ -386,13 +371,10 @@ public class DetailsActivity extends Activity {
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[], @NonNull int[] grantResults) {
-        switch (requestCode) {
-            case PERMISSION_CALLBACK_DOWNLOAD:
-                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    downloadFile();
-                }
-                break;
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        if (requestCode == PERMISSION_CALLBACK_DOWNLOAD &&
+            grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            downloadFile();
         }
     }
 
@@ -440,5 +422,20 @@ public class DetailsActivity extends Activity {
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    /**
+     * Set the current UI state.
+     *
+     * @param state The new state of this activity.
+     */
+    public void setState(int state) {
+        this.mState = state;
+        if (state == STATE_LOADING) {
+            this.showProgressIndicator();
+        } else {
+            this.hideProgressIndicator();
+        }
+        this.invalidateOptionsMenu();
     }
 }

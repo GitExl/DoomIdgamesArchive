@@ -133,8 +133,12 @@ public class MainActivity extends TabActivity implements IdgamesListener, OnShar
         // Build the new files fragment.
         IdgamesListFragment newFilesFragment = (IdgamesListFragment)manager.findFragmentByTag(TAB_TAG_NEWFILES); 
         if (newFilesFragment == null) {
-            int limit = Integer.parseInt(sharedPrefs.getString("ListLimitNew", Integer.toString(Config.LIMIT_NEWFILES)));
-            
+            String limitPref = sharedPrefs.getString("ListLimitNew", Integer.toString(Config.LIMIT_NEWFILES));
+            int limit = 10;
+            if (limitPref != null) {
+                limit = Integer.parseInt(limitPref);
+            }
+
             Bundle args = new Bundle();
             args.putInt("action", Request.GET_LATESTFILES);
             args.putLong("maxAge", Config.MAXAGE_NEWFILES);
@@ -155,8 +159,12 @@ public class MainActivity extends TabActivity implements IdgamesListener, OnShar
         
         // Build the new votes fragment.
         IdgamesListFragment newVotesFragment = (IdgamesListFragment)manager.findFragmentByTag(TAB_TAG_NEWVOTES);
-        if (newVotesFragment == null) {        
-            int limit = Integer.parseInt(sharedPrefs.getString("ListLimitVotes", Integer.toString(Config.LIMIT_NEWVOTES)));
+        if (newVotesFragment == null) {
+            int limit = 10;
+            String limitPref = sharedPrefs.getString("ListLimitVotes", Integer.toString(Config.LIMIT_NEWVOTES));
+            if (limitPref != null) {
+                limit = Integer.parseInt(limitPref);
+            }
             
             Bundle args = new Bundle();
             args.putInt("action", Request.GET_LATESTVOTES);
