@@ -1,6 +1,6 @@
 <resources>
     <color name="colorPrimary">#dc143c</color>
-    <color name="colorPrimaryVariant">#A20016</color>
+    <color name="colorPrimaryVariant">#a20016</color>
     <color name="colorOnPrimary">#ffffff</color>
 
     <color name="colorSecondary">#33a3ee</color>
@@ -9,7 +9,9 @@
 
     <color name="colorError">#f44336</color>
     <color name="colorOnError">#ffffff</color>
-    <color name="colorSurface">#FFFFFF</color>
+    <color name="colorSurface">#ffffff</color>
     <color name="colorOnSurface">#212121</color>
     <color name="colorOnBackground">#212121</color>
+
+    <color name="ic_launcher_background">#dc143c</color>
 </resources>
