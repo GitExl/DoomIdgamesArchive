@@ -1,7 +1,7 @@
 <resources>
     <color name="colorPrimary">#dc143c</color>
-    <color name="colorPrimaryVariant">#a20016</color>
-    <color name="colorOnPrimary">#ffffff</color>
+    <color name="colorPrimaryVariant">#A20016</color>
+    <color name="colorOnPrimary">#FFFFFF</color>
 
     <color name="colorSecondary">#33a3ee</color>
     <color name="colorSecondaryVariant">#0075bb</color>

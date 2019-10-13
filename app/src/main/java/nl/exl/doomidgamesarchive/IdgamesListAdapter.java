@@ -105,6 +105,9 @@ class IdgamesListAdapter extends ArrayAdapter<Entry> {
         if (holder.icon != null) {
             holder.icon.setVisibility(View.GONE);
         }
+        if (holder.subtitle != null) {
+            holder.subtitle.setVisibility(View.GONE);
+        }
 
         // Get the IdgamesApi entry for this list position.
         Entry entry = this.getItem(position);
@@ -121,8 +124,6 @@ class IdgamesListAdapter extends ArrayAdapter<Entry> {
         
         // Fill view with directory info.
         if (entry instanceof DirectoryEntry) {
-            holder.subtitle.setText(R.string.IdgamesList_Directory);
-            holder.subtitle.setMaxLines(1);
             holder.icon.setVisibility(View.VISIBLE);
 
         // Fill view with file info.
@@ -151,6 +152,7 @@ class IdgamesListAdapter extends ArrayAdapter<Entry> {
                 subText.append(fileEntry.getFileSizeString());
             }
 
+            holder.subtitle.setVisibility(View.VISIBLE);
             holder.subtitle.setText(subText.toString());
             holder.subtitle.setMaxLines(1);
             
@@ -163,11 +165,9 @@ class IdgamesListAdapter extends ArrayAdapter<Entry> {
             
             String reviewText = voteEntry.getReviewText();
             if (reviewText != null && reviewText.trim().length() > 0) {
+                holder.subtitle.setVisibility(View.VISIBLE);
                 holder.subtitle.setMaxLines(10);
                 holder.subtitle.setText(reviewText);
-                holder.subtitle.setVisibility(View.VISIBLE);
-            } else {
-                holder.subtitle.setVisibility(View.GONE);
             }
             
             holder.rating.setRating((float)voteEntry.getRating());

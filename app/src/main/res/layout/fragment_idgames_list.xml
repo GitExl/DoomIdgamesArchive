@@ -22,10 +22,12 @@
                 android:id="@+id/IdgamesList_Path"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:background="@color/colorPrimaryVariant"
                 android:ellipsize="start"
                 android:padding="@dimen/Padding"
                 android:text="@string/IdgamesList_PathDefault"
-                android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1" />
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
+                android:textColor="@color/colorOnPrimary" />
         </RelativeLayout>
 
         <RelativeLayout
@@ -51,6 +53,7 @@
                     android:id="@+id/IdgamesList_SearchField"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:inputType="text"
                     android:singleLine="true" />
             </com.google.android.material.textfield.TextInputLayout>
 
