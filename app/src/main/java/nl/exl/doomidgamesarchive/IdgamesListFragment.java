@@ -134,7 +134,7 @@ public class IdgamesListFragment extends Fragment implements OnItemClickListener
         mSearchField.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+                if (actionId == EditorInfo.IME_ACTION_DONE) {
                     mSearchQuery = v.getText().toString();
                     executeSearch();
                 }
