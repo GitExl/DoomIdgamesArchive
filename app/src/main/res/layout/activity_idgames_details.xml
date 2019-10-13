@@ -2,13 +2,15 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:custom="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@drawable/background">
 
     <RelativeLayout
         android:id="@+id/IdgamesDetails_TitleLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/colorPrimaryVariant">
+        android:background="@color/colorPrimaryVariant"
+        android:padding="@dimen/PaddingMedium">
 
         <TextView
             android:id="@+id/IdgamesDetails_Title"
@@ -18,7 +20,6 @@
             android:layout_toStartOf="@+id/IdgamesDetails_Rating"
             android:ellipsize="none"
             android:gravity="top"
-            android:padding="@dimen/Padding"
             android:text="@string/IdgamesDetails_TitleDefault"
             android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
             android:textColor="@color/design_default_color_on_primary" />
@@ -29,8 +30,6 @@
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
             android:layout_centerVertical="false"
-            android:layout_marginTop="@dimen/Padding"
-            android:layout_marginEnd="@dimen/Padding"
             custom:drawableEmpty="@drawable/rating_skull_empty"
             custom:drawableFull="@drawable/rating_skull_blue_full"
             custom:drawableHalf="@drawable/rating_skull_blue_half"
@@ -45,7 +44,6 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/IdgamesDetails_Rating"
             android:layout_alignEnd="@id/IdgamesDetails_Rating"
-            android:paddingBottom="@dimen/Padding"
             android:text="@string/IdgamesDetails_RatingVotesDefault"
             android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
             android:textColor="@color/design_default_color_on_primary" />
@@ -53,24 +51,36 @@
 
     <ScrollView
         android:id="@+id/IdgamesDetails_Scroller"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/IdgamesDetails_TitleLayout" >
+        android:layout_below="@+id/IdgamesDetails_TitleLayout">
 
-        <RelativeLayout
+        <LinearLayout
+            android:id="@+id/IdgamesDetails_Layout"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" >
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/Padding">
+                <LinearLayout
+                    android:id="@+id/IdgamesDetails_LayoutInfo"
+                    android:orientation="vertical"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
 
             <LinearLayout
-                android:id="@+id/IdgamesDetails_Layout"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:id="@+id/IdgamesDetails_LayoutReviews"
                 android:orientation="vertical"
-                android:paddingBottom="@dimen/PaddingMedium"
-                android:paddingLeft="@dimen/Padding"
-                android:paddingRight="@dimen/Padding" >
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
             </LinearLayout>
-        </RelativeLayout>
+
+        </LinearLayout>
     </ScrollView>
 
     <ImageView

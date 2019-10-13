@@ -9,7 +9,7 @@
 
     <color name="colorError">#f44336</color>
     <color name="colorOnError">#ffffff</color>
-    <color name="colorSurface">#ffffff</color>
+    <color name="colorSurface">#FFFFFF</color>
     <color name="colorOnSurface">#212121</color>
     <color name="colorOnBackground">#212121</color>
 </resources>

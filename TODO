@@ -1,12 +1,8 @@
 1.5.0
 - Add new style app icon.
-- Fix download progress not displaying in notification bar.
+- Fix download progress not displaying in notification bar while downloading.
 - Upon start, check if a valid download mirror is set, otherwise use first from list.
 - Move all inner ResponseTask classes into their own classes.
 - More code cleanup.
 - Maybe format some file details content better, like some credits that seem to lack newlines.
-
-Later
-- Find a better location for the settings\download\text\about action menu stuff.
-- Replace the action bar with ...?
-- Design improvements to better fit modern "Material" stuff.
+- FIx details date missing (not being aprsed correctly it seems)

@@ -2,7 +2,6 @@ package nl.exl.doomidgamesarchive.idgamesapi;
 
 import android.util.Log;
 
-import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -198,14 +197,11 @@ public class FileEntry extends Entry {
      * @return The locale formatted date of this entry.
      */
     public String getLocaleDate() {
-        if (mDate.isEmpty()) {
-            return "";
-        }
-        
+
         // Parse the date string and construct a localized date string.
         if (mLocaleDate == null) {
             SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
-            
+
             Date date = null;
             try {
                 date = dateFormat.parse(mDate);
@@ -215,12 +211,12 @@ public class FileEntry extends Entry {
 
             // Store the localized string to prevent date parsing next time it is needed.
             if (date != null) {
-                mLocaleDate = DateFormat.getDateInstance().format(date);
+                mLocaleDate = SimpleDateFormat.getDateInstance().format(date);
             } else {
                 mLocaleDate = "Unknown";
             }
         }
-        
+
         return mLocaleDate;
     }
 

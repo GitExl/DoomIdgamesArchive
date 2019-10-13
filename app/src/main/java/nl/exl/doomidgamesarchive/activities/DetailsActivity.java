@@ -58,7 +58,8 @@ public class DetailsActivity extends AppCompatActivity {
     private static final int PERMISSION_CALLBACK_DOWNLOAD = 1;
     
     // Layout references.
-    private LinearLayout mLayout;
+    private LinearLayout mLayoutInfo;
+    private LinearLayout mLayoutReviews;
     private RelativeLayout mTitleLayout;
     private ImageView mProgress;
     private TextView mTitleText;
@@ -85,7 +86,8 @@ public class DetailsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_idgames_details);
 
         // Get mLayout references.
-        mLayout = findViewById(R.id.IdgamesDetails_Layout);
+        mLayoutInfo = findViewById(R.id.IdgamesDetails_LayoutInfo);
+        mLayoutReviews = findViewById(R.id.IdgamesDetails_LayoutReviews);
         mTitleLayout = findViewById(R.id.IdgamesDetails_TitleLayout);
         mTitleText = findViewById(R.id.IdgamesDetails_Title);
         mRatingView = findViewById(R.id.IdgamesDetails_Rating);
@@ -195,15 +197,12 @@ public class DetailsActivity extends AppCompatActivity {
         createSection("Bugs", false, fileEntry.getBugs());
         
         List<Review> reviews = fileEntry.getReviews();
-        addHeader("Reviews");
         if (reviews.size() > 0) {
             Review review;
             for (int i = 0; i < reviews.size(); i++) {
                 review = reviews.get(i);
                 addReview(review);
             }
-        } else {
-            addText("This file has no reviews.", R.layout.idgames_details_listtext, false);
         }
         
         // Store this info for use in other UI functions.
@@ -261,9 +260,9 @@ public class DetailsActivity extends AppCompatActivity {
         int resource = R.layout.idgames_details_listheader;
 
         // Build view.
-        View view = getLayoutInflater().inflate(resource, mLayout, false);
+        View view = getLayoutInflater().inflate(resource, mLayoutInfo, false);
         ((TextView)view.findViewById(R.id.IdgamesListHeader_Title)).setText(title);
-        mLayout.addView(view);
+        mLayoutInfo.addView(view);
     }
     
     /**
@@ -281,7 +280,7 @@ public class DetailsActivity extends AppCompatActivity {
         }
         
         // Build view.
-        View view = getLayoutInflater().inflate(resource, mLayout, false);
+        View view = getLayoutInflater().inflate(resource, mLayoutInfo, false);
         
         TextView textView = view.findViewById(R.id.IdgamesListText_Text);
         if (parseLinks) {
@@ -291,11 +290,11 @@ public class DetailsActivity extends AppCompatActivity {
         }
         textView.setText(Html.fromHtml(text));
         
-        mLayout.addView(view);
+        mLayoutInfo.addView(view);
     }
     
     private void addReview(Review review) {
-        View view = getLayoutInflater().inflate(R.layout.idgames_details_listreview, mLayout, false);
+        View view = getLayoutInflater().inflate(R.layout.idgames_details_listreview, mLayoutReviews, false);
         
         TextView textView = view.findViewById(R.id.IdgamesListReview_Text);
         TextView usernameView = view.findViewById(R.id.IdgamesListReview_Username);
@@ -305,7 +304,7 @@ public class DetailsActivity extends AppCompatActivity {
         usernameView.setText(review.getUsername());
         ratingView.setRating(review.getRating());
         
-        mLayout.addView(view);
+        mLayoutReviews.addView(view);
     }
     
     /**
@@ -313,7 +312,8 @@ public class DetailsActivity extends AppCompatActivity {
      */
     private void showProgressIndicator() {
         mTitleLayout.setVisibility(View.GONE);
-        mLayout.setVisibility(View.GONE);
+        mLayoutInfo.setVisibility(View.GONE);
+        mLayoutReviews.setVisibility(View.GONE);
         mProgress.setVisibility(View.VISIBLE);
         
         AnimationDrawable progressAnim = (AnimationDrawable)mProgress.getBackground();
@@ -325,7 +325,8 @@ public class DetailsActivity extends AppCompatActivity {
      */
     private void hideProgressIndicator() {
         mTitleLayout.setVisibility(View.VISIBLE);
-        mLayout.setVisibility(View.VISIBLE);
+        mLayoutInfo.setVisibility(View.VISIBLE);
+        mLayoutReviews.setVisibility(View.VISIBLE);
         mProgress.setVisibility(View.GONE);
         
         AnimationDrawable progressAnim = (AnimationDrawable)mProgress.getBackground();
@@ -356,8 +357,6 @@ public class DetailsActivity extends AppCompatActivity {
         DownloadManager.Request request = new DownloadManager.Request(Uri.parse(url));
         request.setTitle(mFileName);
         request.setDescription(mFileTitle);
-        request.setAllowedOverRoaming(false);
-        request.setVisibleInDownloadsUi(true);
         request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
 
         try {

@@ -3,18 +3,20 @@
     android:id="@+id/IdgamesList"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical" >
+    android:background="@drawable/background"
+    android:orientation="vertical">
 
     <RelativeLayout
         android:id="@+id/IdgamesList_ToolContainer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true" >
+        android:layout_alignParentTop="true"
+        android:background="@color/design_default_color_background">
 
         <RelativeLayout
             android:id="@+id/IdgamesList_BrowseTools"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" >
+            android:layout_height="wrap_content">
 
             <TextView
                 android:id="@+id/IdgamesList_Path"
@@ -37,8 +39,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/Padding"
-                android:layout_marginRight="@dimen/Padding"
                 android:layout_marginTop="@dimen/Padding"
+                android:layout_marginRight="@dimen/Padding"
                 android:hint="@string/SearchHint"
                 android:imeOptions="actionSearch"
                 android:inputType="text"
@@ -58,8 +60,10 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@id/IdgamesList_SearchFieldLayout"
                 android:layout_marginLeft="@dimen/Padding"
+                android:layout_marginTop="@dimen/PaddingMedium"
                 android:layout_marginRight="@dimen/Padding"
-                android:layout_marginTop="@dimen/PaddingMedium" />
+                android:dropDownWidth="match_parent"
+                android:spinnerMode="dialog" />
         </RelativeLayout>
     </RelativeLayout>
 
@@ -78,7 +82,7 @@
         android:layout_height="match_parent"
         android:layout_below="@id/IdgamesList_ToolContainer"
         android:layout_centerVertical="true"
-        android:visibility="gone" >
+        android:visibility="gone">
 
         <TextView
             android:id="@+id/IdgamesList_Message"
@@ -105,11 +109,11 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/IdgamesList_ToolContainer"
+        android:background="@color/design_default_color_background"
         android:fastScrollEnabled="true"
         android:scrollingCache="true"
         android:smoothScrollbar="true"
-        android:visibility="visible" >
-    </ListView>
+        android:visibility="visible"></ListView>
 
 
 </RelativeLayout>
