@@ -106,13 +106,13 @@ public class IdgamesListFragment extends Fragment implements OnItemClickListener
         // Set view arguments.
         mAddListIndex = arguments.getBoolean("addListIndex", false);
         mSort = arguments.getBoolean("sort", false);
-    };
-    
+    }
+
     @Override
     public void onSaveInstanceState(Bundle outState) {
         mRequest.saveToBundle(outState);
-    };
-    
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_idgames_list, container, false);
@@ -205,8 +205,8 @@ public class IdgamesListFragment extends Fragment implements OnItemClickListener
         if (mTask != null) {
             mTask.cancel(true);
         }
-    };
-    
+    }
+
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);

@@ -149,8 +149,8 @@ public class RatingView extends View {
 
         // Render icons vertically centered.
         mRenderY = h / 2 - mIconDrawableHeight / 2;
-    };
-    
+    }
+
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);

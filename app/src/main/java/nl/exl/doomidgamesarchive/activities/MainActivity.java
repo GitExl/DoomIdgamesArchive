@@ -90,8 +90,8 @@ public class MainActivity extends TabActivity implements IdgamesListener, OnShar
         if (!fragment.enterParentDirectory()) {
             this.finish();
         }
-    };
-    
+    }
+
     /**
      * Test for network data connectivity.
      * @return True if there is a working data connection, false if there is not.
