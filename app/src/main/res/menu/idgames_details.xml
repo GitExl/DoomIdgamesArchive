@@ -1,15 +1,12 @@
-<?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android" >
-
+<menu xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:id="@+id/MenuDetails_ViewText"
-        android:icon="@drawable/collections_view_as_list"
-        android:showAsAction="ifRoom|withText"
+        android:icon="@drawable/ic_subject_white_24dp"
+        app:showAsAction="ifRoom|withText"
         android:title="@string/MenuDetails_ViewText"/>
     <item
         android:id="@+id/MenuDetails_Download"
-        android:icon="@drawable/av_download_small"
-        android:showAsAction="ifRoom|withText"
+        android:icon="@drawable/ic_get_app_white_24dp"
+        app:showAsAction="ifRoom|withText"
         android:title="@string/MenuDetails_Download"/>
-
 </menu>

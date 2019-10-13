@@ -8,24 +8,37 @@
     android:paddingRight="@dimen/PaddingMedium"
     android:paddingTop="@dimen/Padding" >
 
-    <TextView
-        android:id="@+id/IdgamesListItem_Index"
-        android:layout_width="16dp"
+    <LinearLayout
+        android:id="@+id/IdgamesListItem_TypeLayout"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
-        android:layout_marginEnd="@dimen/PaddingMedium"
-        android:gravity="center"
-        android:text="40"
-        android:textColor="?android:attr/textColorHint"
-        android:textSize="@dimen/TextSizeMedium" />
+        android:gravity="center">
+
+        <ImageView
+            android:id="@+id/IdGamesListItem_Icon"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_marginEnd="@dimen/PaddingMedium"
+            custom:srcCompat="@drawable/ic_folder_black_24dp" />
+
+        <TextView
+            android:id="@+id/IdgamesListItem_Index"
+            android:layout_width="24dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/PaddingMedium"
+            android:gravity="center"
+            android:text="40"
+            android:textAppearance="@style/TextAppearance.MaterialComponents.Body1" />
+    </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
-        android:layout_marginRight="@dimen/Padding"
-        android:layout_toLeftOf="@+id/IdgamesListItem_Date"
-        android:layout_toRightOf="@id/IdgamesListItem_Index"
+        android:layout_marginEnd="@dimen/Padding"
+        android:layout_toStartOf="@+id/IdgamesListItem_Date"
+        android:layout_toEndOf="@id/IdgamesListItem_TypeLayout"
         android:orientation="vertical">
 
         <TextView
@@ -33,11 +46,10 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:autoLink="none"
-            android:autoText="false"
             android:ellipsize="end"
             android:lines="1"
             android:text="@string/IdgamesListItem_TitleDefault"
-            android:textAppearance="?android:attr/textAppearanceMedium" />
+            android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6" />
 
         <TextView
             android:id="@+id/IdgamesListItem_Subtitle"
@@ -47,7 +59,7 @@
             android:ellipsize="end"
             android:lines="1"
             android:text="@string/IdgamesListItem_SubTitleDefault"
-            android:textAppearance="?android:attr/textAppearanceSmall" />
+            android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1" />
     </LinearLayout>
 
     <TextView
@@ -55,18 +67,18 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
-        android:layout_marginRight="@dimen/PaddingMedium"
-        android:layout_toLeftOf="@+id/IdgamesListItem_Rating"
+        android:layout_marginEnd="@dimen/PaddingMedium"
+        android:layout_toStartOf="@+id/IdgamesListItem_Rating"
         android:gravity="end"
         android:text="@string/IdgamesListItem_DateDefault"
-        android:textSize="@dimen/TextSizeSmall"
+        android:textAppearance="@style/TextAppearance.MaterialComponents.Caption"
         android:visibility="visible" />
 
     <nl.exl.doomidgamesarchive.RatingView
         android:id="@+id/IdgamesListItem_Rating"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
         android:layout_centerVertical="true"
         custom:drawableEmpty="@drawable/rating_skull_empty"
         custom:drawableFull="@drawable/rating_skull_full"

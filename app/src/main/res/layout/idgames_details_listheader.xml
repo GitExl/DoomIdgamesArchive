@@ -7,19 +7,11 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
-        android:layout_marginBottom="@dimen/PaddingSmall"
         android:layout_marginLeft="@dimen/Padding"
-        android:layout_marginRight="@dimen/Padding"
         android:layout_marginTop="@dimen/PaddingSmall"
+        android:layout_marginRight="@dimen/Padding"
+        android:layout_marginBottom="@dimen/PaddingSmall"
         android:text="@string/IdgamesListHeader_TitleDefault"
-        android:textAllCaps="true"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:textColor="@color/Application"></TextView>
-
-    <View
-        android:layout_width="fill_parent"
-        android:layout_height="1dp"
-        android:layout_below="@+id/IdgamesListHeader_Title"
-        android:background="@color/Application" />
+        android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6" />
 
 </RelativeLayout>

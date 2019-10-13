@@ -8,14 +8,14 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
-        android:layout_marginBottom="@dimen/Padding"
         android:layout_marginLeft="@dimen/Padding"
-        android:layout_marginRight="@dimen/Padding"
         android:layout_marginTop="@dimen/Padding"
+        android:layout_marginRight="@dimen/Padding"
+        android:layout_marginBottom="@dimen/Padding"
         android:autoLink="web|email"
         android:lineSpacingMultiplier="1.2"
         android:text="@string/IdgamesListText_TextDefault"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:textIsSelectable="true"></TextView>
+        android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
+        android:textIsSelectable="true" />
 
 </RelativeLayout>

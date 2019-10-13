@@ -1,9 +1,15 @@
-<?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <color name="colorPrimary">#dc143c</color>
+    <color name="colorPrimaryVariant">#A20016</color>
+    <color name="colorOnPrimary">#ffffff</color>
 
-    <color name="Application">#dc143c</color>
-    <color name="Accent">#7ac8ff</color>
-    <color name="gray80">#d8d8d8</color>
-    <color name="gray95">#f2f2f2</color>
+    <color name="colorSecondary">#33a3ee</color>
+    <color name="colorSecondaryVariant">#0075bb</color>
+    <color name="colorOnSecondary">#ffffff</color>
 
+    <color name="colorError">#f44336</color>
+    <color name="colorOnError">#ffffff</color>
+    <color name="colorSurface">#ffffff</color>
+    <color name="colorOnSurface">#212121</color>
+    <color name="colorOnBackground">#212121</color>
 </resources>

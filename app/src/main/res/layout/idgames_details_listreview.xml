@@ -2,31 +2,24 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content" >
+    android:layout_height="wrap_content"
+    android:padding="@dimen/PaddingMedium"
+    android:background="?attr/panelBackground">
 
     <TextView
         android:id="@+id/IdgamesListReview_Text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
-        android:layout_marginLeft="@dimen/Padding"
-        android:layout_marginRight="@dimen/Padding"
-        android:layout_marginTop="@dimen/Padding"
-        android:background="@color/gray95"
         android:lineSpacingMultiplier="1.2"
-        android:padding="@dimen/Padding"
         android:text="@string/IdgamesListText_TextDefault"
-        android:textAppearance="?android:attr/textAppearanceSmall" />
+        android:layout_marginBottom="@dimen/Padding"
+        android:textAppearance="@style/TextAppearance.MaterialComponents.Body1" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/IdgamesListReview_Text"
-        android:layout_marginBottom="@dimen/Padding"
-        android:layout_marginLeft="@dimen/Padding"
-        android:layout_marginRight="@dimen/Padding"
-        android:background="@color/gray80"
-        android:padding="@dimen/PaddingSmall">
+        android:layout_below="@+id/IdgamesListReview_Text">
 
         <nl.exl.doomidgamesarchive.RatingView
             android:id="@+id/IdgamesListReview_Rating"
@@ -48,6 +41,7 @@
             android:layout_gravity="center_vertical"
             android:gravity="end|center_vertical"
             android:text="@string/IdgamesListText_TextDefault"
+            android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
             android:textSize="@dimen/TextSizeSmall" />
     </LinearLayout>
 

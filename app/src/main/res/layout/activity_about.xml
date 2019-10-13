@@ -2,14 +2,12 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:background="@drawable/background"
     android:padding="@dimen/PaddingMedium" >
 
     <TextView
         android:id="@+id/About_Text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@android:color/background_light"
         android:padding="@dimen/Padding"
         android:text="@string/About_TextDefault" />
 

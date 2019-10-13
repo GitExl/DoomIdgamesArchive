@@ -4,7 +4,6 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
-import androidx.fragment.app.Fragment;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -19,7 +18,6 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
-import android.widget.AutoCompleteTextView;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
@@ -27,9 +25,12 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.material.textfield.TextInputEditText;
+
 import java.io.File;
 import java.util.List;
 
+import androidx.fragment.app.Fragment;
 import nl.exl.doomidgamesarchive.idgamesapi.DirectoryEntry;
 import nl.exl.doomidgamesarchive.idgamesapi.Entry;
 import nl.exl.doomidgamesarchive.idgamesapi.Request;
@@ -57,7 +58,7 @@ public class IdgamesListFragment extends Fragment implements OnItemClickListener
     // View references.
     private ImageView mProgress;
     private TextView mPathText;
-    private AutoCompleteTextView mSearchField;
+    private TextInputEditText mSearchField;
     private Spinner mSearchSpinner;
     private RelativeLayout mMessageContainer;
     private TextView mMessage;

@@ -1,11 +1,11 @@
 package nl.exl.doomidgamesarchive;
 
 import android.content.Context;
-import androidx.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.Comparator;
@@ -13,6 +13,7 @@ import java.util.HashSet;
 import java.util.Locale;
 import java.util.Set;
 
+import androidx.annotation.NonNull;
 import nl.exl.doomidgamesarchive.idgamesapi.DirectoryEntry;
 import nl.exl.doomidgamesarchive.idgamesapi.Entry;
 import nl.exl.doomidgamesarchive.idgamesapi.FileEntry;
@@ -57,6 +58,7 @@ class IdgamesListAdapter extends ArrayAdapter<Entry> {
         TextView subtitle;
         TextView date;
         RatingView rating;
+        ImageView icon;
     }
     
     
@@ -82,6 +84,7 @@ class IdgamesListAdapter extends ArrayAdapter<Entry> {
             holder.subtitle = convertView.findViewById(R.id.IdgamesListItem_Subtitle);
             holder.date = convertView.findViewById(R.id.IdgamesListItem_Date);
             holder.rating = convertView.findViewById(R.id.IdgamesListItem_Rating);
+            holder.icon = convertView.findViewById(R.id.IdGamesListItem_Icon);
             convertView.setTag(holder);
             
         // Reuse an existing listitem View.
@@ -98,6 +101,9 @@ class IdgamesListAdapter extends ArrayAdapter<Entry> {
         }
         if (holder.rating != null) {
             holder.rating.setVisibility(View.GONE);
+        }
+        if (holder.icon != null) {
+            holder.icon.setVisibility(View.GONE);
         }
 
         // Get the IdgamesApi entry for this list position.
@@ -117,6 +123,7 @@ class IdgamesListAdapter extends ArrayAdapter<Entry> {
         if (entry instanceof DirectoryEntry) {
             holder.subtitle.setText(R.string.IdgamesList_Directory);
             holder.subtitle.setMaxLines(1);
+            holder.icon.setVisibility(View.VISIBLE);
 
         // Fill view with file info.
         } else if (entry instanceof FileEntry) {

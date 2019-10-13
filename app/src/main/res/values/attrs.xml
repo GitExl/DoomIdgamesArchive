@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="utf-8"?>
 <resources>
 
     <declare-styleable name="RatingView">
@@ -9,6 +8,7 @@
         <attr name="drawableEmpty" format="reference" />
         <attr name="drawableHalf" format="reference" />
         <attr name="drawableFull" format="reference" />
+        <attr name="blend" format="boolean" />
     </declare-styleable>
 
 </resources>

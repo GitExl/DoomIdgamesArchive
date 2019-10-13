@@ -2,36 +2,35 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:custom="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@drawable/background" >
+    android:layout_height="match_parent">
 
     <RelativeLayout
         android:id="@+id/IdgamesDetails_TitleLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/Application" >
+        android:background="@color/colorPrimaryVariant">
 
         <TextView
             android:id="@+id/IdgamesDetails_Title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:layout_toLeftOf="@+id/IdgamesDetails_Rating"
+            android:layout_toStartOf="@+id/IdgamesDetails_Rating"
             android:ellipsize="none"
             android:gravity="top"
             android:padding="@dimen/Padding"
             android:text="@string/IdgamesDetails_TitleDefault"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:textColor="@android:color/white" />
+            android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
+            android:textColor="@color/design_default_color_on_primary" />
 
         <nl.exl.doomidgamesarchive.RatingView
             android:id="@+id/IdgamesDetails_Rating"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
             android:layout_centerVertical="false"
-            android:layout_marginRight="@dimen/Padding"
             android:layout_marginTop="@dimen/Padding"
+            android:layout_marginEnd="@dimen/Padding"
             custom:drawableEmpty="@drawable/rating_skull_empty"
             custom:drawableFull="@drawable/rating_skull_blue_full"
             custom:drawableHalf="@drawable/rating_skull_blue_half"
@@ -44,12 +43,12 @@
             android:id="@+id/IdgamesDetails_VoteCount"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignRight="@id/IdgamesDetails_Rating"
             android:layout_below="@id/IdgamesDetails_Rating"
+            android:layout_alignEnd="@id/IdgamesDetails_Rating"
             android:paddingBottom="@dimen/Padding"
             android:text="@string/IdgamesDetails_RatingVotesDefault"
-            android:textAppearance="?android:attr/textAppearanceSmall"
-            android:textColor="@android:color/white" />
+            android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
+            android:textColor="@color/design_default_color_on_primary" />
     </RelativeLayout>
 
     <ScrollView
@@ -66,7 +65,6 @@
                 android:id="@+id/IdgamesDetails_Layout"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="@android:color/background_light"
                 android:orientation="vertical"
                 android:paddingBottom="@dimen/PaddingMedium"
                 android:paddingLeft="@dimen/Padding"
@@ -83,11 +81,5 @@
         android:layout_centerVertical="true"
         android:contentDescription="@string/Describe_Progress"
         android:visibility="gone" />
-
-    <ImageView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/IdgamesDetails_TitleLayout"
-        android:contentDescription="@string/Shadow" />
 
 </RelativeLayout>

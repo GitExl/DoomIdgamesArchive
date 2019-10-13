@@ -1,10 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/IdgamesList"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/background"
     android:orientation="vertical" >
 
     <RelativeLayout
@@ -22,23 +20,20 @@
                 android:id="@+id/IdgamesList_Path"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/Application"
                 android:ellipsize="start"
                 android:padding="@dimen/Padding"
                 android:text="@string/IdgamesList_PathDefault"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:textColor="@android:color/white" />
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1" />
         </RelativeLayout>
 
         <RelativeLayout
             android:id="@+id/IdgamesList_SearchTools"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/gray95"
             android:paddingBottom="@dimen/PaddingMedium">
 
-            <AutoCompleteTextView
-                android:id="@+id/IdgamesList_SearchField"
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/IdgamesList_SearchFieldLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/Padding"
@@ -48,17 +43,23 @@
                 android:imeOptions="actionSearch"
                 android:inputType="text"
                 android:maxLines="1"
-                android:selectAllOnFocus="true"
-                android:textColor="?android:attr/textColorPrimary"></AutoCompleteTextView>
+                android:selectAllOnFocus="true">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/IdgamesList_SearchField"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:singleLine="true" />
+            </com.google.android.material.textfield.TextInputLayout>
 
             <Spinner
                 android:id="@+id/IdgamesList_SearchSpinner"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/IdgamesList_SearchField"
+                android:layout_below="@id/IdgamesList_SearchFieldLayout"
                 android:layout_marginLeft="@dimen/Padding"
                 android:layout_marginRight="@dimen/Padding"
-                android:layout_marginTop="@dimen/PaddingSmall" />
+                android:layout_marginTop="@dimen/PaddingMedium" />
         </RelativeLayout>
     </RelativeLayout>
 
@@ -104,7 +105,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/IdgamesList_ToolContainer"
-        android:background="@android:color/background_light"
         android:fastScrollEnabled="true"
         android:scrollingCache="true"
         android:smoothScrollbar="true"

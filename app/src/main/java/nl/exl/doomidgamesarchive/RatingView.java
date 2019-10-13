@@ -2,11 +2,18 @@ package nl.exl.doomidgamesarchive;
 
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.Paint;
+import android.graphics.PorterDuff;
+import android.graphics.PorterDuffXfermode;
+import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
-import androidx.core.content.res.ResourcesCompat;
 import android.util.AttributeSet;
 import android.view.View;
+
+import androidx.core.content.res.ResourcesCompat;
 
 /**
  * Displays a number of icons based on what current rating is given.
@@ -22,17 +29,28 @@ public class RatingView extends View {
     // The space that is kept in between rating icons.
     private int mRatingSpacing;
 
-    // Rating icon drawables.
-    private Drawable mDrawableEmpty;
-    private Drawable mDrawableHalf;
-    private Drawable mDrawableFull;
-    
-    // Dimensions of the rating icons. This is cached when the view is constructed.
-    private int mIconWidth;
-    private int mIconHeight;
-    
+    // Rating icons.
+    private Bitmap mBitmapEmpty;
+    private Bitmap mBitmapHalf;
+    private Bitmap mBitmapFull;
+
     // Y coordinate to render rating icons at. This is cached when the view's size changes.
     private int mRenderY;
+
+    // Paint used for rendering.
+    private Paint mPaint;
+
+    // Rectangles for rendering.
+    private Rect mRectSrc = new Rect();
+    private Rect mRectDest = new Rect();
+
+    // Cached icon sizes.
+    private int mIconDrawableWidth;
+    private int mIconDrawableHeight;
+
+    private float mIconScale = 1.0f;
+
+    private boolean mBlend;
 
     
     /**
@@ -50,66 +68,53 @@ public class RatingView extends View {
     public RatingView(Context context, AttributeSet attrs) throws RatingBarException {
         super(context, attrs);
 
-        float iconScale = 1.0f;
-        
+        Drawable drawableEmpty;
+
         // Retrieve view parameters.
         TypedArray a = context.getTheme().obtainStyledAttributes(attrs, R.styleable.RatingView, 0, 0);
         try {
             mRatingMax = a.getInt(R.styleable.RatingView_ratingMax, 5);
             mRating = a.getFloat(R.styleable.RatingView_rating, 2.5f);
             mRatingSpacing = a.getDimensionPixelSize(R.styleable.RatingView_ratingSpacing, 1);
-            iconScale = a.getFloat(R.styleable.RatingView_scale, iconScale);
-            
-            mDrawableEmpty = a.getDrawable(R.styleable.RatingView_drawableEmpty);
-            mDrawableHalf = a.getDrawable(R.styleable.RatingView_drawableHalf);
-            mDrawableFull = a.getDrawable(R.styleable.RatingView_drawableFull);
+            mIconScale = a.getFloat(R.styleable.RatingView_scale, mIconScale);
+            mBlend = a.getBoolean(R.styleable.RatingView_blend, false);
 
-            // Use default drawables if none were specified.
-            if (mDrawableEmpty == null) {
-                mDrawableEmpty = ResourcesCompat.getDrawable(getResources(), R.drawable.rating_skull_empty, null);
-            }
-            if (mDrawableHalf == null) {
-                mDrawableHalf = ResourcesCompat.getDrawable(getResources(), R.drawable.rating_skull_half, null);
-            }
-            if (mDrawableFull == null) {
-                mDrawableFull = ResourcesCompat.getDrawable(getResources(), R.drawable.rating_skull_full, null);
-            }
+            mBitmapEmpty = BitmapFactory.decodeResource(getResources(), a.getResourceId(R.styleable.RatingView_drawableEmpty, R.drawable.rating_skull_empty));
+            mBitmapHalf = BitmapFactory.decodeResource(getResources(), a.getResourceId(R.styleable.RatingView_drawableHalf, R.drawable.rating_skull_half));
+            mBitmapFull = BitmapFactory.decodeResource(getResources(), a.getResourceId(R.styleable.RatingView_drawableFull, R.drawable.rating_skull_full));
+
+            drawableEmpty = ResourcesCompat.getDrawable(getResources(), a.getResourceId(R.styleable.RatingView_drawableEmpty, R.drawable.rating_skull_empty), null);
 
         } finally {
             a.recycle();
         }
         
         // Test if all icon drawables are specified.
-        if (mDrawableEmpty == null) {
+        if (mBitmapEmpty == null || drawableEmpty == null) {
             throw new RatingBarException("No empty icon drawable.");
         }
-        if (mDrawableHalf == null) {
+        if (mBitmapHalf == null) {
             throw new RatingBarException("No half icon drawable.");
         }
-        if (mDrawableFull == null) {
+        if (mBitmapFull == null) {
             throw new RatingBarException("No full icon drawable.");
         }
-        
-        // Cache drawables size.
-        mIconWidth = mDrawableEmpty.getIntrinsicWidth();
-        mIconHeight = mDrawableEmpty.getIntrinsicHeight();
-        
-        // Test whether all icon drawables are of the same width and height.
-        if (mIconWidth != mDrawableHalf.getIntrinsicWidth() ||
-                mIconHeight != mDrawableHalf.getIntrinsicHeight() ||
-                mIconWidth != mDrawableFull.getIntrinsicWidth() ||
-                mIconHeight != mDrawableFull.getIntrinsicHeight()) {
-            throw new RatingBarException("Icon drawables are not of equal width and height.");
-        }
 
-        mIconWidth *= iconScale;
-        mIconHeight *= iconScale;
+        mIconDrawableWidth = (int)(drawableEmpty.getIntrinsicWidth() * mIconScale);
+        mIconDrawableHeight = (int)(drawableEmpty.getIntrinsicHeight() * mIconScale);
+
+        mPaint = new Paint();
+        if (mBlend) {
+            mPaint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.MULTIPLY));
+        } else {
+            mPaint.setXfermode(null);
+        }
     }
     
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {     
-        final int desiredWidth = getPaddingLeft() + getPaddingRight() + getSuggestedMinimumWidth() + (mRatingMax * (mIconWidth + mRatingSpacing));
-        final int desiredHeight = getPaddingTop() + getPaddingBottom() + getSuggestedMinimumHeight() + mIconHeight;
+        final int desiredWidth = getPaddingLeft() + getPaddingRight() + getSuggestedMinimumWidth() + (mRatingMax * (mIconDrawableWidth + mRatingSpacing));
+        final int desiredHeight = getPaddingTop() + getPaddingBottom() + getSuggestedMinimumHeight() + mIconDrawableHeight;
         
         final int widthMode = MeasureSpec.getMode(widthMeasureSpec);
         final int heightMode = MeasureSpec.getMode(heightMeasureSpec);
@@ -141,35 +146,45 @@ public class RatingView extends View {
     
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
+
         // Render icons vertically centered.
-        mRenderY = h / 2 - mIconHeight / 2;
+        mRenderY = h / 2 - mIconDrawableHeight / 2;
     };
     
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-        
-        int x = 0;
-        Drawable icon;
-        
-        // Draw all rating icons.
+
+        Bitmap icon;
+
+        int iconWidth = (int)(mBitmapEmpty.getScaledWidth(canvas) * mIconScale);
+        int iconHeight = (int)(mBitmapEmpty.getScaledHeight(canvas) * mIconScale);
+
+        mRectSrc.left = 0;
+        mRectSrc.top = 0;
+        mRectSrc.right = mBitmapEmpty.getWidth();
+        mRectSrc.bottom = mBitmapEmpty.getHeight();
+
+        mRectDest.left = 0;
+        mRectDest.top = mRenderY;
+        mRectDest.right = iconWidth;
+        mRectDest.bottom = mRenderY + iconHeight;
+
         for (int i = 0; i < mRatingMax; i++) {
             
             // Select what icon drawable to use depending on the rating.
             if (mRating - i <= 0) {
-                icon = mDrawableEmpty;
+                icon = mBitmapEmpty;
             } else if (mRating - i <= 0.5) {
-                icon = mDrawableHalf;
+                icon = mBitmapHalf;
             } else {
-                icon = mDrawableFull;
+                icon = mBitmapFull;
             }
-            
-            // Place and render the icon.
-            icon.setBounds(x, mRenderY, x + mIconWidth, mRenderY + mIconHeight);
-            icon.draw(canvas);
-            
-            // Increase x position by icon width and spacing.
-            x += mIconWidth + mRatingSpacing;
+
+            canvas.drawBitmap(icon, mRectSrc, mRectDest, mPaint);
+
+            mRectDest.left += iconWidth + mRatingSpacing;
+            mRectDest.right = mRectDest.left + iconWidth;
         }
     }
     
