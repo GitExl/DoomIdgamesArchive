@@ -9,7 +9,7 @@
         android:id="@+id/IdgamesText_Text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="@dimen/Padding"
+        android:padding="@dimen/PaddingSmall"
         android:text="@string/IdgamesText_TextDefault"
         android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
         android:textSize="11sp"

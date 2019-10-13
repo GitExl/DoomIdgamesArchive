@@ -1,15 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout android:layout_width="match_parent"
-    android:layout_height="match_parent" xmlns:android="http://schemas.android.com/apk/res/android" android:paddingTop="@dimen/Padding">
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingTop="@dimen/PaddingSmall">
 
     <TextView
         android:id="@+id/IdgamesListHeader_Title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
-        android:layout_marginLeft="@dimen/Padding"
-        android:layout_marginRight="@dimen/Padding"
-        android:layout_marginBottom="@dimen/PaddingSmall"
+        android:layout_marginLeft="@dimen/PaddingSmall"
+        android:layout_marginRight="@dimen/PaddingSmall"
         android:text="@string/IdgamesListHeader_TitleDefault"
         android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6" />
 

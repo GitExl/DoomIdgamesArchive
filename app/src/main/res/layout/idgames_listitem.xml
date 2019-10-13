@@ -3,10 +3,10 @@
     xmlns:custom="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:paddingBottom="@dimen/Padding"
+    android:paddingBottom="@dimen/PaddingSmall"
     android:paddingLeft="@dimen/PaddingMedium"
     android:paddingRight="@dimen/PaddingMedium"
-    android:paddingTop="@dimen/Padding" >
+    android:paddingTop="@dimen/PaddingSmall" >
 
     <LinearLayout
         android:id="@+id/IdgamesListItem_TypeLayout"
@@ -36,7 +36,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
-        android:layout_marginEnd="@dimen/Padding"
+        android:layout_marginEnd="@dimen/PaddingSmall"
         android:layout_toStartOf="@+id/IdgamesListItem_Date"
         android:layout_toEndOf="@id/IdgamesListItem_TypeLayout"
         android:orientation="vertical">

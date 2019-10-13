@@ -24,7 +24,7 @@
                 android:layout_height="wrap_content"
                 android:background="@color/colorPrimaryVariant"
                 android:ellipsize="start"
-                android:padding="@dimen/Padding"
+                android:padding="@dimen/PaddingSmall"
                 android:text="@string/IdgamesList_PathDefault"
                 android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
                 android:textColor="@color/colorOnPrimary" />
@@ -40,9 +40,9 @@
                 android:id="@+id/IdgamesList_SearchFieldLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/Padding"
-                android:layout_marginTop="@dimen/Padding"
-                android:layout_marginRight="@dimen/Padding"
+                android:layout_marginLeft="@dimen/PaddingSmall"
+                android:layout_marginTop="@dimen/PaddingSmall"
+                android:layout_marginRight="@dimen/PaddingSmall"
                 android:hint="@string/SearchHint"
                 android:imeOptions="actionSearch"
                 android:inputType="text"
@@ -63,9 +63,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/IdgamesList_SearchFieldLayout"
-                android:layout_marginLeft="@dimen/Padding"
+                android:layout_marginLeft="@dimen/PaddingSmall"
                 android:layout_marginTop="@dimen/PaddingMedium"
-                android:layout_marginRight="@dimen/Padding"
+                android:layout_marginRight="@dimen/PaddingSmall"
                 android:dropDownWidth="match_parent"
                 android:spinnerMode="dialog" />
         </RelativeLayout>
@@ -93,7 +93,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:layout_marginTop="@dimen/Padding"
+            android:layout_marginTop="@dimen/PaddingSmall"
             android:gravity="center"
             android:text="@string/IdgamesList_MessageDefault"
             android:visibility="visible" />
@@ -117,7 +117,7 @@
         android:fastScrollEnabled="true"
         android:scrollingCache="true"
         android:smoothScrollbar="true"
-        android:visibility="visible"></ListView>
+        android:visibility="visible" />
 
 
 </RelativeLayout>

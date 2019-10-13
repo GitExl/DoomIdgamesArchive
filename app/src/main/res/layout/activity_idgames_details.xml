@@ -59,12 +59,13 @@
             android:id="@+id/IdgamesDetails_Layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:padding="@dimen/PaddingMedium"
             android:orientation="vertical">
 
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="@dimen/Padding">
+                android:layout_marginBottom="@dimen/PaddingSmall">
                 <LinearLayout
                     android:id="@+id/IdgamesDetails_LayoutInfo"
                     android:orientation="vertical"
