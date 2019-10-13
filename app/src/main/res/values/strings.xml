@@ -37,5 +37,7 @@
     <string name="IdgamesDetails_InvalidTitle">Invalid file</string>
     <string name="IdgamesList_Directory">Directory</string>
     <string name="IdgamesDetails_ToastNoDirectory">External storage directory could not be found or created.</string>
+    <string name="IdgamesDetails_ToastNoDownloadManager">Could not create download manager.</string>
+    <string name="IdgamesDetails_ToastNoDownloadEnqueue">Could not queue download.</string>
 
 </resources>

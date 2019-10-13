@@ -1,7 +1,6 @@
 package nl.exl.doomidgamesarchive.activities;
 
 import android.Manifest;
-import android.annotation.SuppressLint;
 import android.app.DownloadManager;
 import android.content.Context;
 import android.content.Intent;
@@ -31,6 +30,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+
 import nl.exl.doomidgamesarchive.Config;
 import nl.exl.doomidgamesarchive.R;
 import nl.exl.doomidgamesarchive.RatingView;
@@ -77,8 +77,10 @@ public class DetailsActivity extends AppCompatActivity {
     private String mTextFileContents = null;
     
     private int mState = STATE_INVALID;
-    
-    
+
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -143,8 +145,11 @@ public class DetailsActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public void onSaveInstanceState(Bundle savedInstanceState) {
+    public void onSaveInstanceState(@NonNull Bundle savedInstanceState) {
         super.onSaveInstanceState(savedInstanceState);
         
         savedInstanceState.putInt("fileId", mFileId);
@@ -242,7 +247,7 @@ public class DetailsActivity extends AppCompatActivity {
                 total.append(text);
             }
         }
-        addText(total.substring(2), R.layout.idgames_details_listtext, parseLinks);
+        addText(total.substring(2), parseLinks);
     }
     
     /**
@@ -251,6 +256,7 @@ public class DetailsActivity extends AppCompatActivity {
      * @param title The title to give this header.
      */
     private void addHeader(String title) {
+
         // Do not create empty headers at all.
         if (title == null || title.length() == 0) {
             return;
@@ -269,19 +275,15 @@ public class DetailsActivity extends AppCompatActivity {
      * Adds a TextView to the mLayout.
      * 
      * @param text The text to add.
-     * @param resource The resource id of the layout to use.
      */
-    private void addText(String text, int resource, boolean parseLinks) {
+    private void addText(String text, boolean parseLinks) {
         text = text.trim();
-        
-        // Do not create empty text layouts at all.
         if (text.length() == 0) {
             return;
         }
-        
-        // Build view.
-        View view = getLayoutInflater().inflate(resource, mLayoutInfo, false);
-        
+
+        // Inflate and configure the text view that gets added to the info layout.
+        View view = getLayoutInflater().inflate(R.layout.idgames_details_listtext, mLayoutInfo, false);
         TextView textView = view.findViewById(R.id.IdgamesListText_Text);
         if (parseLinks) {
             textView.setAutoLinkMask(Linkify.EMAIL_ADDRESSES | Linkify.WEB_URLS);
@@ -292,7 +294,12 @@ public class DetailsActivity extends AppCompatActivity {
         
         mLayoutInfo.addView(view);
     }
-    
+
+    /**
+     * Adds a review layout.
+     *
+     * @param review Review object to add a layout for.
+     */
     private void addReview(Review review) {
         View view = getLayoutInflater().inflate(R.layout.idgames_details_listreview, mLayoutReviews, false);
         
@@ -337,23 +344,23 @@ public class DetailsActivity extends AppCompatActivity {
      * Downloads the current IdgamesFile to the public external download directory.
      * Will use DownloadManager on Ice Cream Sandwich and up, a custom DownloadTask on older versions.
      */
-    @SuppressLint("SdCardPath")
     private void downloadFile() {
 
         // Ask for permission if needed.
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            int permission = ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE);
+            final int permission = ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE);
             if (permission != PackageManager.PERMISSION_GRANTED) {
-                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, PERMISSION_CALLBACK_DOWNLOAD);
+                final String[] permissions = new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE};
+                ActivityCompat.requestPermissions(this, permissions, PERMISSION_CALLBACK_DOWNLOAD);
                 return;
             }
         }
 
         // Get the download mirror URL to use.
-        SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
-        String url = sharedPrefs.getString("DownloadMirror", Config.IDGAMES_MIRROR_DEFAULT) + mFilePath + mFileName;
+        final SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
+        final String url = sharedPrefs.getString("DownloadMirror", Config.IDGAMES_MIRROR_DEFAULT) + mFilePath + mFileName;
 
-        // Let DownloadManager handle the download.
+        // Let the DownloadManager handle the download.
         DownloadManager.Request request = new DownloadManager.Request(Uri.parse(url));
         request.setTitle(mFileName);
         request.setDescription(mFileTitle);
@@ -366,9 +373,19 @@ public class DetailsActivity extends AppCompatActivity {
         }
 
         DownloadManager manager = (DownloadManager)getSystemService(Context.DOWNLOAD_SERVICE);
-        manager.enqueue(request);
+        if (manager == null) {
+            Toast.makeText(this, this.getString(R.string.IdgamesDetails_ToastNoDownloadManager), Toast.LENGTH_SHORT).show();
+        }
+        try {
+            manager.enqueue(request);
+        } catch (NullPointerException e) {
+            Toast.makeText(this, this.getString(R.string.IdgamesDetails_ToastNoDownloadEnqueue), Toast.LENGTH_SHORT).show();
+        }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         if (requestCode == PERMISSION_CALLBACK_DOWNLOAD &&
@@ -377,6 +394,9 @@ public class DetailsActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.idgames_details, menu);
         
@@ -401,7 +421,10 @@ public class DetailsActivity extends AppCompatActivity {
             menu.getItem(i).setVisible(isVisible);
         }
     }
-    
+
+    /**
+     * {@inheritDoc}
+     */
     public boolean onOptionsItemSelected(MenuItem item) {
         if (mFileId == FILE_ID_INVALID) {
             return true;
