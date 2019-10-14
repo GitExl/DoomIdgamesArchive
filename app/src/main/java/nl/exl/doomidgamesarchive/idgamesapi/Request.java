@@ -109,6 +109,10 @@ public class Request {
         this.mMaxAge = maxAge;
     }
 
+    public long getMaxAge() {
+        return this.mMaxAge;
+    }
+
     public String getDirectoryName() {
         return mDirectoryName;
     }

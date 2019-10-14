@@ -28,6 +28,7 @@ public class ResponseTask extends AsyncTask<Request, Void, Response> {
             URL url = new URL(request.getURL());
             HttpURLConnection urlConnection = (HttpURLConnection)url.openConnection();
             urlConnection.setUseCaches(true);
+            urlConnection.addRequestProperty("Cache-Control", "max-age=" + request.getMaxAge());
             content = new BufferedInputStream(urlConnection.getInputStream(), 8192);
         } catch (MalformedURLException e) {
             Log.w("ResponseTask", "Malformed URL: " + e.toString());
