@@ -1,88 +1,126 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:custom="http://schemas.android.com/apk/res-auto"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     android:background="@drawable/background">
 
-    <RelativeLayout
-        android:id="@+id/IdgamesDetails_TitleLayout"
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
+        android:id="@+id/IdgamesDetail_Header"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/colorPrimaryVariant"
-        android:padding="@dimen/PaddingMedium">
+        android:layout_height="match_parent">
 
-        <TextView
-            android:id="@+id/IdgamesDetails_Title"
+        <androidx.core.widget.NestedScrollView
+            android:id="@+id/IdgamesDetails_Scroller"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_toStartOf="@+id/IdgamesDetails_Rating"
-            android:ellipsize="none"
-            android:gravity="top"
-            android:text="@string/IdgamesDetails_TitleDefault"
-            android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
-            android:textColor="@color/design_default_color_on_primary" />
-
-        <nl.exl.doomidgamesarchive.RatingView
-            android:id="@+id/IdgamesDetails_Rating"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_centerVertical="false"
-            custom:drawableEmpty="@drawable/rating_skull_empty"
-            custom:drawableFull="@drawable/rating_skull_blue_full"
-            custom:drawableHalf="@drawable/rating_skull_blue_half"
-            custom:rating="2.5"
-            custom:ratingMax="5"
-            custom:ratingSpacing="2dp"
-            custom:scale="0.5" />
-
-        <TextView
-            android:id="@+id/IdgamesDetails_VoteCount"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/IdgamesDetails_Rating"
-            android:layout_alignEnd="@id/IdgamesDetails_Rating"
-            android:text="@string/IdgamesDetails_RatingVotesDefault"
-            android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
-            android:textColor="@color/design_default_color_on_primary" />
-    </RelativeLayout>
-
-    <ScrollView
-        android:id="@+id/IdgamesDetails_Scroller"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/IdgamesDetails_TitleLayout">
-
-        <LinearLayout
-            android:id="@+id/IdgamesDetails_Layout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="@dimen/PaddingMedium"
-            android:orientation="vertical">
-
-            <com.google.android.material.card.MaterialCardView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/PaddingSmall">
-                <LinearLayout
-                    android:id="@+id/IdgamesDetails_LayoutInfo"
-                    android:orientation="vertical"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-                </LinearLayout>
-            </com.google.android.material.card.MaterialCardView>
+            app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
             <LinearLayout
-                android:id="@+id/IdgamesDetails_LayoutReviews"
-                android:orientation="vertical"
+                android:id="@+id/IdgamesDetails_Layout"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-            </LinearLayout>
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
 
-        </LinearLayout>
-    </ScrollView>
+                <com.google.android.material.card.MaterialCardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/PaddingMedium">
+
+                    <LinearLayout
+                        android:id="@+id/IdgamesDetails_LayoutInfo"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"></LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
+
+                <LinearLayout
+                    android:id="@+id/IdgamesDetails_LayoutReviews"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/PaddingMedium"
+                    android:orientation="vertical"></LinearLayout>
+
+            </LinearLayout>
+        </androidx.core.widget.NestedScrollView>
+
+        <com.google.android.material.appbar.AppBarLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <com.google.android.material.appbar.CollapsingToolbarLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:minHeight="80dp"
+                app:expandedTitleGravity="top"
+                app:layout_scrollFlags="scroll|exitUntilCollapsed">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/colorPrimaryVariant">
+
+                    <ImageView
+                        android:id="@+id/IdgamesDetails_Image"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:adjustViewBounds="true"
+                        android:scaleType="fitCenter"
+                        app:srcCompat="@drawable/titlepic" />
+
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="160dp"
+                        android:layout_alignBottom="@id/IdgamesDetails_Image"
+                        app:srcCompat="@drawable/dim_gradient" />
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_alignBottom="@id/IdgamesDetails_Image"
+                        android:padding="@dimen/PaddingMedium">
+
+                        <TextView
+                            android:id="@+id/IdgamesDetails_Title"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="@dimen/PaddingSmall"
+                            android:text="@string/IdgamesListText_TextDefault"
+                            android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
+                            android:textColor="@color/colorOnPrimary" />
+
+                        <nl.exl.doomidgamesarchive.RatingView
+                            android:id="@+id/IdgamesDetails_Rating"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@id/IdgamesDetails_Title"
+                            app:drawableEmpty="@drawable/rating_skull_empty"
+                            app:drawableFull="@drawable/rating_skull_blue_full"
+                            app:drawableHalf="@drawable/rating_skull_blue_half"
+                            app:rating="2.5"
+                            app:ratingMax="5"
+                            app:ratingSpacing="2dp"
+                            app:scale="0.5" />
+
+                        <TextView
+                            android:id="@+id/IdgamesDetails_VoteCount"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignBottom="@id/IdgamesDetails_Rating"
+                            android:layout_marginStart="@dimen/PaddingSmall"
+                            android:layout_toEndOf="@id/IdgamesDetails_Rating"
+                            android:text="@string/IdgamesDetails_RatingVotesDefault"
+                            android:textAppearance="@style/TextAppearance.MaterialComponents.Caption"
+                            android:textColor="@color/design_default_color_on_primary" />
+                    </RelativeLayout>
+
+                </RelativeLayout>
+
+            </com.google.android.material.appbar.CollapsingToolbarLayout>
+
+        </com.google.android.material.appbar.AppBarLayout>
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
     <ImageView
         android:id="@+id/IdgamesDetails_Progress"

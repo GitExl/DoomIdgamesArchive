@@ -19,7 +19,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -28,9 +27,10 @@ import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
-
+import androidx.core.widget.NestedScrollView;
 import nl.exl.doomidgamesarchive.Config;
 import nl.exl.doomidgamesarchive.R;
 import nl.exl.doomidgamesarchive.RatingView;
@@ -60,10 +60,11 @@ public class DetailsActivity extends AppCompatActivity {
     // Layout references.
     private LinearLayout mLayoutInfo;
     private LinearLayout mLayoutReviews;
-    private RelativeLayout mTitleLayout;
+    private NestedScrollView mScroller;
     private ImageView mProgress;
-    private TextView mTitleText;
+    private TextView mTitleView;
     private RatingView mRatingView;
+    private CoordinatorLayout mHeader;
     private TextView mVoteCount;
 
     // ID of the IdgamesApi file being displayed.
@@ -75,7 +76,7 @@ public class DetailsActivity extends AppCompatActivity {
     private String mFilePath = null;
     private String mFileTitle = null;
     private String mTextFileContents = null;
-    
+
     private int mState = STATE_INVALID;
 
     /**
@@ -86,18 +87,20 @@ public class DetailsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         
         setContentView(R.layout.activity_idgames_details);
+        setTitle("");
 
         // Get mLayout references.
         mLayoutInfo = findViewById(R.id.IdgamesDetails_LayoutInfo);
         mLayoutReviews = findViewById(R.id.IdgamesDetails_LayoutReviews);
-        mTitleLayout = findViewById(R.id.IdgamesDetails_TitleLayout);
-        mTitleText = findViewById(R.id.IdgamesDetails_Title);
+        mScroller = findViewById(R.id.IdgamesDetails_Scroller);
+        mTitleView = findViewById(R.id.IdgamesDetails_Title);
         mRatingView = findViewById(R.id.IdgamesDetails_Rating);
+        mHeader = findViewById(R.id.IdgamesDetail_Header);
         mVoteCount = findViewById(R.id.IdgamesDetails_VoteCount);
         
         mProgress = findViewById(R.id.IdgamesDetails_Progress);
         mProgress.setBackgroundResource(R.drawable.cacodemon);
-        
+
         // Restore state from a saved instance.
         if (savedInstanceState != null) {
             mFileId = savedInstanceState.getInt("fileId");
@@ -127,6 +130,8 @@ public class DetailsActivity extends AppCompatActivity {
                 mFileId = this.getIntent().getIntExtra("fileId", FILE_ID_INVALID);
             }
         }
+
+        this.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         if (mFileId == FILE_ID_INVALID) {
             buildInvalidView();
@@ -163,7 +168,6 @@ public class DetailsActivity extends AppCompatActivity {
      * Builds the view so as to display an invalid file.
      */
     private void buildInvalidView() {
-        mTitleText.setText(R.string.IdgamesDetails_InvalidTitle);
         mRatingView.setRating(0);
     }
 
@@ -176,9 +180,8 @@ public class DetailsActivity extends AppCompatActivity {
         if (fileEntry == null) {
             return;
         }
-        
-        // Set title area contents.
-        mTitleText.setText(fileEntry.toString());
+
+        mTitleView.setText(fileEntry.toString());
         mRatingView.setRating((float)fileEntry.getRating());
         
         // Set number of votes.
@@ -318,9 +321,8 @@ public class DetailsActivity extends AppCompatActivity {
      * Displays the mProgressBar indicator and hides the rest of the activity.
      */
     private void showProgressIndicator() {
-        mTitleLayout.setVisibility(View.GONE);
-        mLayoutInfo.setVisibility(View.GONE);
-        mLayoutReviews.setVisibility(View.GONE);
+        mHeader.setVisibility(View.GONE);
+        mScroller.setVisibility(View.GONE);
         mProgress.setVisibility(View.VISIBLE);
         
         AnimationDrawable progressAnim = (AnimationDrawable)mProgress.getBackground();
@@ -331,9 +333,8 @@ public class DetailsActivity extends AppCompatActivity {
      * Hides the mProgressBar indicator and displays the rest of the activity.
      */
     private void hideProgressIndicator() {
-        mTitleLayout.setVisibility(View.VISIBLE);
-        mLayoutInfo.setVisibility(View.VISIBLE);
-        mLayoutReviews.setVisibility(View.VISIBLE);
+        mHeader.setVisibility(View.VISIBLE);
+        mScroller.setVisibility(View.VISIBLE);
         mProgress.setVisibility(View.GONE);
         
         AnimationDrawable progressAnim = (AnimationDrawable)mProgress.getBackground();
@@ -459,5 +460,14 @@ public class DetailsActivity extends AppCompatActivity {
             this.hideProgressIndicator();
         }
         this.invalidateOptionsMenu();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public boolean onSupportNavigateUp() {
+        finish();
+        return true;
     }
 }
