@@ -141,7 +141,6 @@ public class MainActivity extends TabActivity implements IdgamesListener, OnShar
             args.putLong("maxAge", Config.MAXAGE_NEWFILES);
             args.putInt("limit", limit);
             args.putBoolean("sort", false);
-            args.putBoolean("addListIndex", true);
             
             newFilesFragment = new IdgamesListFragment();
             newFilesFragment.setArguments(args);
@@ -165,7 +164,6 @@ public class MainActivity extends TabActivity implements IdgamesListener, OnShar
             args.putLong("maxAge", Config.MAXAGE_NEWVOTES);
             args.putInt("limit", limit);
             args.putBoolean("sort", false);
-            args.putBoolean("addListIndex", true);
             
             newVotesFragment = new IdgamesListFragment();
             newVotesFragment.setArguments(args);
@@ -186,7 +184,6 @@ public class MainActivity extends TabActivity implements IdgamesListener, OnShar
             args.putString("directoryName", "");
             args.putLong("maxAge", Config.MAXAGE_BROWSE);
             args.putBoolean("sort", true);
-            args.putBoolean("addListIndex", false);
             
             browseFragment = new IdgamesListFragment();
             browseFragment.setArguments(args);
@@ -208,7 +205,6 @@ public class MainActivity extends TabActivity implements IdgamesListener, OnShar
             args.putInt("category", Request.CATEGORY_FILENAME);
             args.putLong("maxAge", Config.MAXAGE_SEARCH);
             args.putBoolean("sort", true);
-            args.putBoolean("addListIndex", false);
             
             searchFragment = new IdgamesListFragment();
             searchFragment.setArguments(args);

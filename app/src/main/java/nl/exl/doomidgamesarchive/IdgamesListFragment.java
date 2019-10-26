@@ -47,10 +47,7 @@ public class IdgamesListFragment extends Fragment implements OnItemClickListener
 
     // Sorts the list alphabetically if true.
     private boolean mSort = false;
-    
-    // Adds list index numbers before ListView titles if true.
-    private boolean mAddListIndex = false;
-    
+
     // Request associated with this fragment.
     private Request mRequest;
     
@@ -106,7 +103,6 @@ public class IdgamesListFragment extends Fragment implements OnItemClickListener
         }
 
         // Set view arguments.
-        mAddListIndex = arguments.getBoolean("addListIndex", false);
         mSort = arguments.getBoolean("sort", false);
     }
 
@@ -135,21 +131,21 @@ public class IdgamesListFragment extends Fragment implements OnItemClickListener
         mSearchField.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                if (actionId == EditorInfo.IME_ACTION_SEARCH) {
-                    mSearchQuery = v.getText().toString();
-                    executeSearch();
-                }
-                return false;
+            if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+                mSearchQuery = v.getText().toString();
+                executeSearch();
+            }
+            return false;
             }
         });
         mSearchField.setOnKeyListener(new OnKeyListener() {
             @Override
             public boolean onKey(View v, int keyCode, KeyEvent event) {
-                if (keyCode == KeyEvent.KEYCODE_ENTER || keyCode == KeyEvent.KEYCODE_NUMPAD_ENTER) {
-                    mSearchQuery = ((TextView)v).getText().toString();
-                    executeSearch();
-                }
-                return false;
+            if (keyCode == KeyEvent.KEYCODE_ENTER || keyCode == KeyEvent.KEYCODE_NUMPAD_ENTER) {
+                mSearchQuery = ((TextView)v).getText().toString();
+                executeSearch();
+            }
+            return false;
             }
         });
         mSearchField.addTextChangedListener(new TextWatcher() {
@@ -287,8 +283,6 @@ public class IdgamesListFragment extends Fragment implements OnItemClickListener
         if (warning != null && warning.equals("Limit Warning")) {
             Toast.makeText(getContext(), "The search returned too many results. Not all of them are displayed.", Toast.LENGTH_LONG).show();
         }
-
-        mEntryAdapter.setAddListIndex(mAddListIndex);
 
         // Add all entries to list adapter.
         mEntryAdapter.clear();

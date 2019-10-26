@@ -10,7 +10,6 @@ import android.widget.TextView;
 
 import java.util.Comparator;
 import java.util.HashSet;
-import java.util.Locale;
 import java.util.Set;
 
 import androidx.annotation.NonNull;
@@ -27,9 +26,6 @@ import nl.exl.doomidgamesarchive.responsetasks.VoteUpdateTask;
  */
 public class IdgamesListAdapter extends ArrayAdapter<Entry> {
 
-    // Adds list indices in front of list item titles if true.
-    private boolean mAddListIndex = false;
-    
     // Layout mInflater reference.
     private LayoutInflater mInflater;
 
@@ -54,7 +50,6 @@ public class IdgamesListAdapter extends ArrayAdapter<Entry> {
      * Helper class to keep view references in a view, preventing repeated lookups.
      */
     private static class ViewHolder {
-        TextView index;
         TextView title;
         TextView subtitle;
         TextView date;
@@ -71,7 +66,6 @@ public class IdgamesListAdapter extends ArrayAdapter<Entry> {
 
     @Override
     public @NonNull View getView(int position, View convertView, @NonNull ViewGroup parent) {
-        Locale locale = this.getContext().getResources().getConfiguration().locale;
         ViewHolder holder;
 
         // Create a new list item View.
@@ -80,7 +74,6 @@ public class IdgamesListAdapter extends ArrayAdapter<Entry> {
 
             // Store holder class with references to child views.
             holder = new ViewHolder();
-            holder.index = convertView.findViewById(R.id.IdgamesListItem_Index);
             holder.title = convertView.findViewById(R.id.IdgamesListItem_Title);
             holder.subtitle = convertView.findViewById(R.id.IdgamesListItem_Subtitle);
             holder.date = convertView.findViewById(R.id.IdgamesListItem_Date);
@@ -97,9 +90,6 @@ public class IdgamesListAdapter extends ArrayAdapter<Entry> {
         if (holder.date != null) {
             holder.date.setVisibility(View.GONE);
         }
-        if (holder.index != null) {
-            holder.index.setVisibility(View.GONE);
-        }
         if (holder.rating != null) {
             holder.rating.setVisibility(View.GONE);
         }
@@ -114,12 +104,6 @@ public class IdgamesListAdapter extends ArrayAdapter<Entry> {
         Entry entry = this.getItem(position);
         if (entry == null) {
             return convertView;
-        }
-
-        // Set the View's title.
-        if (mAddListIndex) {
-            holder.index.setText(String.format(locale, "%1$d", position + 1));
-            holder.index.setVisibility(View.VISIBLE);
         }
 
         String title = entry.toString();
@@ -253,8 +237,5 @@ public class IdgamesListAdapter extends ArrayAdapter<Entry> {
     void sort() {
         this.sort(new EntryComparator());
     }
-    
-    void setAddListIndex(boolean addListIndex) {
-        this.mAddListIndex = addListIndex;
-    }
+
 }

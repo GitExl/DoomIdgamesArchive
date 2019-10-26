@@ -22,14 +22,6 @@
             android:layout_marginEnd="@dimen/PaddingMedium"
             custom:srcCompat="@drawable/ic_folder_black_24dp" />
 
-        <TextView
-            android:id="@+id/IdgamesListItem_Index"
-            android:layout_width="24dp"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="@dimen/PaddingMedium"
-            android:gravity="center"
-            android:text="40"
-            android:textAppearance="@style/TextAppearance.MaterialComponents.Body1" />
     </LinearLayout>
 
     <LinearLayout
