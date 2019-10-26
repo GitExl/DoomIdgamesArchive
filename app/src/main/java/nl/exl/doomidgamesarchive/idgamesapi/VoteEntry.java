@@ -13,14 +13,17 @@ public class VoteEntry extends Entry {
     // The database ID of the file that this vote was made on.
     private int mFileId = -1;
     
-    // The mTitle of the file voted on.
+    // The title of the file voted on.
     private String mTitle = "";
 
     // The review text the voter entered. 
     private String mReviewText = "";
     
-    // The mRating the voter entered.
+    // The rating the voter entered.
     private double mRating = 0;
+
+    // Author of the entry (not the vote).
+    private String mAuthor = "";
 
     public void setId(int id) {
         mId = id;
@@ -44,6 +47,14 @@ public class VoteEntry extends Entry {
 
     public void setRating(double rating) {
         mRating = rating;
+    }
+
+    public void setAuthor(String author) {
+        mAuthor = author;
+    }
+
+    public String getAuthor() {
+        return mAuthor;
     }
 
     public int getId() {

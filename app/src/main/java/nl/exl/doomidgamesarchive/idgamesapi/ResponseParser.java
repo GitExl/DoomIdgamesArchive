@@ -285,6 +285,8 @@ class ResponseParser {
                     mVoteEntry.addTitle(chars);
                 } else if (mElement.equals("rating")) {
                     mVoteEntry.setRating(Double.parseDouble(chars));
+                } else if (mElement.equals("author")) {
+                    mVoteEntry.setAuthor(chars);
                 }
                 
             // Directory.

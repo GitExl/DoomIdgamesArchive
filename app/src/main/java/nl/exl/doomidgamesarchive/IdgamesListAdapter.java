@@ -153,12 +153,12 @@ public class IdgamesListAdapter extends ArrayAdapter<Entry> {
         // Fill view with vote info.
         } else if (entry instanceof VoteEntry) {
             VoteEntry voteEntry = (VoteEntry)entry;
-            
-            String reviewText = voteEntry.getReviewText();
-            if (reviewText != null && reviewText.trim().length() > 0) {
+
+            String author = voteEntry.getAuthor();
+            if (!author.isEmpty()) {
                 holder.subtitle.setVisibility(View.VISIBLE);
                 holder.subtitle.setMaxLines(10);
-                holder.subtitle.setText(reviewText);
+                holder.subtitle.setText(author);
             }
             
             holder.rating.setRating((float)voteEntry.getRating());
