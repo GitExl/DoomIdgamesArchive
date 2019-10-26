@@ -30,18 +30,21 @@ import com.google.android.material.textfield.TextInputEditText;
 import java.io.File;
 import java.util.List;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import nl.exl.doomidgamesarchive.idgamesapi.DirectoryEntry;
 import nl.exl.doomidgamesarchive.idgamesapi.Entry;
 import nl.exl.doomidgamesarchive.idgamesapi.Request;
 import nl.exl.doomidgamesarchive.idgamesapi.Response;
 import nl.exl.doomidgamesarchive.idgamesapi.ResponseTask;
+import nl.exl.doomidgamesarchive.responsetasks.ListTask;
 
 /**
  * A fragment containing a list of IdGamesApi entries.
  * It will adapt what it displays based on the API mRequest type.
  */
 public class IdgamesListFragment extends Fragment implements OnItemClickListener {
+
     // Sorts the list alphabetically if true.
     private boolean mSort = false;
     
@@ -59,13 +62,9 @@ public class IdgamesListFragment extends Fragment implements OnItemClickListener
     private ImageView mProgress;
     private TextView mPathText;
     private TextInputEditText mSearchField;
-    private Spinner mSearchSpinner;
     private RelativeLayout mMessageContainer;
     private TextView mMessage;
 
-    // Search spinner adapter.
-    private ArrayAdapter<CharSequence> mSearchSpinnerAdapter;
-    
     // The currently selected search settings.
     private String mSearchQuery;
     private int mSearchCategory;
@@ -94,7 +93,10 @@ public class IdgamesListFragment extends Fragment implements OnItemClickListener
         super.onCreate(savedInstanceState);
         
         Bundle arguments = getArguments();
-        
+        if (arguments == null) {
+            return;
+        }
+
         // Restore the mRequest state from saved instance or from new arguments.
         mRequest = new Request();
         if (savedInstanceState == null) {
@@ -109,7 +111,7 @@ public class IdgamesListFragment extends Fragment implements OnItemClickListener
     }
 
     @Override
-    public void onSaveInstanceState(Bundle outState) {
+    public void onSaveInstanceState(@NonNull Bundle outState) {
         mRequest.saveToBundle(outState);
     }
 
@@ -127,7 +129,6 @@ public class IdgamesListFragment extends Fragment implements OnItemClickListener
         mBrowseTools = view.findViewById(R.id.IdgamesList_BrowseTools);
         
         mSearchField = view.findViewById(R.id.IdgamesList_SearchField);
-        mSearchSpinner = view.findViewById(R.id.IdgamesList_SearchSpinner);
         mSearchTools = view.findViewById(R.id.IdgamesList_SearchTools);
         
         // Set up search field actions.
@@ -165,10 +166,11 @@ public class IdgamesListFragment extends Fragment implements OnItemClickListener
         });
         
         // Set up search spinner.
-        mSearchSpinnerAdapter = ArrayAdapter.createFromResource(getActivity(), R.array.search_types, android.R.layout.simple_spinner_item);
-        mSearchSpinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        mSearchSpinner.setAdapter(mSearchSpinnerAdapter);
-        
+        ArrayAdapter<CharSequence> searchSpinnerAdapter = ArrayAdapter.createFromResource(getActivity(), R.array.search_types, android.R.layout.simple_spinner_item);
+        searchSpinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+        Spinner mSearchSpinner = view.findViewById(R.id.IdgamesList_SearchSpinner);
+        mSearchSpinner.setAdapter(searchSpinnerAdapter);
         mSearchSpinner.setOnItemSelectedListener(new OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long arg3) {
@@ -273,50 +275,44 @@ public class IdgamesListFragment extends Fragment implements OnItemClickListener
         }
         
         mEntryAdapter.clear();
-        
-        // Construct a new IdgamesApi mTask.
-        mTask = new ResponseTask() {
-            @Override
-            protected void onPostExecute(Response response) {
-                String warning = response.getWarningType();
-                if (warning != null && warning.equals("Limit Warning")) {
-                    Toast.makeText(getActivity(), "The search returned too many results. Not all of them are displayed.", Toast.LENGTH_LONG).show();
-                }
-                
-                mEntryAdapter.setAddListIndex(mAddListIndex);
-                
-                // Add all entries to list adapter.
-                mEntryAdapter.clear();
-                List<Entry> entries = response.getEntries();
-                for (int i = 0; i < entries.size(); i++) {
-                    mEntryAdapter.add(entries.get(i));
-                }
-                
-                if (mSort) {
-                    mEntryAdapter.sort();
-                } else {
-                    mEntryAdapter.notifyDataSetChanged();
-                }
-                
-                if (entries.size() == 0) {
-                    hideProgressIndicator("No results.");
-                } else {
-                    hideProgressIndicator(null);
-                }
-                
-                // Fix entry names for votes without any.
-                if (mRequest.getAction() == Request.GET_LATESTVOTES)
-                    mEntryAdapter.fixVotes();
-            }
+        showProgressIndicator();
+        showRelevantTools();
 
-            @Override
-            protected void onPreExecute() {
-                showProgressIndicator();
-                showRelevantTools();
-            }
-        };
-        
+        mTask = new ListTask(this);
         mTask.execute(mRequest);
+    }
+
+    public void setResponse(Response response) {
+        String warning = response.getWarningType();
+        if (warning != null && warning.equals("Limit Warning")) {
+            Toast.makeText(getContext(), "The search returned too many results. Not all of them are displayed.", Toast.LENGTH_LONG).show();
+        }
+
+        mEntryAdapter.setAddListIndex(mAddListIndex);
+
+        // Add all entries to list adapter.
+        mEntryAdapter.clear();
+        List<Entry> entries = response.getEntries();
+        for (int i = 0; i < entries.size(); i++) {
+            mEntryAdapter.add(entries.get(i));
+        }
+
+        if (mSort) {
+            mEntryAdapter.sort();
+        } else {
+            mEntryAdapter.notifyDataSetChanged();
+        }
+
+        if (entries.size() == 0) {
+            hideProgressIndicator("No results.");
+        } else {
+            hideProgressIndicator(null);
+        }
+
+        // Fix titles for votes list items without any.
+        if (mRequest.getAction() == Request.GET_LATESTVOTES) {
+            mEntryAdapter.fixVotes();
+        }
     }
     
     /**

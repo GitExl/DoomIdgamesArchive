@@ -18,21 +18,22 @@ import nl.exl.doomidgamesarchive.idgamesapi.DirectoryEntry;
 import nl.exl.doomidgamesarchive.idgamesapi.Entry;
 import nl.exl.doomidgamesarchive.idgamesapi.FileEntry;
 import nl.exl.doomidgamesarchive.idgamesapi.Request;
-import nl.exl.doomidgamesarchive.idgamesapi.Response;
 import nl.exl.doomidgamesarchive.idgamesapi.ResponseTask;
 import nl.exl.doomidgamesarchive.idgamesapi.VoteEntry;
+import nl.exl.doomidgamesarchive.responsetasks.VoteUpdateTask;
 
 /**
  * Provides list item Views from IdgamesApi entries for a ListView.
  */
-class IdgamesListAdapter extends ArrayAdapter<Entry> {
-    // Adds list indices in front of listitem titles if true.
+public class IdgamesListAdapter extends ArrayAdapter<Entry> {
+
+    // Adds list indices in front of list item titles if true.
     private boolean mAddListIndex = false;
     
     // Layout mInflater reference.
-    private LayoutInflater mInflater = null;
-    
-    
+    private LayoutInflater mInflater;
+
+
     /**
      * Comparator for IdgamesApi entries.
      * Directories are sorted before files and votes 
@@ -72,11 +73,11 @@ class IdgamesListAdapter extends ArrayAdapter<Entry> {
     public @NonNull View getView(int position, View convertView, @NonNull ViewGroup parent) {
         Locale locale = this.getContext().getResources().getConfiguration().locale;
         ViewHolder holder;
-        
-        // Create a new listitem View.
+
+        // Create a new list item View.
         if (convertView == null) {
             convertView = mInflater.inflate(R.layout.idgames_listitem, parent, false);
-            
+
             // Store holder class with references to child views.
             holder = new ViewHolder();
             holder.index = convertView.findViewById(R.id.IdgamesListItem_Index);
@@ -86,10 +87,10 @@ class IdgamesListAdapter extends ArrayAdapter<Entry> {
             holder.rating = convertView.findViewById(R.id.IdgamesListItem_Rating);
             holder.icon = convertView.findViewById(R.id.IdGamesListItem_Icon);
             convertView.setTag(holder);
-            
-        // Reuse an existing listitem View.
+
+            // Reuse an existing list item View.
         } else {
-            holder = (ViewHolder)convertView.getTag();
+            holder = (ViewHolder) convertView.getTag();
         }
 
         // Hide views that might or might not receive content, if they exist at all.
@@ -114,13 +115,19 @@ class IdgamesListAdapter extends ArrayAdapter<Entry> {
         if (entry == null) {
             return convertView;
         }
-        
+
         // Set the View's title.
         if (mAddListIndex) {
             holder.index.setText(String.format(locale, "%1$d", position + 1));
             holder.index.setVisibility(View.VISIBLE);
         }
-        holder.title.setText(entry.toString());
+
+        String title = entry.toString();
+        if (title.length() == 0) {
+            holder.title.setText("...");
+        } else {
+            holder.title.setText(entry.toString());
+        }
         
         // Fill view with directory info.
         if (entry instanceof DirectoryEntry) {
@@ -186,10 +193,10 @@ class IdgamesListAdapter extends ArrayAdapter<Entry> {
         ResponseTask responseTask;
         Request request;
         String title;
-        
+
         // Remember entries that have been fixed already, to prevent multiple requests for votes with the same file id.
-        Set<Entry> finishedEntries = new HashSet<Entry>();
-        
+        Set<Entry> fixedEntries = new HashSet<>();
+
         for (int i = 0; i < getCount(); i++) {
             entry = getItem(i);
             if (entry instanceof VoteEntry) {
@@ -197,8 +204,8 @@ class IdgamesListAdapter extends ArrayAdapter<Entry> {
                 
                 // Only fix votes with an empty title.
                 title = voteEntry.getTitle();
-                if (!finishedEntries.contains(entry) && title == null || title.length() == 0) {
-                    finishedEntries.add(entry);
+                if (!fixedEntries.contains(entry) && title == null || title.length() == 0) {
+                    fixedEntries.add(entry);
                     
                     // Execute a new request for file details.
                     request = new Request();
@@ -206,16 +213,7 @@ class IdgamesListAdapter extends ArrayAdapter<Entry> {
                     request.setMaxAge(Config.MAXAGE_NEWVOTES);
                     request.setFileId(voteEntry.getFileId());
                     
-                    responseTask = new ResponseTask() {
-                        @Override
-                        protected void onPostExecute(Response response) {
-                            // Update the corresponding vote with a new title.
-                            if (response.getEntries().size() > 0) {
-                                FileEntry fileEntry = (FileEntry)response.getEntries().get(0);
-                                updateVote(fileEntry);
-                            }
-                        }
-                    };
+                    responseTask = new VoteUpdateTask(this);
                     responseTask.execute(request);
                 }
             }
@@ -227,7 +225,7 @@ class IdgamesListAdapter extends ArrayAdapter<Entry> {
      * 
      * @param fileEntry The file entry to update a vote list item with.
      */
-    private void updateVote(FileEntry fileEntry) {
+    public void updateVote(FileEntry fileEntry) {
         Entry entry;
         VoteEntry voteEntry;
         

@@ -12,9 +12,6 @@ import android.net.NetworkInfo;
 import android.net.http.HttpResponseCache;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -22,6 +19,9 @@ import android.view.MenuItem;
 import java.io.File;
 import java.io.IOException;
 
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import nl.exl.doomidgamesarchive.Config;
 import nl.exl.doomidgamesarchive.IdgamesListFragment;
 import nl.exl.doomidgamesarchive.IdgamesListFragment.IdgamesListener;
@@ -125,7 +125,7 @@ public class MainActivity extends TabActivity implements IdgamesListener, OnShar
      * @param savedInstanceState Bundle of values saved when this activity was stopped. 
      */
     private void buildTabs(Bundle savedInstanceState) {
-        Tab tab = null;
+        Tab tab;
         TabHelper tabHelper = getTabHelper();
         SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
         FragmentManager manager = getSupportFragmentManager();
@@ -134,10 +134,7 @@ public class MainActivity extends TabActivity implements IdgamesListener, OnShar
         IdgamesListFragment newFilesFragment = (IdgamesListFragment)manager.findFragmentByTag(TAB_TAG_NEWFILES); 
         if (newFilesFragment == null) {
             String limitPref = sharedPrefs.getString("ListLimitNew", Integer.toString(Config.LIMIT_NEWFILES));
-            int limit = 10;
-            if (limitPref != null) {
-                limit = Integer.parseInt(limitPref);
-            }
+            int limit = Integer.parseInt(limitPref);
 
             Bundle args = new Bundle();
             args.putInt("action", Request.GET_LATESTFILES);
@@ -160,12 +157,9 @@ public class MainActivity extends TabActivity implements IdgamesListener, OnShar
         // Build the new votes fragment.
         IdgamesListFragment newVotesFragment = (IdgamesListFragment)manager.findFragmentByTag(TAB_TAG_NEWVOTES);
         if (newVotesFragment == null) {
-            int limit = 10;
             String limitPref = sharedPrefs.getString("ListLimitVotes", Integer.toString(Config.LIMIT_NEWVOTES));
-            if (limitPref != null) {
-                limit = Integer.parseInt(limitPref);
-            }
-            
+            int limit = Integer.parseInt(limitPref);
+
             Bundle args = new Bundle();
             args.putInt("action", Request.GET_LATESTVOTES);
             args.putLong("maxAge", Config.MAXAGE_NEWVOTES);
