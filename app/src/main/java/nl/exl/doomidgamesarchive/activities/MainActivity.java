@@ -16,30 +16,34 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.google.android.material.tabs.TabLayout;
+import com.google.android.material.tabs.TabLayoutMediator;
+
 import java.io.File;
 import java.io.IOException;
 
-import androidx.fragment.app.Fragment;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
+import androidx.viewpager2.widget.ViewPager2;
 import nl.exl.doomidgamesarchive.Config;
 import nl.exl.doomidgamesarchive.IdgamesListFragment;
 import nl.exl.doomidgamesarchive.IdgamesListFragment.IdgamesListener;
+import nl.exl.doomidgamesarchive.MainTabAdapter;
 import nl.exl.doomidgamesarchive.R;
 import nl.exl.doomidgamesarchive.SettingsMenu;
-import nl.exl.doomidgamesarchive.compatibility.Tab;
-import nl.exl.doomidgamesarchive.compatibility.TabActivity;
-import nl.exl.doomidgamesarchive.compatibility.TabHelper;
 import nl.exl.doomidgamesarchive.idgamesapi.DirectoryEntry;
 import nl.exl.doomidgamesarchive.idgamesapi.Entry;
 import nl.exl.doomidgamesarchive.idgamesapi.FileEntry;
 import nl.exl.doomidgamesarchive.idgamesapi.Request;
 import nl.exl.doomidgamesarchive.idgamesapi.VoteEntry;
 
+
 /**
  * The main activity, containing the tabbed interface. Also instantiates the list fragments.
  */
-public class MainActivity extends TabActivity implements IdgamesListener, OnSharedPreferenceChangeListener, Tab.TabListener {
+public class MainActivity extends AppCompatActivity implements IdgamesListener, OnSharedPreferenceChangeListener {
+
     private final static String TAB_TAG_BROWSE = "browse";
     private final static String TAB_TAG_NEWFILES = "newfiles";
     private final static String TAB_TAG_NEWVOTES = "newvotes";
@@ -47,7 +51,7 @@ public class MainActivity extends TabActivity implements IdgamesListener, OnShar
     
     // The currently selected tab's tag.
     private String mSelectedTabTag;
-    
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -62,14 +66,27 @@ public class MainActivity extends TabActivity implements IdgamesListener, OnShar
         }
 
         setContentView(R.layout.main);
-        
+
+        final MainTabAdapter tabAdapter = new MainTabAdapter(this);
+        buildTabs(savedInstanceState, tabAdapter);
+
+        ViewPager2 viewPager = findViewById(R.id.viewPager);
+        viewPager.setAdapter(tabAdapter);
+        viewPager.setOrientation(ViewPager2.ORIENTATION_HORIZONTAL);
+
+        TabLayout tabLayout = findViewById(R.id.tabLayout);
+        TabLayoutMediator mediator = new TabLayoutMediator(tabLayout, viewPager, true, new TabLayoutMediator.TabConfigurationStrategy() {
+            @Override
+            public void onConfigureTab(@NonNull TabLayout.Tab tab, int position) {
+                tab.setText(tabAdapter.getPageTitle(position));
+            }
+        });
+        mediator.attach();
+
         // Check for a network connection
         if (!testConnectivity()) {
             return;
         }
-        
-        // Add tabs to interface
-        buildTabs(savedInstanceState);
         
         // Register preference change listener
         SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
@@ -124,9 +141,7 @@ public class MainActivity extends TabActivity implements IdgamesListener, OnShar
      * 
      * @param savedInstanceState Bundle of values saved when this activity was stopped. 
      */
-    private void buildTabs(Bundle savedInstanceState) {
-        Tab tab;
-        TabHelper tabHelper = getTabHelper();
+    private void buildTabs(Bundle savedInstanceState, MainTabAdapter adapter) {
         SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
         FragmentManager manager = getSupportFragmentManager();
         
@@ -145,13 +160,8 @@ public class MainActivity extends TabActivity implements IdgamesListener, OnShar
             newFilesFragment = new IdgamesListFragment();
             newFilesFragment.setArguments(args);
         }
-        
-        // Build the new files tab.
-        tab = tabHelper.newTab(newFilesFragment, TAB_TAG_NEWFILES);
-        tab.setText(R.string.Tabs_NewFiles);
-        tab.setListener(this);
-        tabHelper.addTab(tab);
-        
+        adapter.addFragment(newFilesFragment, "New");
+
         
         // Build the new votes fragment.
         IdgamesListFragment newVotesFragment = (IdgamesListFragment)manager.findFragmentByTag(TAB_TAG_NEWVOTES);
@@ -168,12 +178,7 @@ public class MainActivity extends TabActivity implements IdgamesListener, OnShar
             newVotesFragment = new IdgamesListFragment();
             newVotesFragment.setArguments(args);
         }
-        
-        // Build the new votes tab.
-        tab = tabHelper.newTab(newVotesFragment, TAB_TAG_NEWVOTES);
-        tab.setText(R.string.Tabs_LatestVotes);
-        tab.setListener(this);
-        tabHelper.addTab(tab);
+        adapter.addFragment(newVotesFragment, "Votes");
         
         
         // Build the browse fragment.
@@ -188,12 +193,7 @@ public class MainActivity extends TabActivity implements IdgamesListener, OnShar
             browseFragment = new IdgamesListFragment();
             browseFragment.setArguments(args);
         }
-        
-        // Build the browse tab.
-        tab = tabHelper.newTab(browseFragment, TAB_TAG_BROWSE);
-        tab.setText(R.string.Tabs_Browse);
-        tab.setListener(this);
-        tabHelper.addTab(tab);
+        adapter.addFragment(browseFragment, "Browse");
         
         
         // Build the search fragment.
@@ -209,12 +209,7 @@ public class MainActivity extends TabActivity implements IdgamesListener, OnShar
             searchFragment = new IdgamesListFragment();
             searchFragment.setArguments(args);
         }
-        
-        // Build the search tab.
-        tab = tabHelper.newTab(searchFragment, TAB_TAG_SEARCH);
-        tab.setText(R.string.Tabs_Search);
-        tab.setListener(this);
-        tabHelper.addTab(tab);
+        adapter.addFragment(searchFragment, "Search");
     }
 
     /**
@@ -252,39 +247,24 @@ public class MainActivity extends TabActivity implements IdgamesListener, OnShar
     }
 
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-        FragmentManager manager = getSupportFragmentManager();
-        IdgamesListFragment fragment = null;
-        
-        // Select the appropriate fragment to update.
-        if (key.equals("ListLimitNew")) {
-            fragment = (IdgamesListFragment)manager.findFragmentByTag(TAB_TAG_NEWFILES);
-        } else if (key.equals("ListLimitVotes")) {
-            fragment = (IdgamesListFragment)manager.findFragmentByTag(TAB_TAG_NEWVOTES);
-        } else if (key.equals("ListLimitSearch")) {
-            fragment = (IdgamesListFragment)manager.findFragmentByTag(TAB_TAG_SEARCH);
-        }
-        
-        // Modify the request of chosen fragment and tell it to update.
-        if (fragment != null) {
-            fragment.setLimit(Integer.parseInt(sharedPreferences.getString(key, Integer.toString(Config.LIMIT_DEFAULT))));
-            fragment.updateList();
-        }
-    }
-
-    @Override
-    public void onTabSelected(Tab tab, FragmentTransaction ft) {
-        mSelectedTabTag = tab.getTag();
-
-        FragmentManager manager = getSupportFragmentManager();
-        Fragment fragment = manager.findFragmentByTag(mSelectedTabTag);
-
-        if (fragment == null) {
-            ft.add(android.R.id.tabcontent, tab.getFragment(), mSelectedTabTag);
-        } else {
-            ft.attach(tab.getFragment());
-        }
-
-        ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+        // TODO:
+//        FragmentManager manager = getSupportFragmentManager();
+//        IdgamesListFragment fragment = null;
+//
+//        // Select the appropriate fragment to update.
+//        if (key.equals("ListLimitNew")) {
+//            fragment = (IdgamesListFragment)manager.findFragmentByTag(TAB_TAG_NEWFILES);
+//        } else if (key.equals("ListLimitVotes")) {
+//            fragment = (IdgamesListFragment)manager.findFragmentByTag(TAB_TAG_NEWVOTES);
+//        } else if (key.equals("ListLimitSearch")) {
+//            fragment = (IdgamesListFragment)manager.findFragmentByTag(TAB_TAG_SEARCH);
+//        }
+//
+//        // Modify the request of chosen fragment and tell it to update.
+//        if (fragment != null) {
+//            fragment.setLimit(Integer.parseInt(sharedPreferences.getString(key, Integer.toString(Config.LIMIT_DEFAULT))));
+//            fragment.updateList();
+//        }
     }
 
     @Override
@@ -295,14 +275,5 @@ public class MainActivity extends TabActivity implements IdgamesListener, OnShar
         if (cache != null) {
             cache.flush();
         }
-    }
-
-    @Override
-    public void onTabUnselected(Tab tab, FragmentTransaction ft) {
-        ft.detach(tab.getFragment());
-    }
-
-    @Override
-    public void onTabReselected(Tab tab, FragmentTransaction ft) {
     }
 }

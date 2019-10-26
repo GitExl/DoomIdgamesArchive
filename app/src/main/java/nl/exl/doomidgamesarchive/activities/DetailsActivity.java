@@ -87,7 +87,6 @@ public class DetailsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         
         setContentView(R.layout.activity_idgames_details);
-        setTitle("");
 
         // Get mLayout references.
         mLayoutInfo = findViewById(R.id.IdgamesDetails_LayoutInfo);
@@ -131,7 +130,7 @@ public class DetailsActivity extends AppCompatActivity {
             }
         }
 
-        this.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+//        this.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         if (mFileId == FILE_ID_INVALID) {
             buildInvalidView();
