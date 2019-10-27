@@ -22,12 +22,11 @@
                 android:id="@+id/IdgamesList_Path"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/colorPrimaryVariant"
+                android:background="?android:attr/colorButtonNormal"
                 android:ellipsize="start"
                 android:padding="@dimen/PaddingSmall"
                 android:text="@string/IdgamesList_PathDefault"
-                android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
-                android:textColor="@color/colorOnPrimary" />
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1" />
         </RelativeLayout>
 
         <RelativeLayout
