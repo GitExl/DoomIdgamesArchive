@@ -11,7 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
-        android:background="@color/design_default_color_background">
+        android:background="?attr/colorSurface">
 
         <RelativeLayout
             android:id="@+id/IdgamesList_BrowseTools"
@@ -113,11 +113,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/IdgamesList_ToolContainer"
-        android:background="@color/design_default_color_background"
+        android:background="?attr/colorSurface"
         android:fastScrollEnabled="true"
         android:scrollingCache="true"
         android:smoothScrollbar="true"
         android:visibility="visible" />
-
 
 </RelativeLayout>
