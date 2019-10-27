@@ -126,15 +126,9 @@ public class IdgamesListAdapter extends ArrayAdapter<Entry> {
 
             // Add date.
             String date = fileEntry.getLocaleDate();
-            if (date != null && date.length() > 0) {
-
-                if (holder.date == null) {
-                    subText.append(" - ");
-                    subText.append(date);
-                } else {
-                    holder.date.setText(date);
-                    holder.date.setVisibility(View.VISIBLE);
-                }
+            if (date.length() > 0) {
+                holder.date.setText(date);
+                holder.date.setVisibility(View.VISIBLE);
             }
             
             // Add file size.

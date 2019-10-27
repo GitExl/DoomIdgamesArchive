@@ -38,7 +38,7 @@ public class FileEntry extends Entry {
     
     // Temporal info of this entry.
     private String mDate = "";
-    private String mLocaleDate = "";
+    private String mLocaleDate;
     
     // Rating info of this entry.
     private double mRating;
@@ -213,7 +213,7 @@ public class FileEntry extends Entry {
             if (date != null) {
                 mLocaleDate = SimpleDateFormat.getDateInstance().format(date);
             } else {
-                mLocaleDate = "Unknown";
+                mLocaleDate = "";
             }
         }
 
