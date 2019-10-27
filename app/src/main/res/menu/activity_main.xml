@@ -2,12 +2,10 @@
 
     <item
         android:id="@+id/MenuMain_Settings"
-        android:orderInCategory="100"
         app:showAsAction="never"
         android:title="@string/MenuMain_Settings"/>
     <item
         android:id="@+id/MenuMain_About"
-        android:orderInCategory="110"
         app:showAsAction="never"
         android:title="@string/MenuMain_About"/>
 
