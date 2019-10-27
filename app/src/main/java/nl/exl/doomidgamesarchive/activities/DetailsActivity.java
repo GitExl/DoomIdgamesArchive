@@ -130,6 +130,7 @@ public class DetailsActivity extends AppCompatActivity {
             }
         }
 
+        // TODO
 //        this.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         if (mFileId == FILE_ID_INVALID) {
@@ -196,7 +197,7 @@ public class DetailsActivity extends AppCompatActivity {
         // Create individual sections.
         createSection("Description", true, fileEntry.getDescription());
         createSection("Author", true, fileEntry.getAuthor(), fileEntry.getEmail());
-        createSection("File", false, fileEntry.getFileName(), fileEntry.getFileSizeString(), fileEntry.getLocaleDate());
+        createSection("File", false, fileEntry.getFileName(), fileEntry.getLocaleDate(), fileEntry.getFileSizeString());
         createSection("Credits", true, fileEntry.getCredits());
         createSection("Based on", false, fileEntry.getBase());
         createSection("Build time", false, fileEntry.getBuildTime());

@@ -52,7 +52,6 @@ public class IdgamesListAdapter extends ArrayAdapter<Entry> {
     private static class ViewHolder {
         TextView title;
         TextView subtitle;
-        TextView date;
         RatingView rating;
         ImageView icon;
     }
@@ -76,7 +75,6 @@ public class IdgamesListAdapter extends ArrayAdapter<Entry> {
             holder = new ViewHolder();
             holder.title = convertView.findViewById(R.id.IdgamesListItem_Title);
             holder.subtitle = convertView.findViewById(R.id.IdgamesListItem_Subtitle);
-            holder.date = convertView.findViewById(R.id.IdgamesListItem_Date);
             holder.rating = convertView.findViewById(R.id.IdgamesListItem_Rating);
             holder.icon = convertView.findViewById(R.id.IdGamesListItem_Icon);
             convertView.setTag(holder);
@@ -87,9 +85,6 @@ public class IdgamesListAdapter extends ArrayAdapter<Entry> {
         }
 
         // Hide views that might or might not receive content, if they exist at all.
-        if (holder.date != null) {
-            holder.date.setVisibility(View.GONE);
-        }
         if (holder.rating != null) {
             holder.rating.setVisibility(View.GONE);
         }
@@ -127,8 +122,8 @@ public class IdgamesListAdapter extends ArrayAdapter<Entry> {
             // Add date.
             String date = fileEntry.getLocaleDate();
             if (date.length() > 0) {
-                holder.date.setText(date);
-                holder.date.setVisibility(View.VISIBLE);
+                subText.append(" - ");
+                subText.append(date);
             }
             
             // Add file size.

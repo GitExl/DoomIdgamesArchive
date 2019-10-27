@@ -28,8 +28,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
-        android:layout_marginEnd="@dimen/PaddingSmall"
-        android:layout_toStartOf="@+id/IdgamesListItem_Date"
+        android:layout_marginEnd="@dimen/PaddingMedium"
+        android:layout_toStartOf="@+id/IdgamesListItem_Rating"
         android:layout_toEndOf="@id/IdgamesListItem_TypeLayout"
         android:orientation="vertical">
 
@@ -53,18 +53,6 @@
             android:text="@string/IdgamesListItem_SubTitleDefault"
             android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1" />
     </LinearLayout>
-
-    <TextView
-        android:id="@+id/IdgamesListItem_Date"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:layout_marginEnd="@dimen/PaddingMedium"
-        android:layout_toStartOf="@+id/IdgamesListItem_Rating"
-        android:gravity="end"
-        android:text="@string/IdgamesListItem_DateDefault"
-        android:textAppearance="@style/TextAppearance.MaterialComponents.Caption"
-        android:visibility="visible" />
 
     <nl.exl.doomidgamesarchive.RatingView
         android:id="@+id/IdgamesListItem_Rating"
