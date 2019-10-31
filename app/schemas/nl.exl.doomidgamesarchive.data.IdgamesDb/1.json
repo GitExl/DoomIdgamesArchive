@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "8d6a993f5243fff3bfa850022b9bddfc",
+    "identityHash": "e89dc71a18cba1a3d43cea10c8d836ad",
     "entities": [
       {
         "tableName": "files",
@@ -33,7 +33,16 @@
           ],
           "autoGenerate": false
         },
-        "indices": [],
+        "indices": [
+          {
+            "name": "index_files_path",
+            "unique": false,
+            "columnNames": [
+              "path"
+            ],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_files_path` ON `${TABLE_NAME}` (`path`)"
+          }
+        ],
         "foreignKeys": []
       },
       {
@@ -93,7 +102,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '8d6a993f5243fff3bfa850022b9bddfc')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'e89dc71a18cba1a3d43cea10c8d836ad')"
     ]
   }
 }

@@ -16,7 +16,8 @@ public class File {
     public int id;
 
     @ColumnInfo(
-        name = "path"
+        name = "path",
+        index = true
     )
     public String path;
 
