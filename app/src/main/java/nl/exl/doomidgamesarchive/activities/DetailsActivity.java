@@ -17,10 +17,14 @@ import android.text.util.Linkify;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.google.android.material.appbar.CollapsingToolbarLayout;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -66,6 +70,8 @@ public class DetailsActivity extends AppCompatActivity {
     private RatingView mRatingView;
     private CoordinatorLayout mHeader;
     private TextView mVoteCount;
+    private RelativeLayout mTitleLayout;
+    private CollapsingToolbarLayout mToolbarLayout;
 
     // ID of the IdgamesApi file being displayed.
     private int mFileId = FILE_ID_INVALID;
@@ -96,6 +102,8 @@ public class DetailsActivity extends AppCompatActivity {
         mRatingView = findViewById(R.id.IdgamesDetails_Rating);
         mHeader = findViewById(R.id.IdgamesDetail_Header);
         mVoteCount = findViewById(R.id.IdgamesDetails_VoteCount);
+        mTitleLayout = findViewById(R.id.IdgamesDetails_TitleLayout);
+        mToolbarLayout = findViewById(R.id.IdgamesDetails_ToolbarLayout);
         
         mProgress = findViewById(R.id.IdgamesDetails_Progress);
         mProgress.setBackgroundResource(R.drawable.cacodemon);
@@ -148,6 +156,21 @@ public class DetailsActivity extends AppCompatActivity {
             ResponseTask responseTask = new FileInfoFetchTask(this);
             responseTask.execute(request);
         }
+
+        // Set the minimum height of the toolbar layout so that it doesn't collapse to less than
+        // the title's layout height.
+        final ViewTreeObserver observer = mTitleLayout.getViewTreeObserver();
+        final ViewTreeObserver.OnGlobalLayoutListener titleLayoutListener = new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                int currentMinHeight = mToolbarLayout.getMinimumHeight();
+                int targetMinHeight = mTitleLayout.getHeight();
+                if (currentMinHeight != targetMinHeight) {
+                    mToolbarLayout.setMinimumHeight(targetMinHeight);
+                }
+            }
+        };
+        observer.addOnGlobalLayoutListener(titleLayoutListener);
     }
 
     /**
@@ -183,7 +206,7 @@ public class DetailsActivity extends AppCompatActivity {
 
         mTitleView.setText(fileEntry.toString());
         mRatingView.setRating((float)fileEntry.getRating());
-        
+
         // Set number of votes.
         if (fileEntry.getVoteCount() == 0) {
             mVoteCount.setText(R.string.IdgamesDetails_NoVotes);

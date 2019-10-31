@@ -51,6 +51,7 @@
             android:layout_height="wrap_content">
 
             <com.google.android.material.appbar.CollapsingToolbarLayout
+                android:id="@+id/IdgamesDetails_ToolbarLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:minHeight="80dp"
@@ -77,6 +78,7 @@
                         app:srcCompat="@drawable/dim_gradient" />
 
                     <RelativeLayout
+                        android:id="@+id/IdgamesDetails_TitleLayout"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_alignBottom="@id/IdgamesDetails_Image"
