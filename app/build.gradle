@@ -8,6 +8,15 @@ android {
         applicationId "nl.exl.doomidgamesarchive"
         minSdkVersion 21
         targetSdkVersion 29
+        javaCompileOptions {
+            annotationProcessorOptions {
+                arguments = [
+                    "room.schemaLocation": "$projectDir/schemas".toString(),
+                    "room.incremental": "true",
+                    "room.expandProjection": "true"
+                ]
+            }
+        }
     }
 
     buildTypes {
@@ -19,6 +28,11 @@ android {
 }
 
 dependencies {
+    def room_version = "2.2.1"
+
+    implementation "androidx.room:room-runtime:$room_version"
+    annotationProcessor "androidx.room:room-compiler:$room_version"
+
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     implementation 'androidx.appcompat:appcompat-resources:1.1.0'
     implementation 'androidx.preference:preference:1.1.0'
