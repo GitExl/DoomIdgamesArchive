@@ -19,7 +19,7 @@ import nl.exl.doomidgamesarchive.idgamesapi.FileEntry;
 import nl.exl.doomidgamesarchive.idgamesapi.Request;
 import nl.exl.doomidgamesarchive.idgamesapi.ResponseTask;
 import nl.exl.doomidgamesarchive.idgamesapi.VoteEntry;
-import nl.exl.doomidgamesarchive.responsetasks.VoteUpdateTask;
+import nl.exl.doomidgamesarchive.tasks.VoteUpdateTask;
 
 /**
  * Provides list item Views from IdgamesApi entries for a ListView.

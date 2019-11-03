@@ -1,4 +1,4 @@
-package nl.exl.doomidgamesarchive.responsetasks;
+package nl.exl.doomidgamesarchive.tasks;
 
 import java.lang.ref.WeakReference;
 
@@ -18,22 +18,16 @@ public class FileInfoFetchTask extends ResponseTask {
     }
 
     @Override
-    protected void onPreExecute() {
-        DetailsActivity activity = activityReference.get();
-        activity.setState(DetailsActivity.STATE_LOADING);
-    }
-
-    @Override
     protected void onPostExecute(Response response) {
         DetailsActivity activity = activityReference.get();
 
+        FileEntry responseFile = null;
         if (response.getErrorMessage() == null) {
             if (response.getEntries().size() > 0) {
-                FileEntry responseFile = (FileEntry) response.getEntries().get(0);
-                activity.buildDetailView(responseFile);
+                responseFile = (FileEntry) response.getEntries().get(0);
             }
         }
 
-        activity.setState(DetailsActivity.STATE_READY);
+        activity.setFile(responseFile);
     }
 }

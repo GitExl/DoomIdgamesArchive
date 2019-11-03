@@ -1,4 +1,4 @@
-package nl.exl.doomidgamesarchive.data;
+package nl.exl.doomidgamesarchive.idgamesdb;
 
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
@@ -20,9 +20,4 @@ public class File {
         index = true
     )
     public String path;
-
-    @ColumnInfo(
-        name = "title"
-    )
-    public String title;
 }

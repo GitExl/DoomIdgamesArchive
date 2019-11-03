@@ -1,4 +1,4 @@
-package nl.exl.doomidgamesarchive.data;
+package nl.exl.doomidgamesarchive.idgamesdb;
 
 import androidx.room.Dao;
 import androidx.room.Query;

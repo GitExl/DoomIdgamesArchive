@@ -1,4 +1,4 @@
-package nl.exl.doomidgamesarchive.data;
+package nl.exl.doomidgamesarchive.idgamesdb;
 
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
@@ -30,4 +30,14 @@ public class Image {
         name = "path"
     )
     public String path;
+
+    @ColumnInfo(
+            name = "width"
+    )
+    public int width;
+
+    @ColumnInfo(
+            name = "height"
+    )
+    public int height;
 }

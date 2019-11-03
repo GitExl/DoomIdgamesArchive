@@ -189,3 +189,4 @@ idgames-extract/graphics/*
 idgames-extract/logs/*
 idgames-extract/*.db
 idgames-extract/iwads/*
+app/schemas/*

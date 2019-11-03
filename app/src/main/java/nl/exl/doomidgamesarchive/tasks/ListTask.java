@@ -1,4 +1,4 @@
-package nl.exl.doomidgamesarchive.responsetasks;
+package nl.exl.doomidgamesarchive.tasks;
 
 import java.lang.ref.WeakReference;
 

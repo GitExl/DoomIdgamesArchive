@@ -14,6 +14,7 @@ import android.os.Environment;
 import android.preference.PreferenceManager;
 import android.text.Html;
 import android.text.util.Linkify;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -42,7 +43,9 @@ import nl.exl.doomidgamesarchive.idgamesapi.FileEntry;
 import nl.exl.doomidgamesarchive.idgamesapi.Request;
 import nl.exl.doomidgamesarchive.idgamesapi.ResponseTask;
 import nl.exl.doomidgamesarchive.idgamesapi.Review;
-import nl.exl.doomidgamesarchive.responsetasks.FileInfoFetchTask;
+import nl.exl.doomidgamesarchive.idgamesdb.Image;
+import nl.exl.doomidgamesarchive.tasks.FileImageTask;
+import nl.exl.doomidgamesarchive.tasks.FileInfoFetchTask;
 
 /**
  * Displays details from an IdgamesApi file.
@@ -73,17 +76,13 @@ public class DetailsActivity extends AppCompatActivity {
     private RelativeLayout mTitleLayout;
     private CollapsingToolbarLayout mToolbarLayout;
 
-    // ID of the IdgamesApi file being displayed.
-    private int mFileId = FILE_ID_INVALID;
-    
-    // Info from the IdgamesApi file being displayed.
-    // This is stored here so that it is immediately available after the activity restarts.
-    private String mFileName = null;
-    private String mFilePath = null;
-    private String mFileTitle = null;
-    private String mTextFileContents = null;
+    private FileEntry mFile;
+    private Image mIdgamesImage;
 
     private int mState = STATE_INVALID;
+
+    private boolean mFileCompleted;
+    private boolean mImageCompleted;
 
     /**
      * {@inheritDoc}
@@ -93,6 +92,9 @@ public class DetailsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         
         setContentView(R.layout.activity_idgames_details);
+
+        // TODO
+        // this.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         // Get mLayout references.
         mLayoutInfo = findViewById(R.id.IdgamesDetails_LayoutInfo);
@@ -108,54 +110,9 @@ public class DetailsActivity extends AppCompatActivity {
         mProgress = findViewById(R.id.IdgamesDetails_Progress);
         mProgress.setBackgroundResource(R.drawable.cacodemon);
 
-        // Restore state from a saved instance.
-        if (savedInstanceState != null) {
-            mFileId = savedInstanceState.getInt("fileId");
-            mFileName = savedInstanceState.getString("fileName");
-            mFilePath = savedInstanceState.getString("filePath");
-            mFileTitle = savedInstanceState.getString("fileTitle");
-            mTextFileContents = savedInstanceState.getString("textFileContents");
-            
-        // Get the file ID to display.
-        } else {
-            // Test for idgames:// protocol link.
-            Uri data = this.getIntent().getData();
-            if (data != null && data.getScheme().equals("idgames")) {
-                String host = data.getHost();
-                if (host == null) {
-                    mFileId = FILE_ID_INVALID;
-                } else {
-                    try {
-                        mFileId = Integer.parseInt(host);
-                    } catch (NumberFormatException e) {
-                        mFileId = FILE_ID_INVALID;
-                    }
-                }
-
-            // Use the file id from the regular intent.
-            } else {
-                mFileId = this.getIntent().getIntExtra("fileId", FILE_ID_INVALID);
-            }
-        }
-
-        // TODO
-//        this.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
-        if (mFileId == FILE_ID_INVALID) {
-            buildInvalidView();
-            invalidateOptionsMenu();
-
-        } else {
-            // Build a request for the file ID's info.
-            Request request = new Request();
-            request.setAction(Request.GET_FILE);
-            request.setFileId(mFileId);
-            request.setMaxAge(Config.MAXAGE_DETAILS);
-
-            // Run task to fetch file info.
-            ResponseTask responseTask = new FileInfoFetchTask(this);
-            responseTask.execute(request);
-        }
+        setState(DetailsActivity.STATE_LOADING);
+        int fileId = getFileIdParameter();
+        getFileInfo(fileId);
 
         // Set the minimum height of the toolbar layout so that it doesn't collapse to less than
         // the title's layout height.
@@ -173,18 +130,80 @@ public class DetailsActivity extends AppCompatActivity {
         observer.addOnGlobalLayoutListener(titleLayoutListener);
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void onSaveInstanceState(@NonNull Bundle savedInstanceState) {
-        super.onSaveInstanceState(savedInstanceState);
-        
-        savedInstanceState.putInt("fileId", mFileId);
-        savedInstanceState.putString("fileName", mFileName);
-        savedInstanceState.putString("filePath", mFilePath);
-        savedInstanceState.putString("fileTitle", mFileTitle);
-        savedInstanceState.putString("textFileContents", mTextFileContents);
+    private int getFileIdParameter() {
+
+        // Test for idgames:// protocol link.
+        Uri data = getIntent().getData();
+        if (data != null && data.getScheme().equals("idgames")) {
+            String host = data.getHost();
+            if (host == null) {
+                return FILE_ID_INVALID;
+            } else {
+                try {
+                    return Integer.parseInt(host);
+                } catch (NumberFormatException e) {
+                    return FILE_ID_INVALID;
+                }
+            }
+        }
+
+        // Get the file ID to display from the intent.
+        return getIntent().getIntExtra("fileId", FILE_ID_INVALID);
+    }
+
+    private void getFileInfo(int fileId) {
+        mFileCompleted = false;
+        mImageCompleted = false;
+
+        if (fileId == FILE_ID_INVALID) {
+            buildInvalidView();
+            invalidateOptionsMenu();
+            return;
+        }
+
+        // Build a request for the file ID's info.
+        Request request = new Request();
+        request.setAction(Request.GET_FILE);
+        request.setFileId(fileId);
+        request.setMaxAge(Config.MAXAGE_DETAILS);
+
+        // Run task to fetch file info.
+        ResponseTask responseTask = new FileInfoFetchTask(this);
+        responseTask.execute(request);
+    }
+
+    public void setImage(Image idgamesImage) {
+        mIdgamesImage = idgamesImage;
+
+        mImageCompleted = true;
+        updateCompletion();
+    }
+
+    public void setFile(FileEntry file) {
+        mFile = file;
+        if (file != null) {
+            buildDetailView();
+        } else {
+            buildInvalidView();
+        }
+
+        // Fetch additional info for the file.
+        FileImageTask imageTask = new FileImageTask(this);
+        imageTask.execute(mFile);
+
+        mFileCompleted = true;
+        updateCompletion();
+    }
+
+    private void updateCompletion() {
+        if (mFileCompleted && mImageCompleted) {
+            if (mIdgamesImage != null) {
+                Log.d("IDGAMES", mIdgamesImage.path);
+                Log.d("IDGAMES", Integer.toString(mIdgamesImage.width));
+                Log.d("IDGAMES", Integer.toString(mIdgamesImage.height));
+            }
+            setState(STATE_READY);
+        }
     }
 
     /**
@@ -196,38 +215,32 @@ public class DetailsActivity extends AppCompatActivity {
 
     /**
      * Builds the views to display an IdgamesApi file's information.
-     * 
-     * @param fileEntry The file to display information from.
      */
-    public void buildDetailView(FileEntry fileEntry) {
-        if (fileEntry == null) {
-            return;
-        }
-
-        mTitleView.setText(fileEntry.toString());
-        mRatingView.setRating((float)fileEntry.getRating());
+    public void buildDetailView() {
+        mTitleView.setText(mFile.toString());
+        mRatingView.setRating((float)mFile.getRating());
 
         // Set number of votes.
-        if (fileEntry.getVoteCount() == 0) {
+        if (mFile.getVoteCount() == 0) {
             mVoteCount.setText(R.string.IdgamesDetails_NoVotes);
-        } else if (fileEntry.getVoteCount() == 1) {
+        } else if (mFile.getVoteCount() == 1) {
             mVoteCount.setText(R.string.IdgamesDetails_SingleVote);
         } else {
-            String votes = getString(R.string.IdgamesDetails_PluralVotes, fileEntry.getVoteCount());
+            String votes = getString(R.string.IdgamesDetails_PluralVotes, mFile.getVoteCount());
             mVoteCount.setText(votes);
         }
         
         // Create individual sections.
-        createSection("Description", true, fileEntry.getDescription());
-        createSection("Author", true, fileEntry.getAuthor(), fileEntry.getEmail());
-        createSection("File", false, fileEntry.getFileName(), fileEntry.getLocaleDate(), fileEntry.getFileSizeString());
-        createSection("Credits", true, fileEntry.getCredits());
-        createSection("Based on", false, fileEntry.getBase());
-        createSection("Build time", false, fileEntry.getBuildTime());
-        createSection("Editors used", false, fileEntry.getEditorsUsed());
-        createSection("Bugs", false, fileEntry.getBugs());
+        createSection("Description", true, mFile.getDescription());
+        createSection("Author", true, mFile.getAuthor(), mFile.getEmail());
+        createSection("File", false, mFile.getFileName(), mFile.getLocaleDate(), mFile.getFileSizeString());
+        createSection("Credits", true, mFile.getCredits());
+        createSection("Based on", false, mFile.getBase());
+        createSection("Build time", false, mFile.getBuildTime());
+        createSection("Editors used", false, mFile.getEditorsUsed());
+        createSection("Bugs", false, mFile.getBugs());
         
-        List<Review> reviews = fileEntry.getReviews();
+        List<Review> reviews = mFile.getReviews();
         if (reviews.size() > 0) {
             Review review;
             for (int i = 0; i < reviews.size(); i++) {
@@ -235,15 +248,8 @@ public class DetailsActivity extends AppCompatActivity {
                 addReview(review);
             }
         }
-        
-        // Store this info for use in other UI functions.
-        mFileId = fileEntry.getId();
-        mFileName = fileEntry.getFileName();
-        mFilePath = fileEntry.getFilePath();
-        mFileTitle = fileEntry.toString();
-        mTextFileContents = fileEntry.getTextFileContents();
     }
-    
+
     /**
      * Creates a new section of file info.
      * 
@@ -382,23 +388,26 @@ public class DetailsActivity extends AppCompatActivity {
 
         // Get the download mirror URL to use.
         final SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
-        final String url = sharedPrefs.getString("DownloadMirror", Config.IDGAMES_MIRROR_DEFAULT) + mFilePath + mFileName;
+        final String url = sharedPrefs.getString("DownloadMirror", Config.IDGAMES_MIRROR_DEFAULT) + mFile.getFilePath() + mFile.getFileName();
 
         // Let the DownloadManager handle the download.
         DownloadManager.Request request = new DownloadManager.Request(Uri.parse(url));
-        request.setTitle(mFileName);
-        request.setDescription(mFileTitle);
+        request.setTitle(mFile.getFileName());
+        request.setDescription(mFile.getTitle());
         request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
+        request.setVisibleInDownloadsUi(true);
 
         try {
-            request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, mFileName);
+            request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, mFile.getFileName());
         } catch (IllegalStateException e) {
             Toast.makeText(this, this.getString(R.string.IdgamesDetails_ToastNoDirectory), Toast.LENGTH_SHORT).show();
+            return;
         }
 
         DownloadManager manager = (DownloadManager)getSystemService(Context.DOWNLOAD_SERVICE);
         if (manager == null) {
             Toast.makeText(this, this.getString(R.string.IdgamesDetails_ToastNoDownloadManager), Toast.LENGTH_SHORT).show();
+            return;
         }
         try {
             manager.enqueue(request);
@@ -425,7 +434,7 @@ public class DetailsActivity extends AppCompatActivity {
         getMenuInflater().inflate(R.menu.idgames_details, menu);
         
         // Hide action bar menu items if no details have been loaded yet.
-        if (mState != STATE_READY || mFileId == FILE_ID_INVALID) {
+        if (mState != STATE_READY || mFile == null) {
             setMenuVisible(menu, false);
         } else {
             setMenuVisible(menu, true);
@@ -449,15 +458,15 @@ public class DetailsActivity extends AppCompatActivity {
     /**
      * {@inheritDoc}
      */
-    public boolean onOptionsItemSelected(MenuItem item) {
-        if (mFileId == FILE_ID_INVALID) {
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        if (mFile == null) {
             return true;
         }
         
         switch (item.getItemId()) {
             case R.id.MenuDetails_ViewText:
                 Intent intent = new Intent(this, TextFileActivity.class);
-                intent.putExtra("textfile", mTextFileContents);
+                intent.putExtra("textfile", mFile.getTextFileContents());
                 startActivity(intent);
                 return true;
                 
@@ -476,13 +485,13 @@ public class DetailsActivity extends AppCompatActivity {
      * @param state The new state of this activity.
      */
     public void setState(int state) {
-        this.mState = state;
+        mState = state;
         if (state == STATE_LOADING) {
-            this.showProgressIndicator();
+            showProgressIndicator();
         } else {
-            this.hideProgressIndicator();
+            hideProgressIndicator();
         }
-        this.invalidateOptionsMenu();
+        invalidateOptionsMenu();
     }
 
     /**

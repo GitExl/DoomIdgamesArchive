@@ -37,7 +37,7 @@ import nl.exl.doomidgamesarchive.idgamesapi.Entry;
 import nl.exl.doomidgamesarchive.idgamesapi.Request;
 import nl.exl.doomidgamesarchive.idgamesapi.Response;
 import nl.exl.doomidgamesarchive.idgamesapi.ResponseTask;
-import nl.exl.doomidgamesarchive.responsetasks.ListTask;
+import nl.exl.doomidgamesarchive.tasks.ListTask;
 
 /**
  * A fragment containing a list of IdGamesApi entries.
