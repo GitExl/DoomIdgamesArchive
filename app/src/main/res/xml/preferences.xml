@@ -21,7 +21,7 @@
     </PreferenceCategory>
     <PreferenceCategory android:title="Downloads" app:iconSpaceReserved="false">
         <ListPreference
-            android:defaultValue="http://ftp.ntua.gr/pub/vendors/idgames/"
+            android:defaultValue="https://www.quaddicted.com/files/idgames/"
             android:entries="@array/download_mirrors"
             android:entryValues="@array/download_mirrors_values"
             android:key="DownloadMirror"
