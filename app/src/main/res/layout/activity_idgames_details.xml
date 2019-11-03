@@ -4,13 +4,15 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/background"
-    android:fitsSystemWindows="false"
     android:orientation="vertical">
+
+    <include layout="@layout/app_bar" />
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:id="@+id/IdgamesDetail_Header"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:layout_below="@id/toolbar">
 
         <androidx.core.widget.NestedScrollView
             android:id="@+id/IdgamesDetails_Scroller"
@@ -61,7 +63,7 @@
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@color/colorPrimary">
+                    android:background="@color/colorPrimaryVariant">
 
                     <ImageView
                         android:id="@+id/IdgamesDetails_Image"

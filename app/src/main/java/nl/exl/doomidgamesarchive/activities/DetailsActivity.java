@@ -35,6 +35,7 @@ import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -101,8 +102,8 @@ public class DetailsActivity extends AppCompatActivity {
         
         setContentView(R.layout.activity_idgames_details);
 
-        // TODO
-        // this.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
 
         // Get mLayout references.
         mLayoutInfo = findViewById(R.id.IdgamesDetails_LayoutInfo);
