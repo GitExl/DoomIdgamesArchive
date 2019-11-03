@@ -1,5 +1,5 @@
 1.5.0
-- Fix download progress not displaying in notification bar while downloading.
+- Fix download progress not displaying in notification bar while downloading. If unfixable, use toast to indicate download has started.
 - Upon start, check if a valid download mirror is set, otherwise use first from list.
 - Maybe format some file details content better, like some credits that seem to lack newlines.
 - Finish Materialization: paddings\margins, typography
