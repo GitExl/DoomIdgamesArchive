@@ -61,15 +61,14 @@
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@color/colorPrimaryVariant">
+                    android:background="@color/colorPrimary">
 
                     <ImageView
                         android:id="@+id/IdgamesDetails_Image"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:adjustViewBounds="true"
-                        android:scaleType="fitCenter"
-                        app:srcCompat="@drawable/titlepic" />
+                        android:scaleType="fitCenter" />
 
                     <ImageView
                         android:layout_width="match_parent"
@@ -81,7 +80,7 @@
                         android:id="@+id/IdgamesDetails_TitleLayout"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_alignBottom="@id/IdgamesDetails_Image"
+                        android:layout_alignParentBottom="true"
                         android:padding="@dimen/PaddingMedium">
 
                         <TextView

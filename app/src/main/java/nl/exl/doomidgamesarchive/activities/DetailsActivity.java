@@ -6,7 +6,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.graphics.drawable.AnimationDrawable;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -14,7 +17,6 @@ import android.os.Environment;
 import android.preference.PreferenceManager;
 import android.text.Html;
 import android.text.util.Linkify;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -25,6 +27,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
 
 import java.util.ArrayList;
@@ -47,6 +50,8 @@ import nl.exl.doomidgamesarchive.idgamesdb.Image;
 import nl.exl.doomidgamesarchive.tasks.FileImageTask;
 import nl.exl.doomidgamesarchive.tasks.FileInfoFetchTask;
 
+import static com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions.withCrossFade;
+
 /**
  * Displays details from an IdgamesApi file.
  * Builds a number of views to form a custom mLayout.
@@ -63,12 +68,15 @@ public class DetailsActivity extends AppCompatActivity {
 
     // Permission requests.
     private static final int PERMISSION_CALLBACK_DOWNLOAD = 1;
+
+    private static final String META_BASE_URL = "https://f000.backblazeb2.com/file/idgames-meta/";
     
     // Layout references.
     private LinearLayout mLayoutInfo;
     private LinearLayout mLayoutReviews;
     private NestedScrollView mScroller;
     private ImageView mProgress;
+    private ImageView mHeaderImage;
     private TextView mTitleView;
     private RatingView mRatingView;
     private CoordinatorLayout mHeader;
@@ -105,6 +113,7 @@ public class DetailsActivity extends AppCompatActivity {
         mHeader = findViewById(R.id.IdgamesDetail_Header);
         mVoteCount = findViewById(R.id.IdgamesDetails_VoteCount);
         mTitleLayout = findViewById(R.id.IdgamesDetails_TitleLayout);
+        mHeaderImage = findViewById(R.id.IdgamesDetails_Image);
         mToolbarLayout = findViewById(R.id.IdgamesDetails_ToolbarLayout);
         
         mProgress = findViewById(R.id.IdgamesDetails_Progress);
@@ -175,6 +184,28 @@ public class DetailsActivity extends AppCompatActivity {
     public void setImage(Image idgamesImage) {
         mIdgamesImage = idgamesImage;
 
+        if (idgamesImage != null) {
+
+            // Scale height to correct aspect ratio to 4:3, but only for 8:5 aspect ratio images.
+            int width = mIdgamesImage.width;
+            int height = mIdgamesImage.height;
+            if ((double)width / (double)height == 8.0 / 5.0) {
+                height = (int)Math.ceil(mIdgamesImage.height * 1.2);
+            }
+
+            // Generate a temporary bitmap as placeholder.
+            // TODO: Using a ColorDrawable and setBounds did not work. Other more efficient options?
+            Bitmap bitmap =  Bitmap.createBitmap(width, height, Bitmap.Config.ALPHA_8);
+            Drawable placeholder = new BitmapDrawable(getResources(), bitmap);
+
+            Glide.with(this)
+                .load(META_BASE_URL + mIdgamesImage.path)
+                .placeholder(placeholder)
+                .override(width, height)
+                .transition(withCrossFade())
+                .into(mHeaderImage);
+        }
+
         mImageCompleted = true;
         updateCompletion();
     }
@@ -197,11 +228,6 @@ public class DetailsActivity extends AppCompatActivity {
 
     private void updateCompletion() {
         if (mFileCompleted && mImageCompleted) {
-            if (mIdgamesImage != null) {
-                Log.d("IDGAMES", mIdgamesImage.path);
-                Log.d("IDGAMES", Integer.toString(mIdgamesImage.width));
-                Log.d("IDGAMES", Integer.toString(mIdgamesImage.height));
-            }
             setState(STATE_READY);
         }
     }
