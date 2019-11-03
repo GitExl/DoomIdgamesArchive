@@ -184,3 +184,8 @@ local.properties
 *.iml
 .idea
 obj/
+idgames-extract/idgames/*
+idgames-extract/graphics/*
+idgames-extract/logs/*
+idgames-extract/*.db
+idgames-extract/iwads/*
