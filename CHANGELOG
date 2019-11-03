@@ -1,7 +1,11 @@
 Version 1.5.0
 -------------
-- Changed: updated for compatibility with Android 10. There are some visual differences as a result of this.
-- Changed: updated list of download mirrors.
+- Added: files can have a title graphic (extracted from its archive) displayed in their header.
+- Added: support for system dark mode setting (where supported).
+- Changed: updated appearance for a more modern look.
+- Changed: updated for compatibility with Android 10.
+- Changed: the tabs in the main screen are swipeable.
+- Changed: updated the list of download mirrors.
 
 Version 1.4.3
 -------------
