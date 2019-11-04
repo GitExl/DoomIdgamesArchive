@@ -2,7 +2,6 @@
 - Tweak colors.
 - Loader for detail header images.
 - Fix aspect ratio correction for header views not working on cached images.
-- Fix margins between file info and reviews.
 - Upon start, check if a valid download mirror is set, otherwise use first from list.
 
 1.6.0
@@ -10,3 +9,5 @@
 - Add more media to display for files. Screenshots, external reviews, videos, etc.
 - Update app navigation.
 - Replace reliance on /idgames API with custom API.
+- Render reviews in RecyclerView for performance.
+- Allow Idgames entries to be serialized so that parsing responses is not necessary when reloading views.
