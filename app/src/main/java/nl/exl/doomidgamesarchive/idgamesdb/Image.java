@@ -32,12 +32,17 @@ public class Image {
     public String path;
 
     @ColumnInfo(
-            name = "width"
+        name = "width"
     )
     public int width;
 
     @ColumnInfo(
-            name = "height"
+        name = "height"
     )
     public int height;
+
+    @ColumnInfo(
+        name = "color"
+    )
+    public int color;
 }

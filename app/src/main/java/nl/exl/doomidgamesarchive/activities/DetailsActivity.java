@@ -9,6 +9,7 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.drawable.AnimationDrawable;
 import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
@@ -84,6 +85,7 @@ public class DetailsActivity extends AppCompatActivity {
     private TextView mVoteCount;
     private RelativeLayout mTitleLayout;
     private CollapsingToolbarLayout mToolbarLayout;
+    private RelativeLayout mToolbarLayoutBackground;
 
     private FileEntry mFile;
     private Image mIdgamesImage;
@@ -116,6 +118,7 @@ public class DetailsActivity extends AppCompatActivity {
         mTitleLayout = findViewById(R.id.IdgamesDetails_TitleLayout);
         mHeaderImage = findViewById(R.id.IdgamesDetails_Image);
         mToolbarLayout = findViewById(R.id.IdgamesDetails_ToolbarLayout);
+        mToolbarLayoutBackground = findViewById(R.id.IdgamesDetails_ToolbarBackground);
         
         mProgress = findViewById(R.id.IdgamesDetails_Progress);
         mProgress.setBackgroundResource(R.drawable.cacodemon);
@@ -186,12 +189,13 @@ public class DetailsActivity extends AppCompatActivity {
         mIdgamesImage = idgamesImage;
 
         if (idgamesImage != null) {
+            mToolbarLayoutBackground.setBackground(new ColorDrawable(0xFF000000 | idgamesImage.color));
 
             // Scale height to correct aspect ratio to 4:3, but only for 8:5 aspect ratio images.
-            int width = mIdgamesImage.width;
-            int height = mIdgamesImage.height;
+            int width = idgamesImage.width;
+            int height = idgamesImage.height;
             if ((double)width / (double)height == 8.0 / 5.0) {
-                height = (int)Math.ceil(mIdgamesImage.height * 1.2);
+                height = (int)Math.ceil(idgamesImage.height * 1.2);
             }
 
             // Generate a temporary bitmap as placeholder.
@@ -199,10 +203,11 @@ public class DetailsActivity extends AppCompatActivity {
             Bitmap bitmap =  Bitmap.createBitmap(width, height, Bitmap.Config.ALPHA_8);
             Drawable placeholder = new BitmapDrawable(getResources(), bitmap);
 
+            // TODO: when loading a cached version, the override seems to not take effect.
             Glide.with(this)
-                .load(META_BASE_URL + mIdgamesImage.path)
-                .placeholder(placeholder)
+                .load(META_BASE_URL + idgamesImage.path)
                 .override(width, height)
+                .placeholder(placeholder)
                 .transition(withCrossFade())
                 .into(mHeaderImage);
         }

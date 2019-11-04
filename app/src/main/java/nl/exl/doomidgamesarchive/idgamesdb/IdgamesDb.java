@@ -7,7 +7,7 @@ import androidx.room.Room;
 import androidx.room.RoomDatabase;
 
 @Database(
-    version = 2,
+    version = 3,
     entities = {File.class, Image.class}
 )
 public abstract class IdgamesDb extends RoomDatabase {

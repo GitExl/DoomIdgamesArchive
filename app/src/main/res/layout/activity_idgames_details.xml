@@ -61,6 +61,7 @@
                 app:layout_scrollFlags="scroll|exitUntilCollapsed">
 
                 <RelativeLayout
+                    android:id="@+id/IdgamesDetails_ToolbarBackground"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@color/colorPrimaryVariant">

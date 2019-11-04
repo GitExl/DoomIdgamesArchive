@@ -49,6 +49,7 @@ class GraphicsExtractor(ExtractorBase):
         if data[0:8] == b'\x89\x50\x4E\x47\x0D\x0A\x1A\x0A' or data[0:3] == b'\xFF\xD8\xFF':
             try:
                 image = Image.open(BytesIO(data))
+                image = image.convert('RGB')
             except IOError:
                 image = None
 
@@ -61,17 +62,6 @@ class GraphicsExtractor(ExtractorBase):
             image = self.read_raw_graphic(320, 200, data, palette)
         elif file.size == 640 * 480:
             image = self.read_raw_graphic(640, 480, data, palette)
-
-        # Apply 4:3 aspect ratio correction, to 1.6 aspect ratio screens. Increase height by 20% and double the size
-        # with nearest interpolation to retain a crispy look without too many scaling artifacts for nearest filtering.
-        # TODO: Let the app do the scaling when rendering, saving on bandwidth and memory.
-        # if image:
-        #     width, height = image.width, image.height
-        #     aspect_ratio = width / height
-        #     if aspect_ratio == 1.6:
-        #         width *= 2
-        #         height = ceil(height * 2.4)
-        #         image = image.resize((width, height), Image.NEAREST)
 
         if not image:
             self.logger.stream('unknown_graphics_format', 'Cannot identify or read {} in {}'.format(file.name, file.owner.file.name))
