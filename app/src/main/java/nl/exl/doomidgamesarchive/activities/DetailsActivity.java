@@ -71,7 +71,7 @@ public class DetailsActivity extends AppCompatActivity {
     // Permission requests.
     private static final int PERMISSION_CALLBACK_DOWNLOAD = 1;
 
-    private static final String META_BASE_URL = "https://f000.backblazeb2.com/file/idgames-meta/";
+    private static final String META_BASE_URL = "https://idgames.exlstuff.com/file/idgames-meta/";
     
     // Layout references.
     private LinearLayout mLayoutInfo;
