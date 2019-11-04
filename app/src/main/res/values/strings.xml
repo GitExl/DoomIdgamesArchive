@@ -1,5 +1,4 @@
 <resources>
-
     <string name="ApplicationName">Doom idgames Archive</string>
     <string name="MenuMain_Settings">Settings</string>
     <string name="MenuMain_About">About</string>
@@ -39,5 +38,5 @@
     <string name="IdgamesDetails_ToastNoDirectory">External storage directory could not be found or created.</string>
     <string name="IdgamesDetails_ToastNoDownloadManager">Could not create download manager.</string>
     <string name="IdgamesDetails_ToastNoDownloadEnqueue">Could not queue download.</string>
-
+    <string name="IdgamesDetails_ToastDownloadStarted">Download has started.</string>
 </resources>

@@ -1,6 +1,5 @@
 1.5.0
 - Tweak colors.
-- Fix download progress not displaying in notification bar while downloading. If unfixable, use toast to indicate download has started.
 - Loader for detail header images.
 - Fix aspect ratio correction for header views not working on cached images.
 - Fix margins between file info and reviews.

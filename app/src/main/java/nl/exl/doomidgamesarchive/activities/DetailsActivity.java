@@ -443,6 +443,7 @@ public class DetailsActivity extends AppCompatActivity {
         }
         try {
             manager.enqueue(request);
+            Toast.makeText(this, this.getString(R.string.IdgamesDetails_ToastDownloadStarted), Toast.LENGTH_SHORT).show();
         } catch (NullPointerException e) {
             Toast.makeText(this, this.getString(R.string.IdgamesDetails_ToastNoDownloadEnqueue), Toast.LENGTH_SHORT).show();
         }
