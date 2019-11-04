@@ -191,22 +191,14 @@ public class DetailsActivity extends AppCompatActivity {
         if (idgamesImage != null) {
             mToolbarLayoutBackground.setBackground(new ColorDrawable(0xFF000000 | idgamesImage.color));
 
-            // Scale height to correct aspect ratio to 4:3, but only for 8:5 aspect ratio images.
-            int width = idgamesImage.width;
-            int height = idgamesImage.height;
-            if ((double)width / (double)height == 8.0 / 5.0) {
-                height = (int)Math.ceil(idgamesImage.height * 1.2);
-            }
-
             // Generate a temporary bitmap as placeholder.
             // TODO: Using a ColorDrawable and setBounds did not work. Other more efficient options?
-            Bitmap bitmap =  Bitmap.createBitmap(width, height, Bitmap.Config.ALPHA_8);
+            Bitmap bitmap =  Bitmap.createBitmap(idgamesImage.width, idgamesImage.height, Bitmap.Config.ALPHA_8);
             Drawable placeholder = new BitmapDrawable(getResources(), bitmap);
 
             // TODO: when loading a cached version, the override seems to not take effect.
             Glide.with(this)
                 .load(META_BASE_URL + idgamesImage.path)
-                .override(width, height)
                 .placeholder(placeholder)
                 .transition(withCrossFade())
                 .into(mHeaderImage);

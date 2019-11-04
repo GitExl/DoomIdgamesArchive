@@ -1,8 +1,7 @@
 1.5.0
-- Tweak colors.
 - Loader for detail header images.
-- Fix aspect ratio correction for header views not working on cached images.
 - Upon start, check if a valid download mirror is set, otherwise use first from list.
+- Test on older Android versions, 5 and up.
 
 1.6.0
 - Improve "Materialization": paddings\margins, typography.

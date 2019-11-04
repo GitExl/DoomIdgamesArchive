@@ -63,6 +63,14 @@ class GraphicsExtractor(ExtractorBase):
         elif file.size == 640 * 480:
             image = self.read_raw_graphic(640, 480, data, palette)
 
+        # Apply 4:3 aspect ratio correction, to 1.6 aspect ratio screens. Increase height by 20%.
+        if image:
+            width, height = image.width, image.height
+            aspect_ratio = width / height
+            if aspect_ratio == 1.6:
+                height = ceil(height * 1.4)
+                image = image.resize((width, height), Image.LANCZOS)
+
         if not image:
             self.logger.stream('unknown_graphics_format', 'Cannot identify or read {} in {}'.format(file.name, file.owner.file.name))
             self.logger.warn('Graphics data is of unknown type.')
