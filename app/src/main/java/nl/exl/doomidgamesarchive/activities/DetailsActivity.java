@@ -88,7 +88,6 @@ public class DetailsActivity extends AppCompatActivity {
     private RelativeLayout mToolbarLayoutBackground;
 
     private FileEntry mFile;
-    private Image mIdgamesImage;
 
     private int mState = STATE_INVALID;
 
@@ -186,8 +185,6 @@ public class DetailsActivity extends AppCompatActivity {
     }
 
     public void setImage(Image idgamesImage) {
-        mIdgamesImage = idgamesImage;
-
         if (idgamesImage != null) {
             mToolbarLayoutBackground.setBackground(new ColorDrawable(0xFF000000 | idgamesImage.color));
 
