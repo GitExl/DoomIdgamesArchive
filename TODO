@@ -1,6 +1,4 @@
 1.5.0
-- Upon start, check if a valid download mirror is set, otherwise use first from list.
-- Fix action bar text color.
 - Test on older Android versions, 5 and up.
 
 1.6.0

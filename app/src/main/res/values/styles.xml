@@ -11,6 +11,16 @@
         <item name="colorOnSecondary">@color/colorOnSecondary</item>
 
         <item name="android:statusBarColor">@color/colorPrimary</item>
+
+        <item name="android:actionBarStyle">@style/AppTheme.ActionBarStyle</item>
+    </style>
+
+    <style name="AppTheme.ActionBarStyle" parent="@android:style/Widget.Holo.Light.ActionBar">
+        <item name="android:titleTextStyle">@style/AppTheme.ActionBar.TitleTextStyle</item>
+    </style>
+
+    <style name="AppTheme.ActionBar.TitleTextStyle" parent="@android:style/TextAppearance.Holo.Widget.ActionBar.Title">
+        <item name="android:textColor">@color/colorOnPrimary</item>
     </style>
 
 </resources>
