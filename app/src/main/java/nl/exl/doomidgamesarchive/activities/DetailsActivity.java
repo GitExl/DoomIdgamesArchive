@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.PorterDuff;
 import android.graphics.drawable.AnimationDrawable;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
@@ -24,22 +25,29 @@ import android.view.View;
 import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.DataSource;
+import com.bumptech.glide.load.engine.GlideException;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.target.Target;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.core.graphics.ColorUtils;
 import androidx.core.widget.NestedScrollView;
 import nl.exl.doomidgamesarchive.Config;
 import nl.exl.doomidgamesarchive.R;
@@ -86,6 +94,7 @@ public class DetailsActivity extends AppCompatActivity {
     private RelativeLayout mTitleLayout;
     private CollapsingToolbarLayout mToolbarLayout;
     private RelativeLayout mToolbarLayoutBackground;
+    private ProgressBar mImageProgress;
 
     private FileEntry mFile;
 
@@ -118,7 +127,8 @@ public class DetailsActivity extends AppCompatActivity {
         mHeaderImage = findViewById(R.id.IdgamesDetails_Image);
         mToolbarLayout = findViewById(R.id.IdgamesDetails_ToolbarLayout);
         mToolbarLayoutBackground = findViewById(R.id.IdgamesDetails_ToolbarBackground);
-        
+        mImageProgress = findViewById(R.id.IdgamesDetails_ImageProgress);
+
         mProgress = findViewById(R.id.IdgamesDetails_Progress);
         mProgress.setBackgroundResource(R.drawable.cacodemon);
 
@@ -173,7 +183,7 @@ public class DetailsActivity extends AppCompatActivity {
             return;
         }
 
-        // Build a request for the file ID's info.
+        // Build a request for the file's info.
         Request request = new Request();
         request.setAction(Request.GET_FILE);
         request.setFileId(fileId);
@@ -193,11 +203,31 @@ public class DetailsActivity extends AppCompatActivity {
             Bitmap bitmap =  Bitmap.createBitmap(idgamesImage.width, idgamesImage.height, Bitmap.Config.ALPHA_8);
             Drawable placeholder = new BitmapDrawable(getResources(), bitmap);
 
-            // TODO: when loading a cached version, the override seems to not take effect.
+            // Set the image progressbar color based on loaded image luminance.
+            if (ColorUtils.calculateLuminance(idgamesImage.color) < 0.5) {
+                mImageProgress.getIndeterminateDrawable().setColorFilter(0xFFFFFFFF, PorterDuff.Mode.SRC_IN);
+            } else {
+                mImageProgress.getIndeterminateDrawable().setColorFilter(0xFF000000, PorterDuff.Mode.SRC_IN);
+            }
+            mImageProgress.setVisibility(View.VISIBLE);
+
             Glide.with(this)
                 .load(META_BASE_URL + idgamesImage.path)
                 .placeholder(placeholder)
                 .transition(withCrossFade())
+                .listener(new RequestListener<Drawable>() {
+                    @Override
+                    public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+                        mImageProgress.setVisibility(View.GONE);
+                        return false;
+                    }
+
+                    @Override
+                    public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+                        mImageProgress.setVisibility(View.GONE);
+                        return false;
+                    }
+                })
                 .into(mHeaderImage);
         }
 
