@@ -468,7 +468,7 @@ public class DetailsActivity extends AppCompatActivity {
         // Let the DownloadManager handle the download.
         DownloadManager.Request request = new DownloadManager.Request(Uri.parse(url));
         request.setTitle(mFile.getFileName());
-        request.setDescription(mFile.getTitle());
+        request.setDescription(mFile.toString());
         request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
         request.setVisibleInDownloadsUi(true);
 
