@@ -4,8 +4,10 @@
     android:id="@+id/toolbar"
     android:layout_width="match_parent"
     android:layout_height="?attr/actionBarSize"
-    android:gravity="center_vertical"
     android:background="?attr/colorPrimary"
+    android:gravity="center_vertical"
+    app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+    app:popupTheme="@style/ThemeOverlay.AppCompat.DayNight"
     app:layout_collapseMode="pin"
     app:layout_scrollFlags="scroll|enterAlways"
     app:title="@string/ApplicationName" />
