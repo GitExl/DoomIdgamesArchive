@@ -63,8 +63,8 @@ import nl.exl.doomidgamesarchive.tasks.FileInfoFetchTask;
 import static com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions.withCrossFade;
 
 /**
- * Displays details from an IdgamesApi file.
- * Builds a number of views to form a custom mLayout.
+ * Display details from an IdgamesApi file.
+ * Builds a number of views to form a custom layout.
  */
 public class DetailsActivity extends AppCompatActivity {
 
@@ -79,6 +79,7 @@ public class DetailsActivity extends AppCompatActivity {
     // Permission requests.
     private static final int PERMISSION_CALLBACK_DOWNLOAD = 1;
 
+    // Base URL for retrieving images.
     private static final String META_BASE_URL = "https://idgames.exlstuff.com/file/idgames-meta/";
     
     // Layout references.
@@ -96,8 +97,10 @@ public class DetailsActivity extends AppCompatActivity {
     private RelativeLayout mToolbarLayoutBackground;
     private ProgressBar mImageProgress;
 
+    // The current file entry that is displayed.
     private FileEntry mFile;
 
+    // Display state of this activity.
     private int mState = STATE_INVALID;
 
     private boolean mFileCompleted;
@@ -115,7 +118,6 @@ public class DetailsActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        // Get mLayout references.
         mLayoutInfo = findViewById(R.id.IdgamesDetails_LayoutInfo);
         mLayoutReviews = findViewById(R.id.IdgamesDetails_LayoutReviews);
         mScroller = findViewById(R.id.IdgamesDetails_Scroller);
@@ -128,10 +130,9 @@ public class DetailsActivity extends AppCompatActivity {
         mToolbarLayout = findViewById(R.id.IdgamesDetails_ToolbarLayout);
         mToolbarLayoutBackground = findViewById(R.id.IdgamesDetails_ToolbarBackground);
         mImageProgress = findViewById(R.id.IdgamesDetails_ImageProgress);
-
         mProgress = findViewById(R.id.IdgamesDetails_Progress);
-        mProgress.setBackgroundResource(R.drawable.cacodemon);
 
+        mProgress.setBackgroundResource(R.drawable.cacodemon);
         setState(DetailsActivity.STATE_LOADING);
         int fileId = getFileIdParameter();
         getFileInfo(fileId);
@@ -152,6 +153,11 @@ public class DetailsActivity extends AppCompatActivity {
         observer.addOnGlobalLayoutListener(titleLayoutListener);
     }
 
+    /**
+     * Returns the idgames file id to display in this activity.
+     *
+     * @return An idgames file id or FILE_ID_INVALID if none could be determined.
+     */
     private int getFileIdParameter() {
 
         // Test for idgames:// protocol link.
@@ -173,6 +179,11 @@ public class DetailsActivity extends AppCompatActivity {
         return getIntent().getIntExtra("fileId", FILE_ID_INVALID);
     }
 
+    /**
+     * Starts a request to get an idgames file information.
+     *
+     * @param fileId An idgames file id.
+     */
     private void getFileInfo(int fileId) {
         mFileCompleted = false;
         mImageCompleted = false;
@@ -194,6 +205,11 @@ public class DetailsActivity extends AppCompatActivity {
         responseTask.execute(request);
     }
 
+    /**
+     * Set the image to display.
+     *
+     * @param idgamesImage Image to display from the internal idgames database.
+     */
     public void setImage(Image idgamesImage) {
         if (idgamesImage != null) {
             mToolbarLayoutBackground.setBackground(new ColorDrawable(0xFF000000 | idgamesImage.color));
@@ -235,6 +251,11 @@ public class DetailsActivity extends AppCompatActivity {
         updateCompletion();
     }
 
+    /**
+     * Set the file entry to display.
+     *
+     * @param file FileEntry to display.
+     */
     public void setFile(FileEntry file) {
         mFile = file;
         if (file != null) {
@@ -251,6 +272,10 @@ public class DetailsActivity extends AppCompatActivity {
         updateCompletion();
     }
 
+    /**
+     * Updates this activity's completion state. If all needed components have been downloaded,
+     * it will be set as ready.
+     */
     private void updateCompletion() {
         if (mFileCompleted && mImageCompleted) {
             setState(STATE_READY);
@@ -258,7 +283,7 @@ public class DetailsActivity extends AppCompatActivity {
     }
 
     /**
-     * Builds the view so as to display an invalid file.
+     * Builds the view to display an invalid file.
      */
     private void buildInvalidView() {
         mRatingView.setRating(0);
@@ -438,8 +463,7 @@ public class DetailsActivity extends AppCompatActivity {
         }
 
         // Get the download mirror URL to use.
-        final SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
-        final String url = sharedPrefs.getString("DownloadMirror", Config.IDGAMES_MIRROR_DEFAULT) + mFile.getFilePath() + mFile.getFileName();
+        final String url = getDownloadMirrorUrl() + mFile.getFilePath() + mFile.getFileName();
 
         // Let the DownloadManager handle the download.
         DownloadManager.Request request = new DownloadManager.Request(Uri.parse(url));
@@ -553,5 +577,26 @@ public class DetailsActivity extends AppCompatActivity {
     public boolean onSupportNavigateUp() {
         finish();
         return true;
+    }
+
+    /**
+     * Returns the currently selected idgames mirror URL.
+     *
+     * @return Idgames mirror URL.
+     */
+    private String getDownloadMirrorUrl() {
+        final SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
+        String url = sharedPrefs.getString("DownloadMirror", Config.IDGAMES_MIRROR_DEFAULT);
+
+        // Because the list of mirrors might change the current value must be validated.
+        String[] mirrors = getResources().getStringArray(R.array.download_mirrors_values);
+        for (String mirror: mirrors) {
+            if (url.equals(mirror)) {
+                return url;
+            }
+        }
+
+        // Return first mirror if the preference is not valid.
+        return mirrors[0];
     }
 }
