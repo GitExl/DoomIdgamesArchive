@@ -1,6 +1,3 @@
-1.5.0
-- Test on older Android versions, 5 and up.
-
 1.6.0
 - Improve "Materialization": paddings\margins, typography.
 - Add more media to display for files. Screenshots, external reviews, videos, etc.

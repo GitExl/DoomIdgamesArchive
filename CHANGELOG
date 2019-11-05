@@ -6,6 +6,7 @@ Version 1.5.0
 - Changed: updated for compatibility with Android 10.
 - Changed: the tabs in the main screen are swipeable.
 - Changed: updated the list of download mirrors.
+- Changed: a message is now shown to indicate when a download has started.
 
 Version 1.4.3
 -------------
