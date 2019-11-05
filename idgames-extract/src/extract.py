@@ -17,16 +17,16 @@ from logger import Logger
 SOURCE_DIR = './idgames'
 
 EXTRACTORS = [
-    ArchiveExtractor,
+    # ArchiveExtractor,
     TextExtractor,
-    GameExtractor,
-    ArchiveListExtractor,
-    GraphicsExtractor,
+    # GameExtractor,
+    # ArchiveListExtractor,
+    # GraphicsExtractor,
 ]
 
 WRITERS = [
-    GraphicsWriter,
-    DatabaseWriter,
+    # GraphicsWriter,
+    # DatabaseWriter,
 ]
 
 logger = Logger()
