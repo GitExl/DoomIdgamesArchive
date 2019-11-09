@@ -49,7 +49,6 @@ class TextParser2:
             self.parse_pair(key, value)
 
     def parse_pair(self, key: str, value: str):
-
         parser_key, parser_data = self.match_key(key, TEXT_KEYS)
         if not parser_key:
             return
@@ -85,9 +84,9 @@ class TextParser2:
             else:
                 self.info[parser_key] = value
 
-    def match_key(self, value: str, parser_data: dict) -> Optional[Tuple[str, dict]]:
+    def match_key(self, value: str, parser_data: dict) -> Tuple[Optional[str], Optional[dict]]:
         if not len(value):
-            return None
+            return None, None
 
         for parser_key, data in parser_data.items():
             if 'keys' in data and value in data['keys']:
@@ -99,7 +98,7 @@ class TextParser2:
                         return parser_key, data
 
         self.logger.stream('text_parser_keys'.format(value), '{}'.format(value))
-        return None
+        return None, None
 
     def parse_bool(self, value: str) -> bool:
         value = value.lower().strip()

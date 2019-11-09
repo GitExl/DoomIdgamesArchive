@@ -4,7 +4,7 @@ import re
 from os import path
 
 from extractors.extractorbase import ExtractorBase
-from textparser.textparser import TextParser
+from textparser.textparser2 import TextParser2
 
 
 class TextExtractor(ExtractorBase):
@@ -32,7 +32,7 @@ class TextExtractor(ExtractorBase):
         if not text_file:
             return {}
 
-        text_parser = TextParser(self.logger)
+        text_parser = TextParser2(self.logger)
         text_parser.parse(text_file)
         text_file.close()
         return text_parser.info
