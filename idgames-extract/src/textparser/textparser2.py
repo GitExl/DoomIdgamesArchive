@@ -1,11 +1,18 @@
 import re
 
 from re import RegexFlag
-from typing import TextIO, Tuple, Optional
+from typing import TextIO, Tuple, Optional, List
 
+from entry import DifficultyLevel
 from game import Game
 from logger import Logger
-from textparser.textkeys2 import TEXT_KEYS, KeyType, TEXT_GAMES, TEXT_BOOLEAN
+from textparser.textkeys2 import TEXT_KEYS, KeyType, TEXT_GAMES, TEXT_BOOLEAN, TEXT_DIFFICULTY, TEXT_MAP_NUMBER
+
+
+KEY_VALUE_MIN_TRAILING_WHITESPACE = 3
+
+RE_KEY_VALUE = re.compile(r':(?!//)')
+RE_HEADER = re.compile(r'[=\-]{2,}')
 
 
 class TextParser2:
@@ -13,40 +20,117 @@ class TextParser2:
     def __init__(self, logger: Logger):
         self.logger: Logger = logger
         self.info: dict = {}
+        self.pairs: List[Tuple[str, str]] = []
 
     def parse(self, file: TextIO):
-        pairs = []
-
         key = None
         values = []
+        newline_count = 0
 
         file.seek(0)
 
         for line in file:
-            whitespace = line[0].isspace()
+            line = line.rstrip()
 
-            # Append indented information to the current value list.
-            if values is not None and whitespace:
-                values.append(line.strip())
+            # Skip blank lines, but track how many.
+            is_blank = len(line.strip()) == 0
+            if is_blank:
+                newline_count += 1
+                continue
 
-            # Split other lines into key\value pairs separated by the first colon.
-            elif not whitespace:
-                parts = line.split(':', 1)
-                if len(parts) < 2:
-                    values.append(line.strip())
-                    continue
+            # After 2 or more newlines, assume a break in between key\values.
+            elif newline_count > 1:
+                self.add_pair(key, values)
+                key = None
+                values = []
 
-                # Store the current key\value pair for later processing.
-                if key is not None:
-                    pairs.append((key, ' '.join(values)))
+            newline_count = 0
 
-                # Create a new current key\value pair.
-                key = parts[0].strip().lower()
-                values = [parts[1].strip()]
+            # Headers are treated a s the key of a new key\value pair.
+            header = self.detect_header(line)
+            if header is not None:
+                self.add_pair(key, values)
+                key = header.lower()
+                values = []
+                continue
+
+            # Detect key\value pairs or just values to append to the current pair.
+            detect_key, detect_value = self.detect_key_value(line)
+            if detect_key is not None:
+                self.add_pair(key, values)
+                key = detect_key
+                values = [detect_value]
+
+            elif detect_value is not None and len(detect_value):
+                values.append(detect_value)
+
+        # Add the last key\value pair if any.
+        self.add_pair(key, values)
 
         # Convert pairs into useful data.
-        for key, value in pairs:
+        for key, value in self.pairs:
+            self.logger.stream('pairs', '{}:  {}'.format(key, value))
             self.parse_pair(key, value)
+
+    def add_pair(self, key: Optional[str], values: List[str]):
+        if len(values) == 0 or key is None or len(key) == 0:
+            return
+
+        # Strip useless trailing characters from keys.
+        if key[0] == '*':
+            key = key.strip('* ')
+
+        self.pairs.append((key, ' '.join(values)))
+
+    @staticmethod
+    def detect_key_value(text: str) -> Tuple[Optional[str], Optional[str]]:
+
+        # Not long enough to contain anything useful.
+        if len(text) < KEY_VALUE_MIN_TRAILING_WHITESPACE:
+            return None, text.strip()
+
+        # If it starts with enough trailing whitespace, it must just be another value part.
+        start = text[0:KEY_VALUE_MIN_TRAILING_WHITESPACE]
+        if start.isspace():
+            return None, text.strip()
+
+        # If there is at least one colon, this must be a new key\value pair.
+        parts = RE_KEY_VALUE.split(text, 1)
+        if len(parts) < 2:
+            return None, text.strip()
+
+        return parts[0].strip().lower(), parts[1].strip()
+
+    @staticmethod
+    def detect_header(text: str) -> Optional[str]:
+        text = text.strip()
+
+        # * Detect this *
+        if len(text) > 2 and text[0] == '*' and text[-1] == '*':
+            return text.strip('*').strip()
+
+        # Strip the initial character from the start and end of the string.
+        initial = text[0]
+        stripped_text = text.strip(initial).strip()
+        if len(stripped_text) == 0:
+            return ''
+
+        startswith = RE_HEADER.match(text)
+        if startswith is None:
+            return None
+
+        # Strip the initial character from the start and end of the string.
+        initial = text[0]
+        text = text.strip(initial).strip()
+
+        # * Detect this *
+        if len(text) > 2 and text[0] == '*' and text[-1] == '*':
+            text = text.strip('*').strip()
+
+        if len(text):
+            return text.strip()
+
+        return ''
 
     def parse_pair(self, key: str, value: str):
         parser_key, parser_data = self.match_key(key, TEXT_KEYS)
@@ -60,6 +144,10 @@ class TextParser2:
             value = self.parse_bool(value)
         elif parser_data['type'] == KeyType.GAME:
             value = self.parse_game(value)
+        elif parser_data['type'] == KeyType.DIFFICULTY:
+            value = self.parse_difficulty(value)
+        elif parser_data['type'] == KeyType.MAP_NUMBER:
+            value = self.parse_map_number(value)
 
         # Append the value based on the type.
         if parser_data.get('array', False):
@@ -123,3 +211,23 @@ class TextParser2:
 
         self.logger.stream('text_parser_value_game', '{}'.format(value))
         return Game.UNKNOWN
+
+    def parse_difficulty(self, value: str) -> Optional[DifficultyLevel]:
+        value = value.lower().strip()
+
+        parser_key, data = self.match_key(value, TEXT_DIFFICULTY)
+        if parser_key:
+            return parser_key
+
+        self.logger.stream('text_parser_value_difficulty', '{}'.format(value))
+        return None
+
+    def parse_map_number(self, value: str) -> Optional[str]:
+        value = value.lower().strip()
+
+        parser_key, data = self.match_key(value, TEXT_MAP_NUMBER)
+        if parser_key:
+            return parser_key
+
+        self.logger.stream('text_parser_value_map_number', '{}'.format(value))
+        return None

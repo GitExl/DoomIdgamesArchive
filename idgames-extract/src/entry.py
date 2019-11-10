@@ -14,6 +14,12 @@ class GameStyles(Enum):
     OTHER = 'other'
 
 
+class GameStyleSupport(Enum):
+    YES = 'yes'
+    NO = 'no'
+    STARTS_ONLY = 'starts only'
+
+
 class ContentTypes(Enum):
     LEVELS = 'levels'
     MUSIC = 'music'
@@ -41,14 +47,20 @@ class VideoType(Enum):
     TWITCH = 'twitch'
 
 
+class DifficultyLevel(Enum):
+    BABY = 'baby'
+    EASY = 'easy'
+    MEDIUM = 'medium'
+    HARD = 'hard'
+    NIGHTMARE = 'nightmare'
+
+
 class Level:
 
     def __init__(self, lump_name: str):
         self.lump_name: str = lump_name
 
         self.title: Optional[str] = None
-        self.authors: List[str] = []
-        self.has_difficulty_levels: bool = False
 
 
 class Graphic:
@@ -89,7 +101,7 @@ class Entry:
         self.path: str = path
         self.text: str = text
 
-        self.game_styles: Set[GameStyles] = set()
+        self.game_styles: Dict[GameStyles,GameStyleSupport] = {}
         self.content: Set[ContentTypes] = set()
         self.authors: List[str] = []
         self.links: List[str] = []
@@ -97,6 +109,7 @@ class Entry:
         self.reviews: List[Review] = []
         self.graphics: Dict[Graphic] = {}
         self.videos: List[Video] = []
+        self.difficulty_levels: Set[DifficultyLevel] = set()
 
         self.score_aggregated: float = 0
 
@@ -115,6 +128,8 @@ class Entry:
         self.build_time: Optional[str] = None
         self.source_port: Optional[str] = None
         self.other_files_required: Optional[str] = None
+        self.copyright: Optional[str] = None
+        self.music: Optional[str] = None
 
         self.date_file: Optional[date] = None
         self.date_completed: Optional[date] = None
