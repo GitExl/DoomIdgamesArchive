@@ -69,8 +69,9 @@ class TextParser2:
 
         # Convert pairs into useful data.
         for key, value in self.pairs:
-            self.logger.stream('pairs', '{}:  {}'.format(key, value))
-            self.parse_pair(key, value)
+            if not self.parse_pair(key, value):
+                self.logger.stream('pairs', '{} :: {}'.format(key, value))
+                self.logger.stream('keys', key)
 
     def add_pair(self, key: Optional[str], values: List[str]):
         if len(values) == 0 or key is None or len(key) == 0:
@@ -132,10 +133,10 @@ class TextParser2:
 
         return ''
 
-    def parse_pair(self, key: str, value: str):
+    def parse_pair(self, key: str, value: str) -> bool:
         parser_key, parser_data = self.match_key(key, TEXT_KEYS)
         if not parser_key:
-            return
+            return False
 
         # Parse value from the key's type.
         if parser_data['type'] == KeyType.TEXT:
@@ -148,6 +149,19 @@ class TextParser2:
             value = self.parse_difficulty(value)
         elif parser_data['type'] == KeyType.MAP_NUMBER:
             value = self.parse_map_number(value)
+
+        # TODO
+        elif parser_data['type'] == KeyType.ENGINE:
+            value = str(value)
+        elif parser_data['type'] == KeyType.INTEGER:
+            value = str(value)
+        elif parser_data['type'] == KeyType.GAME_STYLE:
+            value = str(value)
+        elif parser_data['type'] == KeyType.DATETIME:
+            value = str(value)
+
+        else:
+            raise Exception('Unimplemented parser for key type "{}"'.format(parser_data['type']))
 
         # Append the value based on the type.
         if parser_data.get('array', False):
@@ -172,6 +186,8 @@ class TextParser2:
             else:
                 self.info[parser_key] = value
 
+        return True
+
     def match_key(self, value: str, parser_data: dict) -> Tuple[Optional[str], Optional[dict]]:
         if not len(value):
             return None, None
@@ -185,7 +201,6 @@ class TextParser2:
                     if re.match(regexp, value, RegexFlag.IGNORECASE):
                         return parser_key, data
 
-        self.logger.stream('text_parser_keys'.format(value), '{}'.format(value))
         return None, None
 
     def parse_bool(self, value: str) -> bool:
