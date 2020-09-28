@@ -342,6 +342,10 @@ public class IdgamesListFragment extends Fragment implements OnItemClickListener
      * @return True if there was a parent directory that was changed to, false if not.
      */
     public boolean enterParentDirectory() {
+        if (mRequest == null) {
+            return false;
+        }
+
         // If this is not a directory list, we cannot go back.
         if (mRequest.getDirectoryName() == null)
             return false;

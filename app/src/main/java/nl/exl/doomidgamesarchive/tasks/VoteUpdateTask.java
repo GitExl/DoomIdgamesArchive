@@ -17,12 +17,16 @@ public class VoteUpdateTask extends ResponseTask {
 
     @Override
     protected void onPostExecute(Response response) {
+        IdgamesListAdapter listAdapter = listAdapterReference.get();
+        if (listAdapter == null) {
+            return;
+        }
+
         if (response.getEntries().size() == 0) {
             return;
         }
 
         FileEntry fileEntry = (FileEntry) response.getEntries().get(0);
-        IdgamesListAdapter listAdapter = listAdapterReference.get();
         listAdapter.updateVote(fileEntry);
     }
 

@@ -17,6 +17,10 @@ public class ListTask extends ResponseTask {
     @Override
     protected void onPostExecute(Response response) {
         IdgamesListFragment listFragment = listFragmentReference.get();
+        if (listFragment == null) {
+            return;
+        }
+
         listFragment.setResponse(response);
     }
 

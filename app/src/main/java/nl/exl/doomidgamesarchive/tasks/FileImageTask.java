@@ -44,6 +44,10 @@ public class FileImageTask extends AsyncTask<FileEntry, Void, Image> {
     @Override
     protected void onPostExecute(Image image) {
         DetailsActivity activity = mDetailsActivity.get();
+        if (activity == null) {
+            return;
+        }
+
         activity.setImage(image);
     }
 }

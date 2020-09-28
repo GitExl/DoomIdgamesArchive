@@ -20,6 +20,9 @@ public class FileInfoFetchTask extends ResponseTask {
     @Override
     protected void onPostExecute(Response response) {
         DetailsActivity activity = activityReference.get();
+        if (activity == null) {
+            return;
+        }
 
         FileEntry responseFile = null;
         if (response.getErrorMessage() == null) {
