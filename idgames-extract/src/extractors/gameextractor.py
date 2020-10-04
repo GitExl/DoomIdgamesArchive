@@ -65,17 +65,17 @@ class GameExtractor(ExtractorBase):
 
     @staticmethod
     def detect_from_path(path: str) -> Game:
-        if 'doom2' in path:
+        if path.find('doom2') > -1:
             return Game.DOOM2
-        elif 'doom' in path:
+        elif path.find('doom') > -1:
             return Game.DOOM
-        elif 'heretic' in path:
+        elif path.find('heretic') > -1:
             return Game.HERETIC
-        elif 'hexen' in path:
+        elif path.find('hexen') > -1:
             return Game.HEXEN
-        elif 'strife' in path:
+        elif path.find('strife') > -1:
             return Game.HEXEN
-        elif 'hacx' in path:
+        elif path.find('hacx') > -1:
             return Game.HACX
 
         return Game.UNKNOWN

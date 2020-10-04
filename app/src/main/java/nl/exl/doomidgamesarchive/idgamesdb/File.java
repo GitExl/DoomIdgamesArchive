@@ -20,4 +20,9 @@ public class File {
         index = true
     )
     public String path;
+
+    @ColumnInfo(
+        name = "game"
+    )
+    public String game;
 }
