@@ -236,10 +236,14 @@ TEXT_GAMES = {
 }
 
 TEXT_DIFFICULTY = {
-    # Game.DOOM2: {
-    #     'keys': {'doom 2'},
-    #     're': ['any doom.*', '^doom 2.*', '.*doom2.*', '.*doom2\.wad.*', '.*doom ii.*'],
-    # },
+    'true': {
+        'keys': {'yes', 'y', 'supported', 'possibly', 'of course', 'any', 'all', 'full implementation', 'fully functional.', 'fully supported', 'some'},
+        're': ['^yes', '^yup', '^yep', '^yeah', r'^skills\s', r'^skill\s', '^only', '^implemented', r'^all\b', '^definitely', '^fully implemented', '^some\b']
+    },
+    'false': {
+        'keys': {'not implented', 'no', 'not implimented', '-', 'n\\a', 'unknown', 'n', 'not really', 'na', 'not applicable'},
+        're': ['^not implemented', '^nope', '^none', r'^no\b', '^nah', '^n/a', r'^not\b']
+    },
 }
 
 TEXT_MAP_NUMBER = {

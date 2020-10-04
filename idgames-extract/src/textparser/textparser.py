@@ -3,7 +3,6 @@ import re
 from re import RegexFlag
 from typing import TextIO, Tuple, Optional, List
 
-from idgames.entry import DifficultyLevel
 from idgames.game import Game
 from utils.logger import Logger
 from textparser.textkeys import TEXT_KEYS, KeyType, TEXT_GAMES, TEXT_BOOLEAN, TEXT_DIFFICULTY, TEXT_MAP_NUMBER
@@ -178,6 +177,13 @@ class TextParser2:
                 else:
                     self.info[parser_key] += '\n' + value
 
+            elif parser_data['type'] == KeyType.DIFFICULTY:
+                if value is not None:
+                    if parser_key not in self.info:
+                        self.info[parser_key] = value
+                    else:
+                        self.info[parser_key] |= value
+
             elif parser_data['type'] == KeyType.BOOL:
                 if parser_key not in self.info:
                     self.info[parser_key] = value
@@ -229,12 +235,12 @@ class TextParser2:
         self.logger.stream('text_parser_value_game', '{}'.format(value))
         return Game.UNKNOWN
 
-    def parse_difficulty(self, value: str) -> Optional[DifficultyLevel]:
+    def parse_difficulty(self, value: str) -> Optional[bool]:
         value = value.lower().strip()
 
         parser_key, data = self.match_key(value, TEXT_DIFFICULTY)
-        if parser_key:
-            return DifficultyLevel(parser_key)
+        if parser_key is not None:
+            return bool(parser_key)
 
         self.logger.stream('text_parser_value_difficulty', '{}'.format(value))
         return None

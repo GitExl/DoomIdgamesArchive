@@ -18,14 +18,14 @@ from utils.logger import Logger
 EXTRACTORS = [
     ArchiveExtractor,
     TextExtractor,
-    GameExtractor,
-    ArchiveListExtractor,
-    GraphicsExtractor,
+    # GameExtractor,
+    # ArchiveListExtractor,
+    # GraphicsExtractor,
 ]
 
 WRITERS = [
-    GraphicsWriter,
-    AppDatabaseWriter,
+    # GraphicsWriter,
+    # AppDatabaseWriter,
 ]
 
 

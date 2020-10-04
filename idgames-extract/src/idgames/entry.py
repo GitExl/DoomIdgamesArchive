@@ -51,6 +51,7 @@ class VideoType(Enum):
 
 
 class DifficultyLevel(Enum):
+    UNKNOWN = 'unknown'
     BABY = 'baby'
     EASY = 'easy'
     MEDIUM = 'medium'
