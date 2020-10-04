@@ -6,8 +6,8 @@ from PIL import Image
 
 from archives.archivefilebase import ArchiveFileBase
 from extractors.extractorbase import ExtractorBase
-from doomimage import DoomImage
-from palette import Palette
+from doom.doomimage import DoomImage
+from doom.palette import Palette
 
 
 class GraphicsExtractor(ExtractorBase):
@@ -72,7 +72,7 @@ class GraphicsExtractor(ExtractorBase):
                 image = image.resize((width, height), Image.BICUBIC)
 
         if not image:
-            self.logger.stream('unknown_graphics_format', 'Cannot identify or read {} in {}'.format(file.name, file.owner.file.name))
+            self.logger.stream('unknown_graphics_format', 'Cannot identify or read {}'.format(file.name))
             self.logger.warn('Graphics data is of unknown type.')
 
         return image

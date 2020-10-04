@@ -1,5 +1,6 @@
+import json
 from os.path import splitext, basename, relpath
-from pathlib import Path
+from glob import glob
 
 from extractors.archiveextractor import ArchiveExtractor
 from extractors.archivelistextractor import ArchiveListExtractor
@@ -7,49 +8,52 @@ from extractors.gameextractor import GameExtractor
 from extractors.graphicsextractor import GraphicsExtractor
 from extractors.textextractor import TextExtractor
 
-from writers.databasewriter import DatabaseWriter
+from writers.appdatabasewriter import AppDatabaseWriter
 from writers.graphicswriter import GraphicsWriter
 
-from ignorelist import must_ignore
-from logger import Logger
+from idgames.ignorelist import must_ignore
+from utils.logger import Logger
 
-
-SOURCE_DIR = './idgames'
 
 EXTRACTORS = [
-    # ArchiveExtractor,
+    ArchiveExtractor,
     TextExtractor,
-    # GameExtractor,
-    # ArchiveListExtractor,
-    # GraphicsExtractor,
+    GameExtractor,
+    ArchiveListExtractor,
+    GraphicsExtractor,
 ]
 
 WRITERS = [
-    # GraphicsWriter,
-    # DatabaseWriter,
+    GraphicsWriter,
+    AppDatabaseWriter,
 ]
 
-logger = Logger()
+
+with open('config.json', 'r') as f:
+    config = json.load(f)
+
+logger = Logger(config['paths']['logs'])
+
 
 # Initialize processor instances.
 extractors = []
 for extractor_class in EXTRACTORS:
-    extractors.append(extractor_class(logger))
+    extractors.append(extractor_class(logger, config))
 
 writers = []
 for writer_class in WRITERS:
-    writers.append(writer_class(logger))
+    writers.append(writer_class(logger, config))
 
 # Process every zip file in the directory tree.
-for path_system in Path('.').glob('{}/**/*.zip'.format(SOURCE_DIR)):
+for path_system in glob('{}/**/*.zip'.format(config['paths']['idgames']), recursive=True):
     path_system = str(path_system).replace('\\', '/')
 
-    logger.info('Processing {}...'.format(path_system))
-
-    path_idgames = relpath(path_system, SOURCE_DIR).replace('\\', '/')
+    path_idgames = relpath(path_system, config['paths']['idgames']).replace('\\', '/')
     path_idgames_base = splitext(path_idgames)[0]
     path_base = splitext(path_system)[0]
     filename_base = basename(path_base)
+
+    logger.info('Processing {}...'.format(path_system))
 
     # Ignore some files we'd rather not analyse.
     if must_ignore(path_idgames):

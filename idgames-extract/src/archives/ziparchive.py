@@ -1,4 +1,4 @@
-from typing import BinaryIO, Optional
+from typing import IO, Optional
 from zipfile import ZipFile
 
 from archives.archivebase import ArchiveBase
@@ -7,12 +7,12 @@ from archives.ziparchivefile import ZIPArchiveFile
 
 class ZIPArchive(ArchiveBase):
 
-    def __init__(self, file: BinaryIO):
+    def __init__(self, file: IO[bytes]):
         self.zip_file: Optional[ZipFile] = None
 
         super().__init__(file)
 
-    def read(self, file: BinaryIO):
+    def read(self, file: IO[bytes]):
         self.file = file
         self.zip_file = ZipFile(file)
 

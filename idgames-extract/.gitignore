@@ -1,0 +1,9 @@
+output/*
+logs/*
+
+*.db
+*.dll
+*.exe
+
+config.json
+lump_scores.json

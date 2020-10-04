@@ -1,143 +1,250 @@
 import re
-import codecs
+
 from re import RegexFlag
-from typing import TextIO
+from typing import TextIO, Tuple, Optional, List
 
-from game import Game
-from logger import Logger
-from textparser.textkeys import TEXT_KEYS, KeyType, TEXT_GAMES, TEXT_TRUE, TEXT_FALSE
+from idgames.entry import DifficultyLevel
+from idgames.game import Game
+from utils.logger import Logger
+from textparser.textkeys import TEXT_KEYS, KeyType, TEXT_GAMES, TEXT_BOOLEAN, TEXT_DIFFICULTY, TEXT_MAP_NUMBER
 
 
-class TextParser:
+KEY_VALUE_MIN_TRAILING_WHITESPACE = 3
+
+RE_KEY_VALUE = re.compile(r':(?!//)')
+RE_HEADER = re.compile(r'[=\-]{2,}')
+
+
+class TextParser2:
 
     def __init__(self, logger: Logger):
         self.logger: Logger = logger
         self.info: dict = {}
+        self.pairs: List[Tuple[str, str]] = []
 
     def parse(self, file: TextIO):
-        pairs = []
-
         key = None
-        values = None
+        values = []
+        newline_count = 0
 
-        # Parse the file into key: value pairs.
         self.info['text_file'] = file.read()
         file.seek(0)
 
         for line in file:
-            whitespace = line[0].isspace()
+            line = line.rstrip()
 
-            if values is not None and whitespace:
-                values = values + ' ' + line.strip()
+            # Skip blank lines, but track how many.
+            is_blank = len(line.strip()) == 0
+            if is_blank:
+                newline_count += 1
+                continue
 
-            elif not whitespace:
-                parts = line.split(':')
-                if len(parts) < 2:
-                    continue
+            # After 2 or more newlines, assume a break in between key\values.
+            elif newline_count > 1:
+                self.add_pair(key, values)
+                key = None
+                values = []
 
-                if key is not None:
-                    pairs.append((key, values))
+            newline_count = 0
 
-                key = parts[0].strip().lower()
-                values = parts[1].strip()
+            # Headers are treated a s the key of a new key\value pair.
+            header = self.detect_header(line)
+            if header is not None:
+                self.add_pair(key, values)
+                key = header.lower()
+                values = []
+                continue
+
+            # Detect key\value pairs or just values to append to the current pair.
+            detect_key, detect_value = self.detect_key_value(line)
+            if detect_key is not None:
+                self.add_pair(key, values)
+                key = detect_key
+                values = [detect_value]
+
+            elif detect_value is not None and len(detect_value):
+                values.append(detect_value)
+
+        # Add the last key\value pair if any.
+        self.add_pair(key, values)
 
         # Convert pairs into useful data.
-        for key, value in pairs:
-            self.parse_pair(key, value)
+        for key, value in self.pairs:
+            if not self.parse_pair(key, value):
+                self.logger.stream('pairs', '{} :: {}'.format(key, value))
+                self.logger.stream('keys', key)
 
-    def parse_pair(self, key: str, value: str):
+    def add_pair(self, key: Optional[str], values: List[str]):
+        if len(values) == 0 or key is None or len(key) == 0:
+            return
 
-        # Any key that matches a known one will have it's value assigned to that text key's info.
-        for key_name, key_info in TEXT_KEYS.items():
+        # Strip useless trailing characters from keys.
+        if key[0] == '*':
+            key = key.strip('* ')
 
-            if self.match_key(key_info, key):
+        self.pairs.append((key, ' '.join(values)))
 
-                # Parse value from the key's type.
-                if key_info['type'] == KeyType.TEXT:
-                    value = str(value)
-                elif key_info['type'] == KeyType.BOOL:
-                    value = self.parse_bool(key, value)
-                elif key_info['type'] == KeyType.GAME:
-                    value = self.parse_game(value)
+    @staticmethod
+    def detect_key_value(text: str) -> Tuple[Optional[str], Optional[str]]:
 
-                # Append the value based on the type.
-                if 'array' in key_info and key_info['array']:
-                    if key_name not in self.info:
-                        self.info[key_name] = []
-                    self.info[key_name].append(value)
+        # Not long enough to contain anything useful.
+        if len(text) < KEY_VALUE_MIN_TRAILING_WHITESPACE:
+            return None, text.strip()
 
+        # If it starts with enough trailing whitespace, it must just be another value part.
+        start = text[0:KEY_VALUE_MIN_TRAILING_WHITESPACE]
+        if start.isspace():
+            return None, text.strip()
+
+        # If there is at least one colon, this must be a new key\value pair.
+        parts = RE_KEY_VALUE.split(text, 1)
+        if len(parts) < 2:
+            return None, text.strip()
+
+        return parts[0].strip().lower(), parts[1].strip()
+
+    @staticmethod
+    def detect_header(text: str) -> Optional[str]:
+        text = text.strip()
+
+        # * Detect this *
+        if len(text) > 2 and text[0] == '*' and text[-1] == '*':
+            return text.strip('*').strip()
+
+        # Strip the initial character from the start and end of the string.
+        initial = text[0]
+        stripped_text = text.strip(initial).strip()
+        if len(stripped_text) == 0:
+            return ''
+
+        startswith = RE_HEADER.match(text)
+        if startswith is None:
+            return None
+
+        # Strip the initial character from the start and end of the string.
+        initial = text[0]
+        text = text.strip(initial).strip()
+
+        # * Detect this *
+        if len(text) > 2 and text[0] == '*' and text[-1] == '*':
+            text = text.strip('*').strip()
+
+        if len(text):
+            return text.strip()
+
+        return ''
+
+    def parse_pair(self, key: str, value: str) -> bool:
+        parser_key, parser_data = self.match_key(key, TEXT_KEYS)
+        if not parser_key:
+            return False
+
+        # Parse value from the key's type.
+        if parser_data['type'] == KeyType.TEXT:
+            value = str(value)
+        elif parser_data['type'] == KeyType.BOOL:
+            value = self.parse_bool(value)
+        elif parser_data['type'] == KeyType.GAME:
+            value = self.parse_game(value)
+        elif parser_data['type'] == KeyType.DIFFICULTY:
+            value = self.parse_difficulty(value)
+        elif parser_data['type'] == KeyType.MAP_NUMBER:
+            value = self.parse_map_number(value)
+
+        # TODO
+        elif parser_data['type'] == KeyType.ENGINE:
+            value = str(value)
+        elif parser_data['type'] == KeyType.INTEGER:
+            value = str(value)
+        elif parser_data['type'] == KeyType.GAME_STYLE:
+            value = str(value)
+        elif parser_data['type'] == KeyType.DATETIME:
+            value = str(value)
+
+        else:
+            raise Exception('Unimplemented parser for key type "{}"'.format(parser_data['type']))
+
+        # Append the value based on the type.
+        if parser_data.get('array', False):
+            if parser_key not in self.info:
+                self.info[parser_key] = [value]
+            else:
+                self.info[parser_key].append(value)
+
+        else:
+            if parser_data['type'] == KeyType.TEXT:
+                if parser_key not in self.info:
+                    self.info[parser_key] = value
                 else:
-                    if key_info['type'] == KeyType.TEXT:
-                        if key_name not in self.info:
-                            self.info[key_name] = ''
-                        self.info[key_name] += '\n' + value
-                    elif key_info['type'] == KeyType.BOOL:
-                        if key_name not in self.info:
-                            self.info[key_name] = False
-                        self.info[key_name] |= value
-                    else:
-                        self.info[key_name] = value
+                    self.info[parser_key] += '\n' + value
 
-                return
+            elif parser_data['type'] == KeyType.BOOL:
+                if parser_key not in self.info:
+                    self.info[parser_key] = value
+                else:
+                    self.info[parser_key] |= value
 
-        self.logger.stream('text_parser_keys', '{}'.format(key))
+            else:
+                self.info[parser_key] = value
 
-    def parse_bool(self, key: str, value: str) -> bool:
-        """
-        Converts a value into a boolean if possible.
+        return True
 
-        :param key:
-        :param value:
-        :return:
-        """
+    @staticmethod
+    def match_key(value: str, parser_data: dict) -> Tuple[Optional[str], Optional[dict]]:
+        if not len(value):
+            return None, None
 
+        for parser_key, data in parser_data.items():
+            if 'keys' in data and value in data['keys']:
+                return parser_key, data
+
+            if 're' in data:
+                for regexp in data['re']:
+                    if re.search(regexp, value, RegexFlag.IGNORECASE):
+                        return parser_key, data
+
+        return None, None
+
+    def parse_bool(self, value: str) -> bool:
         value = value.lower().strip()
         if not len(value):
             return False
 
-        if self.match_key(TEXT_TRUE, value):
+        parser_key, data = self.match_key(value, TEXT_BOOLEAN)
+        if parser_key == 'true':
             return True
-        elif self.match_key(TEXT_FALSE, value):
+        elif parser_key == 'false':
             return False
 
-        self.logger.stream('text_parser_value_bool'.format(key), '{} :: {}'.format(value, key))
+        self.logger.stream('text_parser_value_bool', '{}'.format(value))
         return False
 
     def parse_game(self, value: str) -> Game:
-        """
-        Parses a game value string into one of the recognized games.
-
-        :param value:
-        :return:
-        """
         value = value.lower().strip()
 
-        for game, game_info in TEXT_GAMES.items():
-            if self.match_key(game_info, value):
-                return game
+        parser_key, data = self.match_key(value, TEXT_GAMES)
+        if parser_key:
+            return Game(parser_key)
 
         self.logger.stream('text_parser_value_game', '{}'.format(value))
         return Game.UNKNOWN
 
-    @staticmethod
-    def match_key(info: dict, value: str) -> bool:
-        """
-        Returns if a alue is matched by any of a key info's keys or regular expressions.
+    def parse_difficulty(self, value: str) -> Optional[DifficultyLevel]:
+        value = value.lower().strip()
 
-        :param info:
-        :param value:
-        :return:
-        """
+        parser_key, data = self.match_key(value, TEXT_DIFFICULTY)
+        if parser_key:
+            return DifficultyLevel(parser_key)
 
-        if not len(value):
-            return False
+        self.logger.stream('text_parser_value_difficulty', '{}'.format(value))
+        return None
 
-        if 'keys' in info and value in info['keys']:
-            return True
+    def parse_map_number(self, value: str) -> Optional[str]:
+        value = value.lower().strip()
 
-        if 're' in info:
-            for regexp in info['re']:
-                if re.match(regexp, value, RegexFlag.IGNORECASE):
-                    return True
+        parser_key, data = self.match_key(value, TEXT_MAP_NUMBER)
+        if parser_key:
+            return parser_key
 
-        return False
+        self.logger.stream('text_parser_value_map_number', '{}'.format(value))
+        return None

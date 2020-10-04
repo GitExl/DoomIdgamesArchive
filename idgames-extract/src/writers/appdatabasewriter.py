@@ -4,16 +4,16 @@ from sqlite3 import Connection, Cursor
 
 from PIL import Image
 
-from logger import Logger
+from utils.logger import Logger
 from writers.writerbase import WriterBase
 
 
-class DatabaseWriter(WriterBase):
+class AppDatabaseWriter(WriterBase):
 
-    def __init__(self, logger: Logger):
-        super().__init__(logger)
+    def __init__(self, logger: Logger, config: dict):
+        super().__init__(logger, config)
 
-        self.db: Connection = sqlite3.connect('idgames.db')
+        self.db: Connection = sqlite3.connect(config['writers']['appdatabase']['output'])
         self.cursor: Cursor = self.db.cursor()
         self.create_tables()
 

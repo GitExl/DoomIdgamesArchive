@@ -4,13 +4,15 @@ from typing import Optional, Set, List, Dict
 
 from PIL import Image
 
-from game import Game
+from idgames.game import Game
 
 
 class GameStyles(Enum):
     SINGLE_PLAYER = 'single_player'
     DEATHMATCH = 'deathmatch'
     COOPERATIVE = 'cooperative'
+    CTF = 'ctf'
+    TEAM_DEATHMATCH = 'team_deathmatch'
     OTHER = 'other'
 
 
@@ -30,6 +32,7 @@ class ContentTypes(Enum):
     DEHACKED = 'dehacked'
     DECORATE = 'decorate'
     PALETTE = 'palette'
+    ZSCRIPT = 'zscript'
 
 
 class ReviewType(Enum):

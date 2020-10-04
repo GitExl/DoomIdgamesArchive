@@ -1,17 +1,16 @@
 import re
-from io import BytesIO
 from os.path import basename, splitext
 from re import RegexFlag
-from typing import List, BinaryIO, Optional
+from typing import List, BinaryIO, Optional, IO
 
 from archives.archivefilebase import ArchiveFileBase
 
 
 class ArchiveBase:
 
-    def __init__(self, file: BinaryIO):
+    def __init__(self, file: IO[bytes]):
         self.files: List[ArchiveFileBase] = []
-        self.file: BinaryIO = file
+        self.file: IO[bytes] = file
         self.is_main: bool = False
 
         self.read(file)
@@ -21,7 +20,7 @@ class ArchiveBase:
         file = open(path, 'rb')
         return cls(file)
 
-    def read(self, file: BinaryIO):
+    def read(self, file: IO[bytes]):
         pass
 
     def file_add(self, file: ArchiveFileBase):

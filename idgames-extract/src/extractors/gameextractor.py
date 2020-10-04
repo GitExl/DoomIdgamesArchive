@@ -1,9 +1,36 @@
+import json
+from typing import Dict
+
 from archives.archivebase import ArchiveBase
 from extractors.extractorbase import ExtractorBase
-from textparser.textparser import Game
+from idgames.game import Game
+from textparser.textkeys import TEXT_GAMES
+from textparser.textparser import TextParser2
+from utils.logger import Logger
+
+LumpScores = Dict[str, Dict[Game, float]]
 
 
 class GameExtractor(ExtractorBase):
+
+    def __init__(self, logger: Logger, config: dict):
+        super().__init__(logger, config)
+
+        self.lump_scores: LumpScores = self._load_lump_scores()
+
+    def _load_lump_scores(self) -> LumpScores:
+        lump_scores: LumpScores = {}
+
+        with open(self.config['extractors']['game']['lump_score_table'], 'r') as f:
+            scores = json.load(f)
+
+            for file_name, scores in scores.items():
+                lump_scores[file_name] = {}
+
+                for game, score in scores.items():
+                    lump_scores[file_name][Game(game)] = score
+
+        return lump_scores
 
     def extract(self, info: dict) -> dict:
         game = Game.UNKNOWN
@@ -19,10 +46,14 @@ class GameExtractor(ExtractorBase):
         # Detect from certain lump names.
         if game == Game.UNKNOWN and 'archive' in info:
             game = self.detect_from_archive(info['archive'])
+            if game != Game.UNKNOWN:
+                self.logger.stream('game_detect_archive', info['path_idgames'])
 
         # Last ditch effort, just use the entire text file.
         if game == Game.UNKNOWN and 'text_file' in info:
             game = self.detect_from_text(info['text_file'])
+            if game != Game.UNKNOWN:
+                self.logger.stream('game_detect_text', info['path_idgames'])
 
         if game == Game.UNKNOWN:
             self.logger.warn('Cannot determine game.')
@@ -52,24 +83,13 @@ class GameExtractor(ExtractorBase):
     @staticmethod
     def detect_from_text(text_file: str) -> Game:
         text_data = text_file.lower()
-
-        if 'heretic' in text_data:
-            return Game.HERETIC
-        elif 'hexen' in text_data:
-            return Game.HEXEN
-        elif 'strife' in text_data:
-            return Game.STRIFE
-        elif 'hacx' in text_data:
-            return Game.HACX
-        elif 'doom2' in text_data or 'doom 2' in text_data:
-            return Game.DOOM2
-        elif 'doom' in text_data:
-            return Game.DOOM
+        key, data = TextParser2.match_key(text_data, TEXT_GAMES)
+        if key:
+            return Game(key)
 
         return Game.UNKNOWN
 
-    @staticmethod
-    def detect_from_archive(archive: ArchiveBase) -> Game:
+    def detect_from_archive(self, archive: ArchiveBase) -> Game:
         if archive.file_find_basename('bossback') or archive.file_find_regexp('VILE') or archive.file_find_regexp('CPOS') or archive.file_find_basename('help'):
             return Game.DOOM2
 
@@ -84,5 +104,20 @@ class GameExtractor(ExtractorBase):
 
         elif archive.file_find_basename('help1') and not archive.file_find_basename('help2') or archive.file_find_regexp('^WILV.*'):
             return Game.DOOM
+
+        # Attempt detection through lump scores.
+        scores = {}
+        for file in archive.files:
+            if file.name in self.lump_scores:
+                for game, score in self.lump_scores[file.name].items():
+                    if game in scores:
+                        scores[game] += score
+                    else:
+                        scores[game] = score
+
+        if len(scores):
+            game = max(scores.keys(), key=(lambda k: scores[k]))
+            if scores[game] >= 5:
+                return game
 
         return Game.UNKNOWN

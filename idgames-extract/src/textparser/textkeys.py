@@ -1,211 +1,215 @@
 from enum import Enum
 
-from game import Game
+from idgames.game import Game
 
 
 class KeyType(Enum):
     TEXT = 'text'
     BOOL = 'bool'
     GAME = 'game'
+    DIFFICULTY = 'difficulty'
+    MAP_NUMBER = 'map_number'
+    DATETIME = 'datetime'
+    INTEGER = 'integer'
+    GAME_STYLE = 'game_style'
+    ENGINE = 'engine'
 
 
 TEXT_KEYS = {
+    'author': {
+        'type': KeyType.TEXT,
+        'keys': {'author', 'authors', 'author(s)'},
+    },
+    'title': {
+        'type': KeyType.TEXT,
+        'keys': {'title', 'level name', 'name'},
+    },
+    'game_style_singleplayer': {
+        'type': KeyType.BOOL,
+        'keys': {'single player'},
+    },
+    'based_on': {
+        'type': KeyType.TEXT,
+        'keys': {'base'},
+    },
+    'description': {
+        'type': KeyType.TEXT,
+        'keys': {'description'},
+    },
+    'difficulty_levels': {
+        'type': KeyType.DIFFICULTY,
+        'keys': {'difficulty settings'},
+    },
+    'game_style_cooperative': {
+        'type': KeyType.BOOL,
+        'keys': {'cooperative 2-4 player'},
+    },
+    'game_style_deathmatch': {
+        'type': KeyType.BOOL,
+        'keys': {'deathmatch 2-4 player', 'deathmatch'},
+    },
+    'tools_used': {
+        'type': KeyType.TEXT,
+        'keys': {'editor(s) used', 'editors used', 'editor used'},
+    },
+    'email': {
+        'type': KeyType.TEXT,
+        'keys': {'email address', 'e-mail', 'e-mail address', 'email'},
+    },
+    'known_bugs': {
+        'type': KeyType.TEXT,
+        'keys': {'known bugs', 'bugs'},
+    },
+    'copyright': {
+        'type': KeyType.TEXT,
+        'keys': {'copyright / permissions'},
+    },
     'filename': {
         'type': KeyType.TEXT,
         'keys': {'filename'},
     },
-    'title': {
-        'type': KeyType.TEXT,
-        'keys': {'title', 'name', 'file title', 'title (once again)', 'wad name'},
-    },
-    'map_titles': {
-        'type': KeyType.TEXT,
-        'keys': {'level name'},
-        'array': True,
-    },
-    'authors': {
-        'type': KeyType.TEXT,
-        'keys': {'author', 'authors', 'author(s)', 'autor', 'author & email', 'co-authors', 'creator', 'developer', 'designer'},
-        'array': True,
-    },
-    'author_info': {
-        'type': KeyType.TEXT,
-        'keys': {'misc. author info', 'misc author info', 'author info', 'misc. developer info'},
-    },
-    'emails': {
-        'type': KeyType.TEXT,
-        're': ['^email.*', '^e-mail.*'],
-    },
-    'description': {
-        'type': KeyType.TEXT,
-        'keys': {'description', 'brief description', 'summary', 'wad description'},
-    },
-    'base': {
-        'type': KeyType.TEXT,
-        'keys': {'base'},
-    },
-    'style_single_player': {
-        'type': KeyType.BOOL,
-        'keys': {'single player', 'singleplayer'},
-    },
-    'style_deathmatch': {
-        'type': KeyType.BOOL,
-        're': ['^deathmatch.*', '.* deathmatch', 'deatmatch.*', 'death match.*'],
-    },
-    'style_coop': {
-        'type': KeyType.BOOL,
-        're': ['^cooperative.*', '^co-op.*', '^coop.*', '^co-operative.*'],
-    },
-    'has_difficulties': {
-        'type': KeyType.BOOL,
-        'keys': {'skill levels', 'skill settings'},
-        're': ['^difficulty.*'],
-    },
-    'story': {
-        'type': KeyType.TEXT,
-        'keys': {'story'},
-    },
-    'note': {
-        'type': KeyType.TEXT,
-        'keys': {'note'},
-    },
-    'theme': {
-        'type': KeyType.TEXT,
-        'keys': {'theme', 'themes'},
-    },
-    'date': {
-        'type': KeyType.TEXT,
-        'keys': {'date'},
-    },
-    'date_completed': {
-        'type': KeyType.TEXT,
-        'keys': {'date finished', 'date completed', 'date of completion', 'finished date'},
-    },
-    'date_release': {
-        'type': KeyType.TEXT,
-        'keys': {'date of release', 'date released', 'release date'},
-    },
-    'bugs': {
-        'type': KeyType.TEXT,
-        're': ['^bugs.*', '.*bugs$'],
-    },
-    'style_other': {
-        'type': KeyType.TEXT,
-        'keys': {'other game styles'},
-    },
-    'tools': {
-        'type': KeyType.TEXT,
-        'keys': {'editor(s) used', 'editors used', 'editor used', 'editors', 'tools used', 'editor', 'utilities used', 'main editor(s) used', 'tools(s) used', 'other editor(s) used', 'tool(s) used'},
-        'array': True,
-    },
     'credits': {
         'type': KeyType.TEXT,
-        'keys': {'additional credits to', 'additional credits', 'credits', 'special thanks to', 'credits to', 'beta testers', 'big thanks to', 'playtesters', 'thanks to', 'additional credit to', 'additional thanks', 'many thanks to', 'major credits to'},
-    },
-    'tested_with': {
-        'type': KeyType.TEXT,
-        'keys': {'tested with'},
-    },
-    'do_not_run_with': {
-        'type': KeyType.TEXT,
-        'keys': {'may not run with...', 'may not run with', 'will not run with...'},
+        'keys': {'additional credits to', 'additional credits', 'credits'},
     },
     'build_time': {
         'type': KeyType.TEXT,
-        'keys': {'build time', 'construction time', 'time', 'building time', 'design time', 'time spent', 'time taken', 'time to build'},
+        'keys': {'build time'},
     },
-    'has_levels': {
-        'type': KeyType.BOOL,
-        'keys': {'new levels', 'new level wad'},
-    },
-    'has_graphics': {
-        'type': KeyType.BOOL,
-        'keys': {'new graphics', 'graphics', 'graphic addon only', 'sprites', 'new sprites', 'new textures', 'new graphic'},
-    },
-    'has_sounds': {
-        'type': KeyType.BOOL,
-        'keys': {'new sounds', 'sounds', 'sound pwad only'},
-    },
-    'has_music': {
-        'type': KeyType.BOOL,
-        'keys': {'new music', 'music', 'music pwad only', 'midi'},
-    },
-    'has_demos': {
-        'type': KeyType.BOOL,
-        'keys': {'demos replaced', 'demos', '.lmp only', 'new demos', 'demos included'},
-    },
-    'has_dehacked': {
-        'type': KeyType.BOOL,
-        're': ['^dehack.*'],
-    },
-    'game': {
-        'type': KeyType.GAME,
-        'keys': {'game', 'game name', 'game type', 'doom version', 'doom game', 'for game', 'required game', 'iwad', 'iwad needed', 'doom-version', 'wadfile to be used with', 'Game Version Required'},
-    },
-    'levels': {
+    'author_info': {
         'type': KeyType.TEXT,
-        'keys': {'map #', 'episode and level #', 'level #', 'map number', 'map', 'level', 'map#', 'levels', 'levels replaced'},
-    },
-    'purpose': {
-        'type': KeyType.TEXT,
-        'keys': {'primary purpose'},
-    },
-    'source_port': {
-        'type': KeyType.TEXT,
-        'keys': {'advanced engine needed', 'source port', 'engine'},
-    },
-    'files_required': {
-        'type': KeyType.TEXT,
-        'keys': {'other files required'},
-    },
-    'other_files': {
-        'type': KeyType.TEXT,
-        'keys': {'other files by author', 'other levels by author', 'other releases', 'other wads', 'other wads by author', 'files by author', 'other works'},
-        'array': True,
+        'keys': {'misc. author info'},
     },
     'other': {
         'type': KeyType.TEXT,
         'keys': {'other'},
     },
+    'game': {
+        'type': KeyType.GAME,
+        'keys': {'game', 'required game', 'game version required', 'iwad needed'},
+    },
+    'content_graphics': {
+        'type': KeyType.BOOL,
+        'keys': {'new graphics', 'graphics', 'graphic addon only'},
+    },
+    'content_sounds': {
+        'type': KeyType.BOOL,
+        'keys': {'new sounds', 'sounds', 'sound pwad only'},
+    },
+    'music': {
+        'type': KeyType.TEXT,
+        'keys': {'music'},
+    },
+    'map_number': {
+        'type': KeyType.MAP_NUMBER,
+        'keys': {'map #', 'episode and level #', 'level #', 'level', 'map', 'map number'},
+    },
+    'content_demos': {
+        'type': KeyType.BOOL,
+        'keys': {'demos replaced', 'demos', '.lmp only'},
+    },
+    'content_music': {
+        'type': KeyType.BOOL,
+        'keys': {'new music', 'music pwad only'},
+    },
+    'date_released': {
+        'type': KeyType.DATETIME,
+        'keys': {'release date', 'date'},
+    },
+    'count_levels': {
+        'type': KeyType.INTEGER,
+        'keys': {'new levels'},
+    },
+    'content_dehacked': {
+        'type': KeyType.BOOL,
+        'keys': {'dehacked/bex patch'},
+    },
+    'game_style_primary': {
+        'type': KeyType.GAME_STYLE,
+        'keys': {'primary purpose'},
+    },
+    'game_style_other': {
+        'type': KeyType.GAME_STYLE,
+        'keys': {'other game styles'},
+    },
+    'other_files_required': {
+        'type': KeyType.TEXT,
+        'keys': {'other files required', 'required to have in dir'},
+    },
+    'author_other_files': {
+        'type': KeyType.TEXT,
+        'keys': {'other files by author'},
+    },
+    'engine': {
+        'type': KeyType.ENGINE,
+        'keys': {'advanced engine needed'},
+    },
+    'links': {
+        'type': KeyType.TEXT,
+        'keys': {'the usual', 'ftp sites', 'web sites', 'bbs numbers'},
+    },
+    'do_not_run_with': {
+        'type': KeyType.TEXT,
+        'keys': {'may not run with...', 'may not run with'},
+    },
     'archive_maintainer': {
         'type': KeyType.TEXT,
         'keys': {'archive maintainer'},
+    },
+    'tested_with': {
+        'type': KeyType.TEXT,
+        'keys': {'tested with'},
     },
     'update_to': {
         'type': KeyType.TEXT,
         'keys': {'update to'},
     },
-    'uploaded_by': {
+    'where_to_get': {
         'type': KeyType.TEXT,
-        'keys': {'uploaded by'},
+        'keys': {'where to get this wad'},
     },
-    'url': {
-        'type': KeyType.TEXT,
-        'keys': {'web', 'home page', 'homepage', 'internet', 'internet address', 'internet home page'},
-        're': ['^web .*', '^website.*'],
-        'array': True,
+    'date_completed': {
+        'type': KeyType.DATETIME,
+        'keys': {'date finished'},
     },
-    'bbs': {
+    'notes': {
         'type': KeyType.TEXT,
-        're': ['^bbs .*'],
-        'array': True,
+        'keys': {'note', 'notes'},
     },
-    'ftp': {
+    'content_levels': {
+        'type': KeyType.BOOL,
+        'keys': {'new level wad'},
+    },
+    'review': {
         'type': KeyType.TEXT,
-        're': ['^ftp .*'],
-        'array': True,
+        'keys': {'review'},
+    },
+    'story': {
+        'type': KeyType.TEXT,
+        'keys': {'story'},
+    },
+    'theme': {
+        'type': KeyType.TEXT,
+        'keys': {'theme'},
+    },
+    'inspiration': {
+        'type': KeyType.TEXT,
+        'keys': {'inspiration'},
+    },
+    'comments': {
+        'type': KeyType.TEXT,
+        'keys': {'comments'},
     },
 }
 
-
 TEXT_GAMES = {
     Game.DOOM2: {
-        'keys': {'doom 2', 'doom2', 'doom ii', 'doomii', 'doom 2 ver 1.9', 'doom ][', 'doom / doom2', 'doom/doom2', 'any doom', '- doom2', '2', 'any', 'both', 'freedoom',' freedm', 'ii'},
-        're': ['any doom.*', '^doom 2.*', '.*doom2.*', '.*doom2\.wad.*', '.*doom ii.*'],
+        'keys': {'doom 2', 'doom2', 'doom ii', 'doomii', 'doom 2 ver 1.9', 'doom ][', 'doom / doom2', 'doom/doom2', 'any doom', '- doom2', '2', 'any', 'both', 'freedoom',' freedm', 'ii', 'any iwad', 'freedoom: phase 2'},
+        're': ['any doom.*', '^doom 2.*', '.*doom2.*', r'.*doom2\.wad.*', '.*doom ii.*', r'\bdoom\b', '^any game'],
     },
     Game.DOOM: {
-        'keys': {'doom', 'doom1', '(ultimate) doom', 'the ultimate doom'},
-        're': ['^doom.*', '.* ultimate .*', 'doom\.wad', '.*ultimate doom.*', '.*doom i.*'],
+        'keys': {'doom', 'doom1', '(ultimate) doom', 'the ultimate doom', 'freedoom1'},
+        're': ['^doom.*', '.* ultimate .*', r'doom\.wad', '.*ultimate doom.*', '.*doom i.*'],
     },
     Game.PLUTONIA: {
         'keys': {'final doom', 'the plutonia experiment'},
@@ -229,15 +233,33 @@ TEXT_GAMES = {
     Game.HACX: {
         're': ['^hacx.*'],
     }
- }
-
-
-TEXT_TRUE = {
-    'keys': {'designed for', 'all', 'any', 'yeah!', 'yeah', 'affirmative', 'certainly', 'some', 'y', '- yes', 'one'},
-    're': ['^yea.*', '^oh yeah.*', '^oh yes.*', '^supported.*', '^starts.*', '^yes.*', '^sure.*', '^probably.*', '^absolutely.*', '^definitely.*', '^some .*', '^duh.*', '^hell (yes|yeah).*', '^i guess.*', '^implemented.*', '^of course.*', '^yep.*', '^yup.*', '^a .*', '^all .*', '^designed.*', '^fully .*', '^full .*', '^you bet.*', '.*\(yes\).*', '^aye.*'],
 }
 
-TEXT_FALSE = {
-    'keys': {'n/a', '-', '- no', '0'},
-    're': ['^no.*'],
+TEXT_DIFFICULTY = {
+    # Game.DOOM2: {
+    #     'keys': {'doom 2'},
+    #     're': ['any doom.*', '^doom 2.*', '.*doom2.*', '.*doom2\.wad.*', '.*doom ii.*'],
+    # },
+}
+
+TEXT_MAP_NUMBER = {
+    # Game.DOOM2: {
+    #     'keys': {'doom 2'},
+    #     're': ['any doom.*', '^doom 2.*', '.*doom2.*', '.*doom2\.wad.*', '.*doom ii.*'],
+    # },
+}
+
+TEXT_BOOLEAN = {
+    'true': {
+        'keys': {'designed for', 'all', 'any', 'yeah!', 'yeah', 'affirmative', 'certainly', 'some', 'y', '- yes',
+                 'one'},
+        're': ['^yea.*', '^oh yeah.*', '^oh yes.*', '^supported.*', '^starts.*', '^yes.*', '^sure.*', '^probably.*',
+               '^absolutely.*', '^definitely.*', '^some .*', '^duh.*', '^hell (yes|yeah).*', '^i guess.*',
+               '^implemented.*', '^of course.*', '^yep.*', '^yup.*', '^a .*', '^all .*', '^designed.*', '^fully .*',
+               '^full .*', '^you bet.*', '.*\(yes\).*', '^aye.*'],
+    },
+    'false': {
+        'keys': {'n/a', '-', '- no', '0'},
+        're': ['^no.*'],
+    },
 }

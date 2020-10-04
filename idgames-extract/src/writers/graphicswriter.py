@@ -7,6 +7,8 @@ from writers.writerbase import WriterBase
 class GraphicsWriter(WriterBase):
 
     def write(self, info: dict):
+        base_path = self.config['writers']['graphics']['output_path']
+
         if 'graphics' not in info:
             return
 
@@ -14,8 +16,8 @@ class GraphicsWriter(WriterBase):
             if graphic is None:
                 continue
 
-            path_dir = dirname('graphics/{}'.format(info['path_idgames']))
-            path_file = 'graphics/{}_{}.webp'.format(info['path_idgames_base'], key)
+            path_dir = dirname('{}/{}'.format(base_path, info['path_idgames']))
+            path_file = '{}/{}_{}.webp'.format(base_path, info['path_idgames_base'], key)
             Path(path_dir).mkdir(parents=True, exist_ok=True)
 
             pixel_count = graphic.size[0] * graphic.size[1]

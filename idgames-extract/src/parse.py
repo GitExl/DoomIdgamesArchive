@@ -1,7 +1,7 @@
 from sys import argv, exit
 
-from logger import Logger
-from textparser.textparser2 import TextParser2
+from utils.logger import Logger
+from textparser.textparser import TextParser2
 
 if len(argv) < 2:
     print('Insufficient arguments.')

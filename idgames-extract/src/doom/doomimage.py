@@ -3,7 +3,7 @@ from typing import Optional
 
 from PIL import Image
 
-from palette import Palette
+from doom.palette import Palette
 
 
 class DoomImage(object):

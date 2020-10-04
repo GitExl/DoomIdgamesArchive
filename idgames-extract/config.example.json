@@ -1,0 +1,15 @@
+{
+  "paths": {
+    "idgames": "d:/idgames",
+    "iwads": "c:/doom/iwads",
+    "logs": "./logs"
+  },
+  "writers": {
+    "appdatabase": {
+      "output": "./output/app.db"
+    },
+    "graphics": {
+      "output_path": "./output/graphics"
+    }
+  }
+}

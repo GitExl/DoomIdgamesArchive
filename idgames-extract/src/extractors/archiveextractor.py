@@ -1,13 +1,11 @@
-import re
-
 from os.path import basename
 from typing import List, Optional
-from zipfile import ZipFile, BadZipFile
 
 from archives.archivebase import ArchiveBase
 from archives.wadarchive import WADArchive
 from archives.ziparchive import ZIPArchive
 from extractors.extractorbase import ExtractorBase
+from utils.sevenzip import SZArchive, SZFile
 
 
 class ArchiveExtractor(ExtractorBase):
@@ -19,18 +17,10 @@ class ArchiveExtractor(ExtractorBase):
     ]
 
     def extract(self, info: dict) -> dict:
-        try:
-            main_archive = ZipFile(info['path'])
-            namelist = main_archive.namelist()
-        except BadZipFile:
-            namelist = []
-            main_archive = None
-            self.logger.error('Bad ZIP file.')
-        main_archive_files = [name for name in namelist]
-
-        data_filename = self.get_data_filename(info['filename_base'], main_archive_files)
-        if data_filename:
-            archive = self.load_archive(main_archive, data_filename)
+        main_archive = SZArchive(info['path'])
+        main_file = self.get_data_main_file(info['filename_base'], main_archive)
+        if main_file:
+            archive = self.load_main_file(main_file)
             if not archive:
                 self.logger.warn('Unable to read archive.')
                 return {}
@@ -45,47 +35,45 @@ class ArchiveExtractor(ExtractorBase):
         }
 
     @staticmethod
-    def get_data_filename(file_basename: str, archive_files: List[str]) -> Optional[str]:
+    def get_data_main_file(file_basename: str, archive: SZArchive) -> Optional[SZFile]:
         for extension in ArchiveExtractor.EXTENSIONS:
 
             # Look for a file with the same basename as the ZIP.
             wad_filename = '{}.{}'.format(file_basename, extension).lower()
-            for filename in archive_files:
-                if basename(filename).lower() == wad_filename:
-                    return filename
+            for file in archive.files:
+                if basename(file.name).lower() == wad_filename:
+                    return file
 
-            # Return the first available file with the right extension.
-            for filename in archive_files:
-                if re.match(r'.*\.{}$'.format(extension), filename, re.IGNORECASE):
-                    return filename
+            # Return the first available file with the largest file size matching the extension.
+            largest: Optional[SZFile] = None
+            for file in archive.files:
+                if not file.name.lower().endswith(extension):
+                    continue
+                if largest is None or file.size > largest.size:
+                    largest = file
+            if largest:
+                return largest
 
         return None
 
-    def load_archive(self, zip_file: ZipFile, filename: str) -> Optional[ArchiveBase]:
-        try:
-            with zip_file.open(filename) as f:
-                magic_bytes = f.read(4)
-        except NotImplementedError:
-            self.logger.error('Unimplemented compression method.')
-            self.logger.stream('unimplemented_compression', '{} in {}'.format(filename, zip_file.filename))
-            return None
+    def load_main_file(self, file: SZFile) -> Optional[ArchiveBase]:
+        data = file.get_data()
+        magic_bytes = data.getbuffer()[0:4]
 
         archive = None
         if magic_bytes[0:2] == b'PK':
-            file = zip_file.open(filename)
-            archive = ZIPArchive(file)
+            archive = ZIPArchive(data)
 
         elif magic_bytes[0:4] == b'PWAD' or magic_bytes[0:4] == b'IWAD':
-            data = zip_file.open(filename)
             archive = WADArchive(data)
 
         elif magic_bytes[0:2] == b'7z':
             archive = None
             self.logger.error('7zip is not yet supported.')
-            self.logger.stream('7zip_unsupported', '{} in {}'.format(filename, zip_file.filename))
+            self.logger.stream('7zip_unsupported', '{} in {}'.format(file.path, file.archive.path))
 
         else:
             self.logger.error('Cannot determine type of archive.')
-            self.logger.stream('archive_type_unknown', '{} in {}'.format(filename, zip_file.filename))
+            self.logger.stream('archive_type_unknown', '{} in {}'.format(file.path, file.archive.path))
 
         return archive

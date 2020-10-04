@@ -5,10 +5,11 @@ import colorama
 
 class Logger:
 
-    def __init__(self):
+    def __init__(self, path: str):
         colorama.init()
 
         self.streams: dict = {}
+        self.path: str = path
 
     def error(self, text: str):
         self.stream('error', text)
@@ -24,7 +25,7 @@ class Logger:
 
     def stream(self, stream: str, text: str):
         if stream not in self.streams:
-            stream_file = codecs.open('logs/{}.txt'.format(stream), 'w', encoding='utf8')
+            stream_file = codecs.open('{}/{}.txt'.format(self.path, stream), 'w', encoding='utf8')
             self.streams[stream] = stream_file
         else:
             stream_file = self.streams[stream]
