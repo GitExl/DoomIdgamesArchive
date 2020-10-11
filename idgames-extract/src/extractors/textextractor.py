@@ -4,7 +4,7 @@ import re
 from os import path
 
 from extractors.extractorbase import ExtractorBase
-from textparser.textparser import TextParser2
+from textparser.textparser import TextParser
 
 
 class TextExtractor(ExtractorBase):
@@ -23,14 +23,15 @@ class TextExtractor(ExtractorBase):
 
             # Case-insensitive filename search.
             regexp = re.compile('{}/\.txt'.format(info['path_base']), re.IGNORECASE)
-            for file in main_archive.files:
-                if regexp.match(file.name):
-                    text_file = file.get_data()
+            for info in main_archive.infolist():
+                if regexp.match(info.filename):
+                    with main_archive.open(info.filename):
+                        text_file = file.read()
 
         if not text_file:
             return {}
 
-        text_parser = TextParser2(self.logger)
+        text_parser = TextParser(self.logger)
         text_parser.parse(text_file)
         text_file.close()
 

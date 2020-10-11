@@ -1,5 +1,6 @@
 from enum import Enum
 
+from idgames.engine import Engine
 from idgames.game import Game
 
 
@@ -18,7 +19,7 @@ class KeyType(Enum):
 TEXT_KEYS = {
     'author': {
         'type': KeyType.TEXT,
-        'keys': {'author', 'authors', 'author(s)'},
+        'keys': {'author', 'authors', 'author(s)', 'autor', 'original author'},
     },
     'title': {
         'type': KeyType.TEXT,
@@ -26,31 +27,34 @@ TEXT_KEYS = {
     },
     'game_style_singleplayer': {
         'type': KeyType.BOOL,
-        'keys': {'single player'},
+        'keys': {'single player', 'singleplayer'},
     },
     'based_on': {
         'type': KeyType.TEXT,
-        'keys': {'base'},
+        'keys': {'base', 'idea base'},
     },
     'description': {
         'type': KeyType.TEXT,
-        'keys': {'description'},
+        'keys': {'description', 'instructions', 'play information', 'wad description'},
     },
     'difficulty_levels': {
         'type': KeyType.DIFFICULTY,
-        'keys': {'difficulty settings'},
+        'keys': {'difficulty settings', 'difficulty'},
     },
     'game_style_cooperative': {
         'type': KeyType.BOOL,
-        'keys': {'cooperative 2-4 player'},
+        'keys': {'cooperative 2-4 player', 'cooperative', 'cooperative 2-8 player', 'co-op', 'coop 2-4 player', 'coop'},
     },
     'game_style_deathmatch': {
         'type': KeyType.BOOL,
-        'keys': {'deathmatch 2-4 player', 'deathmatch'},
+        'keys': {'deathmatch 2-4 player', 'deathmatch', 'deathmatch 2-8 player'},
     },
     'tools_used': {
         'type': KeyType.TEXT,
-        'keys': {'editor(s) used', 'editors used', 'editor used'},
+        'keys': {
+            'editor(s) used', 'editors used', 'editor used', 'tools used', 'editors', 'utilities used', 'editor',
+            'main editor(s) used', 'tools(s) used',
+        },
     },
     'email': {
         'type': KeyType.TEXT,
@@ -58,7 +62,7 @@ TEXT_KEYS = {
     },
     'known_bugs': {
         'type': KeyType.TEXT,
-        'keys': {'known bugs', 'bugs'},
+        'keys': {'known bugs', 'bugs', 'unknown bugs'},
     },
     'copyright': {
         'type': KeyType.TEXT,
@@ -70,15 +74,18 @@ TEXT_KEYS = {
     },
     'credits': {
         'type': KeyType.TEXT,
-        'keys': {'additional credits to', 'additional credits', 'credits'},
+        'keys': {
+            'additional credits to', 'additional credits', 'credits', 'credits to', 'special thanks to', 'thanks to',
+            'big thanks to', 'special thanks', 'additional credit to',
+        },
     },
     'build_time': {
         'type': KeyType.TEXT,
-        'keys': {'build time'},
+        'keys': {'build time', 'time taken', 'construction time', 'time', 'building time'},
     },
     'author_info': {
         'type': KeyType.TEXT,
-        'keys': {'misc. author info'},
+        'keys': {'misc. author info', 'misc author info', 'author info', 'misc. developer info'},
     },
     'other': {
         'type': KeyType.TEXT,
@@ -86,11 +93,14 @@ TEXT_KEYS = {
     },
     'game': {
         'type': KeyType.GAME,
-        'keys': {'game', 'required game', 'game version required', 'iwad needed'},
+        'keys': {'game', 'required game', 'game version required', 'iwad needed', 'doom version'},
     },
     'content_graphics': {
         'type': KeyType.BOOL,
-        'keys': {'new graphics', 'graphics', 'graphic addon only'},
+        'keys': {
+            'new graphics', 'graphics', 'graphic addon only', 'sprites', 'textures', 'sprite edit', 'new sprites',
+            'new textures',
+        },
     },
     'content_sounds': {
         'type': KeyType.BOOL,
@@ -98,7 +108,7 @@ TEXT_KEYS = {
     },
     'music': {
         'type': KeyType.TEXT,
-        'keys': {'music'},
+        'keys': {'music', 'music track'},
     },
     'map_number': {
         'type': KeyType.MAP_NUMBER,
@@ -106,23 +116,19 @@ TEXT_KEYS = {
     },
     'content_demos': {
         'type': KeyType.BOOL,
-        'keys': {'demos replaced', 'demos', '.lmp only'},
+        'keys': {'demos replaced', 'demos', '.lmp only', 'new demos'},
     },
     'content_music': {
         'type': KeyType.BOOL,
-        'keys': {'new music', 'music pwad only'},
+        'keys': {'new music', 'music pwad only', 'midi', 'new musics'},
     },
     'date_released': {
         'type': KeyType.DATETIME,
-        'keys': {'release date', 'date'},
-    },
-    'count_levels': {
-        'type': KeyType.INTEGER,
-        'keys': {'new levels'},
+        'keys': {'release date', 'date', 'date released', 'date of release'},
     },
     'content_dehacked': {
         'type': KeyType.BOOL,
-        'keys': {'dehacked/bex patch'},
+        'keys': {'dehacked/bex patch', 'dehack patch only'},
     },
     'game_style_primary': {
         'type': KeyType.GAME_STYLE,
@@ -142,15 +148,18 @@ TEXT_KEYS = {
     },
     'engine': {
         'type': KeyType.ENGINE,
-        'keys': {'advanced engine needed'},
+        'keys': {'advanced engine needed', 'source port', 'engine', 'port'},
     },
     'links': {
         'type': KeyType.TEXT,
-        'keys': {'the usual', 'ftp sites', 'web sites', 'bbs numbers'},
+        'keys': {
+            'the usual', 'ftp sites', 'web sites', 'bbs numbers', 'homepage', 'web page', 'ftp', 'website',
+            'web site', 'home page', 'www', 'bbs', 'internet', 'web', 'www sites'
+        },
     },
     'do_not_run_with': {
         'type': KeyType.TEXT,
-        'keys': {'may not run with...', 'may not run with'},
+        'keys': {'may not run with...', 'may not run with', 'will not run with...'},
     },
     'archive_maintainer': {
         'type': KeyType.TEXT,
@@ -170,15 +179,11 @@ TEXT_KEYS = {
     },
     'date_completed': {
         'type': KeyType.DATETIME,
-        'keys': {'date finished'},
-    },
-    'notes': {
-        'type': KeyType.TEXT,
-        'keys': {'note', 'notes'},
+        'keys': {'date finished', 'date completed'},
     },
     'content_levels': {
         'type': KeyType.BOOL,
-        'keys': {'new level wad'},
+        'keys': {'new level wad', 'new levels', 'levels', 'levels replaced'},
     },
     'review': {
         'type': KeyType.TEXT,
@@ -186,11 +191,11 @@ TEXT_KEYS = {
     },
     'story': {
         'type': KeyType.TEXT,
-        'keys': {'story'},
+        'keys': {'story', 'the story'},
     },
     'theme': {
         'type': KeyType.TEXT,
-        'keys': {'theme'},
+        'keys': {'theme', 'themes'},
     },
     'inspiration': {
         'type': KeyType.TEXT,
@@ -198,13 +203,32 @@ TEXT_KEYS = {
     },
     'comments': {
         'type': KeyType.TEXT,
-        'keys': {'comments'},
+        'keys': {
+            'comments', 'author\'s comment', 'info', 'author\'s comments', 'note', 'notes', 'additional notes',
+            'uploader\'s note', 'important notes', 'play notes', 'misc. info', 'things to look out for',
+            'additional info', 'comment', 'misc game info', 'misc notes', 'author comments',
+        },
+    },
+    'hints': {
+        'type': KeyType.TEXT,
+        'keys': {'hints', 'tips', 'hint'},
+    },
+    'content_decorate': {
+        'type': KeyType.TEXT,
+        'keys': {'decorate'},
+    },
+    'content_weapons': {
+        'type': KeyType.TEXT,
+        'keys': {'weapons', 'new weapons'},
     },
 }
 
 TEXT_GAMES = {
     Game.DOOM2: {
-        'keys': {'doom 2', 'doom2', 'doom ii', 'doomii', 'doom 2 ver 1.9', 'doom ][', 'doom / doom2', 'doom/doom2', 'any doom', '- doom2', '2', 'any', 'both', 'freedoom',' freedm', 'ii', 'any iwad', 'freedoom: phase 2'},
+        'keys': {
+            'doom 2', 'doom2', 'doom ii', 'doomii', 'doom 2 ver 1.9', 'doom ][', 'doom / doom2', 'doom/doom2',
+            'any doom', '- doom2', '2', 'any', 'both', 'freedoom',' freedm', 'ii', 'any iwad', 'freedoom: phase 2',
+        },
         're': ['any doom.*', '^doom 2.*', '.*doom2.*', r'.*doom2\.wad.*', '.*doom ii.*', r'\bdoom\b', '^any game'],
     },
     Game.DOOM: {
@@ -246,13 +270,6 @@ TEXT_DIFFICULTY = {
     },
 }
 
-TEXT_MAP_NUMBER = {
-    # Game.DOOM2: {
-    #     'keys': {'doom 2'},
-    #     're': ['any doom.*', '^doom 2.*', '.*doom2.*', '.*doom2\.wad.*', '.*doom ii.*'],
-    # },
-}
-
 TEXT_BOOLEAN = {
     'true': {
         'keys': {'designed for', 'all', 'any', 'yeah!', 'yeah', 'affirmative', 'certainly', 'some', 'y', '- yes',
@@ -263,7 +280,45 @@ TEXT_BOOLEAN = {
                '^full .*', '^you bet.*', '.*\(yes\).*', '^aye.*'],
     },
     'false': {
-        'keys': {'n/a', '-', '- no', '0'},
+        'keys': {'n/a', '-', '- no', '0', 'nah'},
         're': ['^no.*'],
+    },
+}
+
+TEXT_ENGINE = {
+    Engine.ZDOOM: {
+        're': [r'zdoom'],
+    },
+    Engine.VANILLA: {
+        'keys': {
+            'none', 'no', 'none.', 'doom2', 'vanilla', '-', 'doom 2', 'nope', 'any', 'n/a', 'vanilla compatible',
+            'doom2.exe', 'vanilla-compatible', 'vanilla doom', 'none required',
+        },
+    },
+    Engine.BOOM: {
+        'keys': {},
+        're': [r'boom'],
+    },
+    Engine.GZDOOM: {
+        'keys': {},
+        're': [r'gzdoom'],
+    },
+    Engine.SKULLTAG: {
+        'keys': {'skulltag'},
+    },
+    Engine.NOLIMITS: {
+        'keys': {'limit removing', 'limit-removing', 'limit removing port', 'yes', 'limit-removing port'},
+    },
+    Engine.PRBOOM: {
+        'keys': {'prboom+', 'prboom-plus -complevel 2'},
+    },
+    Engine.LEGACY: {
+        'keys': {'legacy', 'doom legacy'},
+    },
+    Engine.ZANDRONUM: {
+        'keys': {'zandronum'},
+    },
+    Engine.ZDAEMON: {
+        'keys': {'zdaemon'},
     },
 }

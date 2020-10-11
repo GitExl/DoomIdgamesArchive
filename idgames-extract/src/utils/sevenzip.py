@@ -1,8 +1,9 @@
 import subprocess
 from enum import Enum
 from io import BytesIO
-from os.path import basename
-from typing import List, Optional
+from os.path import basename, normpath
+from pathlib import Path
+from typing import Dict, List, Optional
 
 
 class SZParseMode(Enum):
@@ -17,6 +18,7 @@ class SZArchive:
         self.path: str = path
         self.type: Optional[str] = None
         self.files: List[SZFile] = []
+        self.file_names: Dict[str, int] = {}
 
         self._read_info()
 
@@ -54,8 +56,11 @@ class SZArchive:
             elif mode == SZParseMode.FILES:
                 if parts[0] == 'Path':
                     if file:
+                        self.file_names[file.path] = len(self.files)
                         self.files.append(file)
-                    file = SZFile(self, parts[1])
+
+                    path = Path(parts[1])
+                    file = SZFile(self, path.as_posix())
                 elif parts[0] == 'Size':
                     file.size = int(parts[1])
                 elif parts[0] == 'Packed Size':
@@ -64,9 +69,16 @@ class SZArchive:
                     file.method = parts[1]
 
         if file:
+            self.file_names[file.path] = len(self.files)
             self.files.append(file)
 
         proc.stdout.close()
+
+    def get_file(self, filename: str):
+        if filename in self.file_names:
+            return self.files[self.file_names[filename]]
+
+        return None
 
     def close(self):
         for file in self.files:
@@ -81,7 +93,7 @@ class SZFile:
     def __init__(self, archive: SZArchive, path: str):
         self.archive: SZArchive = archive
         self.path: str = path
-        self.name: str = basename(path)
+        self.name: str = basename(self.path)
 
         self.size: Optional[int] = None
         self.packed_size: Optional[int] = None

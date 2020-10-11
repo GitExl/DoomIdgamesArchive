@@ -1,7 +1,7 @@
 import re
 from os.path import basename, splitext
 from re import RegexFlag
-from typing import List, BinaryIO, Optional, IO
+from typing import List, Optional, IO
 
 from archives.archivefilebase import ArchiveFileBase
 

@@ -3,9 +3,10 @@ import re
 from re import RegexFlag
 from typing import TextIO, Tuple, Optional, List
 
+from idgames.engine import Engine
 from idgames.game import Game
 from utils.logger import Logger
-from textparser.textkeys import TEXT_KEYS, KeyType, TEXT_GAMES, TEXT_BOOLEAN, TEXT_DIFFICULTY, TEXT_MAP_NUMBER
+from textparser.textkeys import TEXT_ENGINE, TEXT_KEYS, KeyType, TEXT_GAMES, TEXT_BOOLEAN, TEXT_DIFFICULTY
 
 
 KEY_VALUE_MIN_TRAILING_WHITESPACE = 3
@@ -14,7 +15,7 @@ RE_KEY_VALUE = re.compile(r':(?!//)')
 RE_HEADER = re.compile(r'[=\-]{2,}')
 
 
-class TextParser2:
+class TextParser:
 
     def __init__(self, logger: Logger):
         self.logger: Logger = logger
@@ -147,11 +148,11 @@ class TextParser2:
             value = self.parse_game(value)
         elif parser_data['type'] == KeyType.DIFFICULTY:
             value = self.parse_difficulty(value)
-        elif parser_data['type'] == KeyType.MAP_NUMBER:
-            value = self.parse_map_number(value)
+        elif parser_data['type'] == KeyType.ENGINE:
+            value = self.parse_engine(value)
 
         # TODO
-        elif parser_data['type'] == KeyType.ENGINE:
+        elif parser_data['type'] == KeyType.MAP_NUMBER:
             value = str(value)
         elif parser_data['type'] == KeyType.INTEGER:
             value = str(value)
@@ -235,6 +236,17 @@ class TextParser2:
         self.logger.stream('text_parser_value_game', '{}'.format(value))
         return Game.UNKNOWN
 
+    def parse_engine(self, value: str) -> Engine:
+        value = value.lower().strip()
+
+        # TODO: only allow one to match from all, otherwise many false positives
+        parser_key, data = self.match_key(value, TEXT_ENGINE)
+        if parser_key:
+            return Engine(parser_key)
+
+        self.logger.stream('text_parser_value_engine', '{}'.format(value))
+        return Engine.UNKNOWN
+
     def parse_difficulty(self, value: str) -> Optional[bool]:
         value = value.lower().strip()
 
@@ -243,14 +255,4 @@ class TextParser2:
             return bool(parser_key)
 
         self.logger.stream('text_parser_value_difficulty', '{}'.format(value))
-        return None
-
-    def parse_map_number(self, value: str) -> Optional[str]:
-        value = value.lower().strip()
-
-        parser_key, data = self.match_key(value, TEXT_MAP_NUMBER)
-        if parser_key:
-            return parser_key
-
-        self.logger.stream('text_parser_value_map_number', '{}'.format(value))
         return None

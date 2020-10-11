@@ -5,7 +5,7 @@ from archives.archivebase import ArchiveBase
 from extractors.extractorbase import ExtractorBase
 from idgames.game import Game
 from textparser.textkeys import TEXT_GAMES
-from textparser.textparser import TextParser2
+from textparser.textparser import TextParser
 from utils.logger import Logger
 
 LumpScores = Dict[str, Dict[Game, float]]
@@ -83,7 +83,7 @@ class GameExtractor(ExtractorBase):
     @staticmethod
     def detect_from_text(text_file: str) -> Game:
         text_data = text_file.lower()
-        key, data = TextParser2.match_key(text_data, TEXT_GAMES)
+        key, data = TextParser.match_key(text_data, TEXT_GAMES)
         if key:
             return Game(key)
 
