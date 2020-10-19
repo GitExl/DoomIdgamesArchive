@@ -1,6 +1,6 @@
 import zipfile
 from os.path import basename
-from typing import IO, List, Optional
+from typing import IO, List, Optional, Set
 from zipfile import ZipFile, ZipInfo
 
 from archives.archivebase import ArchiveBase
@@ -12,7 +12,7 @@ from utils.sevenzip import SZArchive
 
 class ArchiveExtractor(ExtractorBase):
 
-    EXTENSIONS: List[str] = [
+    EXTENSIONS: Set[str] = [
         'wad',
         'pk3',
         'pk7'

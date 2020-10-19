@@ -4,6 +4,11 @@
     "iwads": "c:/doom/iwads",
     "logs": "./logs"
   },
+  "extractors": {
+    "game": {
+      "lump_score_table": "lump_scores.json"
+    }
+  },
   "writers": {
     "appdatabase": {
       "output": "./output/app.db"
@@ -11,5 +16,15 @@
     "graphics": {
       "output_path": "./output/graphics"
     }
-  }
+  },
+  "ignore": [
+    "idstuff",
+    "incoming",
+    "newstuff",
+    "ls-laR.gz"
+  ],
+  "mirrors": [
+    "https://mirrors.syringanetworks.net/idgames",
+    "https://www.quaddicted.com/files/idgames"
+  ]
 }
