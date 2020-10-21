@@ -7,7 +7,7 @@ from writers.writerbase import WriterBase
 class GraphicsWriter(WriterBase):
 
     def write(self, info: dict):
-        base_path = self.config['writers']['graphics']['output_path']
+        base_path = self.config.get('writers.graphics.output_path')
 
         if 'graphics' not in info:
             return

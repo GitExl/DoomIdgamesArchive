@@ -4,16 +4,17 @@ from sqlite3 import Connection, Cursor
 
 from PIL import Image
 
+from utils.config import Config
 from utils.logger import Logger
 from writers.writerbase import WriterBase
 
 
 class AppDatabaseWriter(WriterBase):
 
-    def __init__(self, logger: Logger, config: dict):
+    def __init__(self, logger: Logger, config: Config):
         super().__init__(logger, config)
 
-        self.db: Connection = sqlite3.connect(config['writers']['appdatabase']['output'])
+        self.db: Connection = sqlite3.connect(config.get('writers.appdatabase.output'))
         self.cursor: Cursor = self.db.cursor()
         self.create_tables()
 

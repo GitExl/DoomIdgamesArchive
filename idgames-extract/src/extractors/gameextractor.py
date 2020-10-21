@@ -6,6 +6,7 @@ from extractors.extractorbase import ExtractorBase
 from idgames.game import Game
 from textparser.textkeys import TEXT_GAMES
 from textparser.textparser import TextParser
+from utils.config import Config
 from utils.logger import Logger
 
 LumpScores = Dict[str, Dict[Game, float]]
@@ -13,7 +14,7 @@ LumpScores = Dict[str, Dict[Game, float]]
 
 class GameExtractor(ExtractorBase):
 
-    def __init__(self, logger: Logger, config: dict):
+    def __init__(self, logger: Logger, config: Config):
         super().__init__(logger, config)
 
         self.lump_scores: LumpScores = self._load_lump_scores()
@@ -21,7 +22,7 @@ class GameExtractor(ExtractorBase):
     def _load_lump_scores(self) -> LumpScores:
         lump_scores: LumpScores = {}
 
-        with open(self.config['extractors']['game']['lump_score_table'], 'r') as f:
+        with open(self.config.get('extractors.game.lump_score_table'), 'r') as f:
             scores = json.load(f)
 
             for file_name, scores in scores.items():

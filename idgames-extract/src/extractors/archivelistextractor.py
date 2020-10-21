@@ -3,12 +3,13 @@ from archives.wadarchive import WADArchive
 from extractors.extractorbase import ExtractorBase
 
 from idgames.game import Game
+from utils.config import Config
 from utils.logger import Logger
 
 
 class ArchiveListExtractor(ExtractorBase):
 
-    def __init__(self, logger: Logger, config: dict):
+    def __init__(self, logger: Logger, config: Config):
         super().__init__(logger, config)
 
         self.iwads: dict = {}
@@ -42,4 +43,4 @@ class ArchiveListExtractor(ExtractorBase):
         }
 
     def _add_iwad(self, game: Game, filename: str):
-        self.iwads[game] = WADArchive.from_path('{}/{}'.format(self.config['paths']['iwads'], filename))
+        self.iwads[game] = WADArchive.from_path('{}/{}'.format(self.config.get('paths.iwads'), filename))

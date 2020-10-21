@@ -1,4 +1,3 @@
-import json
 from os.path import splitext, basename, relpath
 from glob import glob
 
@@ -7,6 +6,7 @@ from extractors.archivelistextractor import ArchiveListExtractor
 from extractors.gameextractor import GameExtractor
 from extractors.graphicsextractor import GraphicsExtractor
 from extractors.textextractor import TextExtractor
+from utils.config import Config
 
 from writers.appdatabasewriter import AppDatabaseWriter
 from writers.graphicswriter import GraphicsWriter
@@ -18,21 +18,19 @@ from utils.logger import Logger
 EXTRACTORS = [
     ArchiveExtractor,
     TextExtractor,
-    # GameExtractor,
-    # ArchiveListExtractor,
-    # GraphicsExtractor,
+    GameExtractor,
+    ArchiveListExtractor,
+    GraphicsExtractor,
 ]
 
 WRITERS = [
-    # GraphicsWriter,
-    # AppDatabaseWriter,
+    GraphicsWriter,
+    AppDatabaseWriter,
 ]
 
 
-with open('config.json', 'r') as f:
-    config = json.load(f)
-
-logger = Logger(config['paths']['logs'])
+config = Config()
+logger = Logger(config.get('paths.logs'))
 
 
 # Initialize processor instances.
@@ -45,10 +43,10 @@ for writer_class in WRITERS:
     writers.append(writer_class(logger, config))
 
 # Process every zip file in the directory tree.
-for path_system in glob('{}/**/*.zip'.format(config['paths']['idgames']), recursive=True):
+for path_system in glob('{}/**/*.zip'.format(config.get('paths.idgames')), recursive=True):
     path_system = str(path_system).replace('\\', '/')
 
-    path_idgames = relpath(path_system, config['paths']['idgames']).replace('\\', '/')
+    path_idgames = relpath(path_system, config.get('paths.idgames')).replace('\\', '/')
     path_idgames_base = splitext(path_idgames)[0]
     path_base = splitext(path_system)[0]
     filename_base = basename(path_base)

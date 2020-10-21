@@ -25,8 +25,7 @@ class TextExtractor(ExtractorBase):
             regexp = re.compile('{}/\.txt'.format(info['path_base']), re.IGNORECASE)
             for info in main_archive.infolist():
                 if regexp.match(info.filename):
-                    with main_archive.open(info.filename):
-                        text_file = file.read()
+                    text_file = main_archive.open(info.filename)
 
         if not text_file:
             return {}

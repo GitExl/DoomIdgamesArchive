@@ -43,8 +43,9 @@ class ArchiveExtractor(ExtractorBase):
             else:
                 file = main_archive.open(main_fileinfo.filename)
 
+            # We do not close the file, as it may be used to read data from later if needed. It is closed when
+            # the archive\archivelist is closed later anyway.
             archive = self.load_main_file(file, main_fileinfo.filename, main_archive.filename)
-            file.close()
             if not archive:
                 self.logger.warn('Unable to read archive.')
                 return {}
