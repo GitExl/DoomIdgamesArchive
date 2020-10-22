@@ -35,7 +35,7 @@ TEXT_KEYS = {
     },
     'description': {
         'type': KeyType.TEXT,
-        'keys': {'description', 'instructions', 'play information', 'wad description'},
+        'keys': {'description', 'instructions', 'play information', 'wad description', 'log entry'},
     },
     'difficulty_levels': {
         'type': KeyType.DIFFICULTY,
@@ -93,7 +93,7 @@ TEXT_KEYS = {
     },
     'game': {
         'type': KeyType.GAME,
-        'keys': {'game', 'required game', 'game version required', 'iwad needed', 'doom version'},
+        'keys': {'game', 'required game', 'game version required', 'iwad needed', 'doom version', 'game and version used'},
     },
     'content_graphics': {
         'type': KeyType.BOOL,
@@ -179,7 +179,7 @@ TEXT_KEYS = {
     },
     'date_completed': {
         'type': KeyType.DATETIME,
-        'keys': {'date finished', 'date completed'},
+        'keys': {'date finished', 'date completed', 'completion date'},
     },
     'content_levels': {
         'type': KeyType.BOOL,
@@ -206,7 +206,8 @@ TEXT_KEYS = {
         'keys': {
             'comments', 'author\'s comment', 'info', 'author\'s comments', 'note', 'notes', 'additional notes',
             'uploader\'s note', 'important notes', 'play notes', 'misc. info', 'things to look out for',
-            'additional info', 'comment', 'misc game info', 'misc notes', 'author comments',
+            'additional info', 'comment', 'misc game info', 'misc notes', 'author comments', 'authors comments',
+            'important',
         },
     },
     'hints': {

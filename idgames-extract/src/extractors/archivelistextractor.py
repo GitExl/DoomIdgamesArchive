@@ -1,3 +1,6 @@
+import os
+from typing import Dict
+
 from archives.archivelist import ArchiveList
 from archives.wadarchive import WADArchive
 from extractors.extractorbase import ExtractorBase
@@ -12,7 +15,7 @@ class ArchiveListExtractor(ExtractorBase):
     def __init__(self, logger: Logger, config: Config):
         super().__init__(logger, config)
 
-        self.iwads: dict = {}
+        self.iwads: Dict[Game, WADArchive] = {}
 
         self._add_iwad(Game.DOOM2, 'doom2.wad')
         self._add_iwad(Game.DOOM, 'doom.wad')
@@ -34,6 +37,8 @@ class ArchiveListExtractor(ExtractorBase):
 
         iwad = self.iwads[info['game']]
 
+        self.logger.decision('Using "{}" as IWAD.'.format(os.path.basename(iwad.file.name)))
+
         archive_list = ArchiveList()
         archive_list.append(iwad)
         archive_list.append(info['archive'])
@@ -43,4 +48,5 @@ class ArchiveListExtractor(ExtractorBase):
         }
 
     def _add_iwad(self, game: Game, filename: str):
-        self.iwads[game] = WADArchive.from_path('{}/{}'.format(self.config.get('paths.iwads'), filename))
+        wad_path = '{}/{}'.format(self.config.get('paths.iwads'), filename)
+        self.iwads[game] = WADArchive.from_path(wad_path)

@@ -44,6 +44,15 @@ class ArchiveBase:
 
         return None
 
+    def file_find_all_regexp(self, regexp: str) -> List[ArchiveFileBase]:
+        files: List[ArchiveFileBase] = []
+
+        for file in reversed(self.files):
+            if re.match(regexp, file.name, RegexFlag.IGNORECASE):
+                files.append(file)
+
+        return files
+
     def close(self):
         self.file.close()
 

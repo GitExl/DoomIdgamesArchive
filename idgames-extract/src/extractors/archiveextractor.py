@@ -1,6 +1,6 @@
 import zipfile
 from os.path import basename
-from typing import IO, List, Optional, Set
+from typing import IO, Optional, Set
 from zipfile import ZipFile, ZipInfo
 
 from archives.archivebase import ArchiveBase
@@ -15,7 +15,12 @@ class ArchiveExtractor(ExtractorBase):
     EXTENSIONS: Set[str] = [
         'wad',
         'pk3',
-        'pk7'
+        'pk7',
+        'pkz',
+        'pke',
+        'ipk3',
+        'pkz',
+        'ipk7',
     ]
 
     def extract(self, info: dict) -> dict:
@@ -29,14 +34,17 @@ class ArchiveExtractor(ExtractorBase):
             self.logger.error('Bad ZIP file.')
 
         if main_fileinfo:
+            self.logger.decision('Using "{}" as the main data file.'.format(main_fileinfo.filename))
 
             # Some archives contain files with compression type "Imploded", which Python zipfile cannot
             # decompress. We use the slower 7zip CLI fallback here instead.
             if not self.is_compression_type_supported(main_fileinfo.compress_type):
+                self.logger.debug('Archive is compressed using deflate, falling back to 7zip CLI.')
+
                 main_archive_7z = SZArchive(info['path'])
                 file_7z = main_archive_7z.get_file(main_fileinfo.filename)
                 if not file_7z:
-                    self.logger.warn('Cannot find file {} in archive with 7zip.'.format(main_fileinfo.filename))
+                    self.logger.warn('Cannot find file {} in archive.'.format(main_fileinfo.filename))
                     return {}
                 file = file_7z.get_data()
 
@@ -99,7 +107,7 @@ class ArchiveExtractor(ExtractorBase):
 
         elif magic_bytes[0:2] == b'7z':
             archive = None
-            self.logger.error('7zip is not yet supported.')
+            self.logger.error('7zip is not yet supported for main archive.')
             self.logger.stream('7zip_unsupported', '{} in {}'.format(path, archive_path))
 
         else:

@@ -39,22 +39,25 @@ class GameExtractor(ExtractorBase):
         # Only try to detect the game if one is not set already.
         if 'game' in info and info['game'] != Game.UNKNOWN:
             game = info['game']
+            self.logger.decision('Detected game "{}" from info dictionary.'.format(game.name))
 
         # Detect from idgames path.
         if game == Game.UNKNOWN and 'path_idgames' in info:
             game = self.detect_from_path(info['path_idgames'])
+            if game != Game.UNKNOWN:
+                self.logger.decision('Detected game "{}" from path.'.format(game.name))
 
         # Detect from certain lump names.
         if game == Game.UNKNOWN and 'archive' in info:
             game = self.detect_from_archive(info['archive'])
             if game != Game.UNKNOWN:
-                self.logger.stream('game_detect_archive', info['path_idgames'])
+                self.logger.decision('Detected game "{}" from archive filenames.'.format(game.name))
 
         # Last ditch effort, just use the entire text file.
         if game == Game.UNKNOWN and 'text_file' in info:
             game = self.detect_from_text(info['text_file'])
             if game != Game.UNKNOWN:
-                self.logger.stream('game_detect_text', info['path_idgames'])
+                self.logger.decision('Detected game "{}" from text file contents.'.format(game.name))
 
         if game == Game.UNKNOWN:
             self.logger.warn('Cannot determine game.')
