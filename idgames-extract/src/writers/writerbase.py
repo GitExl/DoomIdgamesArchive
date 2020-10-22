@@ -10,3 +10,6 @@ class WriterBase:
 
     def write(self, info: dict):
         pass
+
+    def close(self):
+        pass

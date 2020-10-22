@@ -48,3 +48,7 @@ class AppDatabaseWriter(WriterBase):
         self.cursor.execute('CREATE TABLE IF NOT EXISTS `files` (`id` INTEGER NOT NULL, `path` TEXT, `game` TEXT, PRIMARY KEY(`id`))')
         self.cursor.execute('CREATE TABLE IF NOT EXISTS `images` (`id` INTEGER NOT NULL, `file_id` INTEGER NOT NULL, `path` TEXT, `width` INTEGER NOT NULL, `height` INTEGER NOT NULL, `color` INTEGER NOT NULL, PRIMARY KEY(`id`), FOREIGN KEY(`file_id`) REFERENCES `files`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION )')
         self.db.commit()
+
+    def close(self):
+        self.cursor.close()
+        self.db.close()

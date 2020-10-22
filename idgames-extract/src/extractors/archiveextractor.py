@@ -27,8 +27,10 @@ class ArchiveExtractor(ExtractorBase):
         main_fileinfo = None
 
         try:
+            self.logger.debug('Opening "{}"'.format(info['path']))
             main_archive = ZipFile(info['path'])
             main_fileinfo = self.get_data_main_fileinfo(info['filename_base'], main_archive)
+
         except zipfile.BadZipFile:
             main_archive = None
             self.logger.error('Bad ZIP file.')
@@ -39,7 +41,7 @@ class ArchiveExtractor(ExtractorBase):
             # Some archives contain files with compression type "Imploded", which Python zipfile cannot
             # decompress. We use the slower 7zip CLI fallback here instead.
             if not self.is_compression_type_supported(main_fileinfo.compress_type):
-                self.logger.debug('Archive is compressed using deflate, falling back to 7zip CLI.')
+                self.logger.debug('Opening "{}" as using 7zip process'.format(main_fileinfo.filename))
 
                 main_archive_7z = SZArchive(info['path'])
                 file_7z = main_archive_7z.get_file(main_fileinfo.filename)
@@ -67,6 +69,12 @@ class ArchiveExtractor(ExtractorBase):
             'main_archive': main_archive,
             'archive': archive,
         }
+
+    def cleanup(self, info: dict):
+        if 'main_archive' in info and info['main_archive']:
+            main_archive: ZipFile = info['main_archive']
+            self.logger.debug('Closing "{}"'.format(main_archive.filename))
+            main_archive.close()
 
     @staticmethod
     def is_compression_type_supported(method: int) -> bool:
@@ -100,10 +108,10 @@ class ArchiveExtractor(ExtractorBase):
 
         archive = None
         if magic_bytes[0:2] == b'PK':
-            archive = ZIPArchive(file)
+            archive = ZIPArchive(path, file, self.logger)
 
         elif magic_bytes[0:4] == b'PWAD' or magic_bytes[0:4] == b'IWAD':
-            archive = WADArchive(file)
+            archive = WADArchive(path, file, self.logger)
 
         elif magic_bytes[0:2] == b'7z':
             archive = None

@@ -34,6 +34,7 @@ class ArchiveList:
 
         return None
 
-    def close(self):
+    def close(self, iwads: bool = True):
         for archive in self.archives:
-            archive.close()
+            if (archive.is_main and iwads) or not archive.is_main:
+                archive.close()

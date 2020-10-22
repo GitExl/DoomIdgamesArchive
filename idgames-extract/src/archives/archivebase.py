@@ -4,21 +4,27 @@ from re import RegexFlag
 from typing import List, Optional, IO
 
 from archives.archivefilebase import ArchiveFileBase
+from utils.logger import Logger
 
 
 class ArchiveBase:
 
-    def __init__(self, file: IO[bytes]):
+    def __init__(self, name: str, file: IO[bytes], logger: Logger):
+        logger.debug('Opening archive "{}"'.format(name))
+
+        self.name = name
         self.files: List[ArchiveFileBase] = []
         self.file: IO[bytes] = file
         self.is_main: bool = False
 
+        self.logger: Logger = logger
+
         self.read(file)
 
     @classmethod
-    def from_path(cls, path: str):
+    def from_path(cls, path: str, logger: Logger):
         file = open(path, 'rb')
-        return cls(file)
+        return cls(path, file, logger)
 
     def read(self, file: IO[bytes]):
         pass
@@ -54,6 +60,7 @@ class ArchiveBase:
         return files
 
     def close(self):
+        self.logger.debug('Closing "{}"'.format(self.name))
         self.file.close()
 
     def get_file_data(self, file: ArchiveFileBase) -> bytes:

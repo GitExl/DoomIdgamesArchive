@@ -47,6 +47,14 @@ class ArchiveListExtractor(ExtractorBase):
             'archive_list': archive_list,
         }
 
+    def cleanup(self, info: dict):
+        if 'archive_list' in info and info['archive_list']:
+            info['archive_list'].close(iwads=False)
+
     def _add_iwad(self, game: Game, filename: str):
         wad_path = '{}/{}'.format(self.config.get('paths.iwads'), filename)
-        self.iwads[game] = WADArchive.from_path(wad_path)
+        self.iwads[game] = WADArchive.from_path(wad_path, self.logger)
+
+    def close(self):
+        for iwad in self.iwads.values():
+            iwad.close()

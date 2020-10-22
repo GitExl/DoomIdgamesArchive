@@ -3,14 +3,15 @@ from zipfile import ZipFile
 
 from archives.archivebase import ArchiveBase
 from archives.ziparchivefile import ZIPArchiveFile
+from utils.logger import Logger
 
 
 class ZIPArchive(ArchiveBase):
 
-    def __init__(self, file: IO[bytes]):
+    def __init__(self, name: str, file: IO[bytes], logger: Logger):
         self.zip_file: Optional[ZipFile] = None
 
-        super().__init__(file)
+        super().__init__(name, file, logger)
 
     def read(self, file: IO[bytes]):
         self.file = file

@@ -39,7 +39,6 @@ def extract():
     extractors = []
     for extractor_class in EXTRACTORS:
         extractors.append(extractor_class(logger, config))
-
     writers = []
     for writer_class in WRITERS:
         writers.append(writer_class(logger, config))
@@ -69,20 +68,22 @@ def extract():
             'filename_base': filename_base,
         }
 
-        # Run all extractors in sequence.
+        # Run all extractors and writers in sequence.
         for extractor in extractors:
             info.update(extractor.extract(info))
-
-        # Close any archive list left open. This will also close any associated archives.
-        if 'archive_list' in info and info['archive_list']:
-            info['archive_list'].close()
-        if 'main_archive' in info and info['main_archive']:
-            info['main_archive'].close()
-
-        # Run all writers.
         for writer in writers:
             writer.write(info)
 
+        # Clean up extractors.
+        for extractor in reversed(extractors):
+            extractor.cleanup(info)
 
-#cProfile.run('extract()')
+    # Close extractor and writer classes.
+    for writer in reversed(writers):
+        writer.close()
+    for extractor in reversed(extractors):
+        extractor.close()
+
+
+#cProfile.run('extract()', sort='tottime')
 extract()

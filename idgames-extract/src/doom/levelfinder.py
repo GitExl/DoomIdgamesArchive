@@ -40,7 +40,7 @@ class LevelData:
 
         if file.name == 'TEXTMAP':
             self.format = LevelFormat.UDMF
-        elif file.name == 'BEHAVIOR':
+        elif self.format != LevelFormat.UDMF and file.name == 'BEHAVIOR':
             self.format = LevelFormat.HEXEN
 
 

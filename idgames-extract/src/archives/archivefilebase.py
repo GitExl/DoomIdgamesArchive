@@ -12,6 +12,7 @@ class ArchiveFileBase:
 
     def get_data(self) -> bytes:
         if self.data is None:
+            self.owner.logger.debug('Reading "{}" from "{}"'.format(self.name, self.owner.name))
             self.data = self.owner.get_file_data(self)
 
         return self.data

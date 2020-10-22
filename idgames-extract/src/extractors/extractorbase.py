@@ -10,3 +10,9 @@ class ExtractorBase:
 
     def extract(self, info: dict) -> dict:
         pass
+
+    def cleanup(self, info: dict):
+        pass
+
+    def close(self):
+        pass
