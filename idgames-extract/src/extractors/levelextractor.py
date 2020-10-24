@@ -6,6 +6,7 @@ from archives.wadarchive import WADArchive
 from doom.binarylevelreader import BinaryLevelReader
 from doom.level import Level
 from doom.levelfinder import LevelDataFinder, LevelFormat
+from doom.udmflevelreader import UDMFLevelReader
 from extractors.extractorbase import ExtractorBase
 
 
@@ -35,23 +36,22 @@ class LevelExtractor(ExtractorBase):
         levels: List[Level] = []
         for level_data in level_data_finder.level_data:
             if level_data.format == LevelFormat.UDMF:
-                #reader = UDMFLevelReader()
-                continue
+                reader = UDMFLevelReader(self.logger)
             else:
-                reader = BinaryLevelReader()
+                reader = BinaryLevelReader(self.logger)
 
             level = reader.read(level_data)
-            levels.append(level)
-
-            self.logger.debug('Found {} ({}): {} vertices, {} lines, {} sides, {} sectors, {} things.'.format(
-                level.name, level_data.format.name,
-                len(level.vertices), len(level.lines), len(level.sides), len(level.sectors), len(level.things))
-            )
+            if level:
+                levels.append(level)
+                self.logger.debug('Found {} ({}): {} vertices, {} lines, {} sides, {} sectors, {} things.'.format(
+                    level.name, level_data.format.name,
+                    len(level.vertices), len(level.lines), len(level.sides), len(level.sectors), len(level.things))
+                )
 
         for archive in wad_archives:
             archive.close()
 
-        self.logger.decision('Found {} levels.'.format(len(levels)))
+        self.logger.decision('Found {} valid levels.'.format(len(levels)))
 
         return {
             'levels': levels

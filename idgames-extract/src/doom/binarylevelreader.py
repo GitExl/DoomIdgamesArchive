@@ -1,5 +1,5 @@
 from struct import Struct
-from typing import Tuple
+from typing import Optional, Tuple
 
 from doom.level import Level, Line, Sector, Side, Thing, Vertex
 from doom.levelfinder import LevelData, LevelFormat
@@ -20,17 +20,17 @@ STRUCT_THING_HEXEN: Struct = Struct('<HhhhHHHBBBBBB')
 
 
 def unpack_vertex(values: Tuple):
-    return Vertex(values[0], values[1])
+    return Vertex(float(values[0]), float(values[1]))
 
 
 def unpack_line_doom(values: Tuple):
-    return Line(values[0], values[1], values[5], values[6], values[2], values[3], values[4], None)
+    return Line(values[0], values[1], values[5], values[6], values[2], values[3], values[4], (0, 0, 0, 0, 0))
 
 
 def unpack_line_hexen(values: Tuple):
     return Line(
         values[0], values[1], values[9], values[10], values[2], values[3],
-        None, (values[4], values[5], values[6], values[7], values[8]),
+        0, (values[4], values[5], values[6], values[7], values[8]),
     )
 
 
@@ -43,19 +43,19 @@ def unpack_sector(values: Tuple):
 
 
 def unpack_thing_doom(values: Tuple):
-    return Thing(values[0], values[1], values[2], values[3], values[4], None, None, None, None)
+    return Thing(float(values[0]), float(values[1]), values[2], values[3], values[4], 0, 0, 0, (0, 0, 0, 0, 0))
 
 
 def unpack_thing_hexen(values: Tuple):
     return Thing(
-        values[1], values[2], values[4], values[5], values[6], values[3], values[0], values[7],
+        float(values[1]), float(values[2]), values[4], values[5], values[6], float(values[3]), values[0], values[7],
         (values[8], values[9], values[10], values[11], values[12]),
     )
 
 
 class BinaryLevelReader(LevelReaderBase):
 
-    def read(self, level_data: LevelData) -> Level:
+    def read(self, level_data: LevelData) -> Optional[Level]:
         level_name: str = level_data.header_file.name
 
         vertices = BinaryLevelReader._read_binary_data(level_data, 'VERTEXES', unpack_vertex, STRUCT_VERTEX)

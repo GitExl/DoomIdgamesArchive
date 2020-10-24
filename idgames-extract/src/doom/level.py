@@ -6,8 +6,8 @@ from typing import List, Optional, Tuple
 class Vertex:
     __slots__ = ['x', 'y']
 
-    x: int
-    y: int
+    x: float
+    y: float
 
 
 @dataclass(frozen=True)
@@ -20,8 +20,8 @@ class Line:
     side_back: int
     flags: int
     type: int
-    tag: Optional[int]
-    args: Optional[Tuple[int, int, int, int, int]]
+    tag: int
+    args: Tuple[int, int, int, int, int]
 
 
 @dataclass(frozen=True)
@@ -53,15 +53,15 @@ class Sector:
 class Thing:
     __slots__ = ['x', 'y', 'angle', 'type', 'flags', 'z', 'tag', 'special', 'args']
 
-    x: int
-    y: int
+    x: float
+    y: float
     angle: int
     type: int
     flags: int
-    z: Optional[int]
-    tag: Optional[int]
-    special: Optional[int]
-    args: Optional[Tuple[int, int, int, int, int]]
+    z: float
+    tag: int
+    special: int
+    args: Tuple[int, int, int, int, int]
 
 
 class Level:
