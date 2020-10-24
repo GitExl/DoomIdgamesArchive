@@ -53,7 +53,7 @@ class Logger:
             return
 
         dt = strftime('%Y-%m-%d %H:%M:%S', localtime())
-        sys.stdout.write('{} \033[1;33m[warning] {}\n'.format(dt, text))
+        sys.stdout.write('{} \033[1;33m[warning]  {}\n'.format(dt, text))
 
     def stream(self, stream: str, text: str):
         if stream not in self.streams:

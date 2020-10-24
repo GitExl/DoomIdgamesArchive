@@ -100,9 +100,9 @@ class Lexer(object):
     def require_token(self, token_type: str) -> str:
         token = self.get_token()
         if token is None:
-            raise LexerError('Expected "{}" token but reached end of file.'.format(token_type), self._split_position(token[2]))
+            raise LexerError('Expected "{}" token but reached end of file.'.format(token_type), self.split_position(token[2]))
         if token[0] != token_type:
-            raise LexerError('Expected "{}" token, got "{}".'.format(token_type, token[0]), self._split_position(token[2]))
+            raise LexerError('Expected "{}" token, got "{}".'.format(token_type, token[0]), self.split_position(token[2]))
 
         return token[1]
 
@@ -130,9 +130,9 @@ class Lexer(object):
                 return rule.name, m.group(group_name), m.pos
 
         # If we're here, no rule matched.
-        raise LexerError('Invalid token', self._split_position(self.pos))
+        raise LexerError('Invalid token', self.split_position(self.pos))
 
-    def _split_position(self, pos: int) -> (int, int):
+    def split_position(self, pos: int) -> (int, int):
         text_part = self.buf[:pos]
 
         line = text_part.count('\n') + 1

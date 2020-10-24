@@ -56,7 +56,7 @@ def unpack_thing_hexen(values: Tuple):
 class BinaryLevelReader(LevelReaderBase):
 
     def read(self, level_data: LevelData) -> Optional[Level]:
-        level_name: str = level_data.header_file.name
+        level_name: str = level_data.name
 
         vertices = BinaryLevelReader._read_binary_data(level_data, 'VERTEXES', unpack_vertex, STRUCT_VERTEX)
         sides = BinaryLevelReader._read_binary_data(level_data, 'SIDEDEFS', unpack_side, STRUCT_SIDE)

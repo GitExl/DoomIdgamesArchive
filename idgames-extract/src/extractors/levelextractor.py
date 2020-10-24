@@ -1,4 +1,6 @@
 from io import BytesIO
+from os.path import basename, splitext
+from pathlib import Path
 from typing import List
 
 from archives.archivebase import ArchiveBase
@@ -27,9 +29,10 @@ class LevelExtractor(ExtractorBase):
         wad_archives = []
         level_wads = archive.file_find_all_regexp(r'maps/.*\.wad')
         for wad in level_wads:
+            wad_base_name = Path(wad.name).stem
             wad_data = BytesIO(wad.get_data())
             wad_archive = WADArchive(wad.name, wad_data, self.logger)
-            level_data_finder.add_from_archive(wad_archive)
+            level_data_finder.add_from_archive(wad_archive, wad_base_name)
 
             wad_archives.append(wad_archive)
 

@@ -1,5 +1,6 @@
 import codecs
 import re
+from io import StringIO
 
 from os import path
 
@@ -23,10 +24,12 @@ class TextExtractor(ExtractorBase):
             main_archive = info['main_archive']
 
             # Case-insensitive filename search.
-            regexp = re.compile('{}/\.txt'.format(info['path_base']), re.IGNORECASE)
-            for info in main_archive.infolist():
-                if regexp.match(info.filename):
-                    text_file = main_archive.open(info.filename)
+            regexp = re.compile(r'{}\.txt'.format(info['filename_base']), re.IGNORECASE)
+            for file_info in main_archive.infolist():
+                if regexp.match(file_info.filename):
+                    text_file = main_archive.open(file_info.filename)
+                    text_data = text_file.read().decode('latin_1')
+                    text_file = StringIO(text_data)
 
             if text_file:
                 self.logger.decision('Using text file from inside the archive.')

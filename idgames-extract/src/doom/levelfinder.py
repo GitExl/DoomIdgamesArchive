@@ -1,5 +1,5 @@
 from enum import Enum
-from typing import Dict, List
+from typing import Dict, List, Optional
 
 from archives.archivebase import ArchiveBase
 from archives.archivefilebase import ArchiveFileBase
@@ -30,8 +30,8 @@ class LevelFormat(Enum):
 
 class LevelData:
 
-    def __init__(self, header_file: ArchiveFileBase):
-        self.header_file: ArchiveFileBase = header_file
+    def __init__(self, name: str):
+        self.name: str = name
         self.files: Dict[str, ArchiveFileBase] = {}
         self.format: LevelFormat = LevelFormat.DOOM
 
@@ -49,18 +49,20 @@ class LevelDataFinder:
     def __init__(self):
         self.level_data: List[LevelData] = []
 
-    def add_from_archive(self, archive: ArchiveBase):
+    def add_from_archive(self, archive: ArchiveBase, name: Optional[str] = None):
         for index, file in enumerate(archive.files):
             if file.name != 'THINGS' and file.name != 'TEXTMAP':
                 continue
 
-            files = LevelDataFinder._collect_level_data(archive, index - 1)
-            self.level_data.append(files)
+            level_data = LevelDataFinder._collect_level_data(archive, index - 1)
+            if name is not None:
+                level_data.name = name
+            self.level_data.append(level_data)
 
     @staticmethod
     def _collect_level_data(archive: ArchiveBase, header_index: int) -> LevelData:
         header_file = archive.files[header_index]
-        level_data: LevelData = LevelData(header_file)
+        level_data: LevelData = LevelData(header_file.name)
 
         # Collect UDMF map lumps between the header and ENDMAP
         lump_index_max = min(len(archive.files), header_index + 20)

@@ -8,16 +8,16 @@ from utils.lexer import Lexer, LexerError, Rule
 
 
 class UDMFParserError(Exception):
-    def __init__(self, message: str, position: int):
-        super(Exception, self).__init__('Position {}: {}'.format(position, message))
+    def __init__(self, message: str, position: Tuple[int, int]):
+        super(Exception, self).__init__('Line {} column {}: {}'.format(position[0], position[1], message))
 
 
 class UDMFToken(Enum):
     WHITESPACE: str = 'white'
     COMMENT: str = 'comment'
     IDENTIFIER: str = 'ident'
-    BLOCK_START: str = 'blk_start'
-    BLOCK_END: str = 'blk_end'
+    BLOCK_START: str = 'blkstart'
+    BLOCK_END: str = 'blkend'
     ASSIGN: str = 'assign'
     END: str = 'end'
     INTEGER: str = 'int'
@@ -35,6 +35,7 @@ def parse_namespace(lexer: Lexer) -> str:
 
 
 def parse_thing(lexer: Lexer) -> Thing:
+    start = lexer.pos
     lexer.require_token(UDMFToken.BLOCK_START)
 
     x = None
@@ -61,7 +62,9 @@ def parse_thing(lexer: Lexer) -> Thing:
         elif key == 'y':
             y = float(lexer.require_token(UDMFToken.FLOAT))
         elif key == 'height':
-            z = float(lexer.require_token(UDMFToken.FLOAT))
+            # These can be integers in rare cases, but we can treat those as floats too.
+            z_token = lexer.get_token()
+            z = float(z_token[1])
         elif key == 'angle':
             angle = int(lexer.require_token(UDMFToken.INTEGER))
         elif key == 'type':
@@ -80,18 +83,21 @@ def parse_thing(lexer: Lexer) -> Thing:
             args[4] = int(lexer.require_token(UDMFToken.INTEGER))
         else:
             lexer.get_token()
+        # TODO: flags
+        # TODO: arg0str
 
         lexer.require_token(UDMFToken.END)
 
     if x is None or y is None:
-        raise Exception('Thing is missing coordinates.')
+        raise UDMFParserError('Thing is missing coordinates.', lexer.split_position(start))
     if type is None:
-        raise Exception('Thing is missing a type.')
+        raise UDMFParserError('Thing is missing a type.', lexer.split_position(start))
 
     return Thing(x, y, angle, type, flags, z, tag, special, tuple(args))
 
 
 def parse_vertex(lexer: Lexer) -> Vertex:
+    start = lexer.pos
     lexer.require_token(UDMFToken.BLOCK_START)
 
     x = None
@@ -114,17 +120,18 @@ def parse_vertex(lexer: Lexer) -> Vertex:
         lexer.require_token(UDMFToken.END)
 
     if x is None or y is None:
-        raise Exception('Vertex is missing coordinates.')
+        raise UDMFParserError('Vertex is missing coordinates.', lexer.split_position(start))
 
     return Vertex(x, y)
 
 
 def parse_line(lexer: Lexer, vanilla_namespace: bool) -> Line:
+    start = lexer.pos
     lexer.require_token(UDMFToken.BLOCK_START)
 
     vertex_start = None
     vertex_end = None
-    side_front = None
+    side_front = -1
     side_back = -1
     flags = 0
     type = 0
@@ -162,18 +169,20 @@ def parse_line(lexer: Lexer, vanilla_namespace: bool) -> Line:
             tag = int(lexer.require_token(UDMFToken.INTEGER))
         else:
             lexer.get_token()
+        # TODO: flags
+        # TODO: moreids
+        # TODO: arg0str
 
         lexer.require_token(UDMFToken.END)
 
     if vertex_start is None or vertex_end is None:
-        raise Exception('Line is missing vertices.')
-    if side_front is None:
-        raise Exception('Line is missing front side.')
+        raise UDMFParserError('Line is missing vertices.', lexer.split_position(start))
 
     return Line(vertex_start, vertex_end, side_front, side_back ,flags, type, tag, tuple(args))
 
 
 def parse_sector(lexer: Lexer) -> Sector:
+    start = lexer.pos
     lexer.require_token(UDMFToken.BLOCK_START)
 
     z_floor = 0
@@ -207,16 +216,18 @@ def parse_sector(lexer: Lexer) -> Sector:
             type = int(lexer.require_token(UDMFToken.INTEGER))
         else:
             lexer.get_token()
+        # TODO: moreids
 
         lexer.require_token(UDMFToken.END)
 
     if texture_floor is None or texture_ceiling is None:
-        raise Exception('Sector has no floor or ceiling texture.')
+        raise UDMFParserError('Sector has no floor or ceiling texture.', lexer.split_position(start))
 
     return Sector(z_floor, z_ceiling, texture_floor, texture_ceiling, tag, type, light)
 
 
 def parse_side(lexer: Lexer) -> Side:
+    start = lexer.pos
     lexer.require_token(UDMFToken.BLOCK_START)
 
     sector = None
@@ -251,7 +262,7 @@ def parse_side(lexer: Lexer) -> Side:
         lexer.require_token(UDMFToken.END)
 
     if sector is None:
-        raise Exception('Side has no sector.')
+        raise UDMFParserError('Side has no sector.', lexer.split_position(start))
 
     return Side(sector, texture_upper, texture_mid, texture_lower, texture_x, texture_y)
 
@@ -259,7 +270,7 @@ def parse_side(lexer: Lexer) -> Side:
 class UDMFLevelReader(LevelReaderBase):
 
     def read(self, level_data: LevelData) -> Optional[Level]:
-        level_name = level_data.header_file.name
+        level_name = level_data.name
         text = level_data.files.get('TEXTMAP').get_data().decode('latin1')
 
         try:
@@ -304,7 +315,7 @@ class UDMFLevelReader(LevelReaderBase):
             if token is None:
                 break
             if token[0] != UDMFToken.IDENTIFIER:
-                raise UDMFParserError('Expected a root identifier, got "{}".'.format(token[1]), token[2])
+                raise UDMFParserError('Expected a root identifier, got "{}".'.format(token[1]), lexer.split_position(token[2]))
 
             identifier = token[1]
             if identifier == 'namespace':
@@ -323,6 +334,6 @@ class UDMFLevelReader(LevelReaderBase):
             elif identifier == 'sector':
                 sectors.append(parse_sector(lexer))
             else:
-                raise UDMFParserError('Unknown root identifier "{}".'.format(identifier), token[2])
+                raise UDMFParserError('Unknown root identifier "{}".'.format(identifier), lexer.split_position(token[2]))
 
         return Level(level_name, vertices, lines, sides, sectors, things)
