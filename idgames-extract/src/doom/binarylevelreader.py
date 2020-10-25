@@ -24,12 +24,16 @@ def unpack_vertex(values: Tuple):
 
 
 def unpack_line_doom(values: Tuple):
-    return Line(values[0], values[1], values[5], values[6], values[2], values[3], values[4], (0, 0, 0, 0, 0))
+    # TODO: expand binary flags to internal flags
+    flags = values[2]
+    return Line(values[0], values[1], values[5], values[6], flags, values[3], values[4], 0, 0, 0, 0, 0, None)
 
 
 def unpack_line_hexen(values: Tuple):
+    # TODO: expand binary Hexen flags to internal flags
+    flags = values[2]
     return Line(
-        values[0], values[1], values[9], values[10], values[2], values[3],
+        values[0], values[1], values[9], values[10], flags, values[3],
         0, (values[4], values[5], values[6], values[7], values[8]),
     )
 
@@ -43,13 +47,17 @@ def unpack_sector(values: Tuple):
 
 
 def unpack_thing_doom(values: Tuple):
-    return Thing(float(values[0]), float(values[1]), values[2], values[3], values[4], 0, 0, 0, (0, 0, 0, 0, 0))
+    # TODO: expand binary flags to internal flags
+    flags = values[4]
+    return Thing(float(values[0]), float(values[1]), 0, values[2], values[3], flags, 0, 0, 0, 0, 0, 0, 0, None)
 
 
 def unpack_thing_hexen(values: Tuple):
+    # TODO: expand binary Hexen flags to internal flags
+    flags = values[6]
     return Thing(
-        float(values[1]), float(values[2]), values[4], values[5], values[6], float(values[3]), values[0], values[7],
-        (values[8], values[9], values[10], values[11], values[12]),
+        float(values[1]), float(values[2]), float(values[3]), values[4], values[5], flags, values[0], values[7],
+        values[8], values[9], values[10], values[11], values[12], None
     )
 
 
