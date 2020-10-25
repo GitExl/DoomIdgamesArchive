@@ -18,19 +18,10 @@ def file_download(src_url: str, dest_path: Path, downloader: Downloader):
         return src_url, dest_path, e
 
 
-def download_all(download_list: List, logger: Logger):
-    results = ThreadPool(6).starmap(file_download, download_list)
-    for src_url, dest_path, e in results:
-        if e is not None:
-            logger.error('Error downloading {}: {}'.format(src_url, e))
-        else:
-            logger.info('Downloaded {}'.format(src_url))
-
-
 def sync():
     config = Config()
     logger = Logger(config.get('paths.logs'))
-    downloader = Downloader(config.get('mirrors'))
+    downloader = Downloader(logger, config.get('mirrors'))
 
     path_idgames = Path(config.get('paths.idgames'))
     paths_ignore = config.get('ignore')
@@ -89,6 +80,7 @@ def sync():
         path_local = path_idgames / file_update.path
         download_list.append((url_remote, path_local, downloader))
 
-    download_all(download_list, logger)
+    ThreadPool(6).starmap(file_download, download_list)
+
 
 sync()
