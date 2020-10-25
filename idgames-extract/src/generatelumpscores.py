@@ -4,6 +4,8 @@ from typing import Dict, Set
 
 from archives.wadarchive import WADArchive
 from idgames.game import Game
+from utils.config import Config
+from utils.logger import Logger
 
 iwads = {
     Game.DOOM2: 'doom2.wad',
@@ -35,16 +37,16 @@ ignore = {
     'PLAYPAL', 'COLORMAP'
 }
 
-with open('config.json', 'r') as f:
-    config = json.load(f)
+config = Config()
+logger = Logger(config.get('paths.logs'))
 
 lump_list: Dict[str, Set[Game]] = {}
 for game, iwad_file in iwads.items():
-    iwad_path = '{}/{}'.format(config['paths']['iwads'], iwad_file)
+    iwad_path = '{}/{}'.format(config.get('paths.iwads'), iwad_file)
     iwad_path = str(iwad_path).replace('\\', '/')
 
     with open(iwad_path, 'rb') as f:
-        archive = WADArchive(f)
+        archive = WADArchive(iwad_path, f, logger)
 
     for file in archive.files:
         if file.name in ignore:
@@ -70,5 +72,5 @@ for lump_name, lump_presence in lump_list.items():
 
     lump_scores[lump_name] = presence_scores
 
-with open(config['extractors']['game']['lump_score_table'], 'w') as f:
+with open(config.get('extractors.game.lump_score_table'), 'w') as f:
     json.dump(lump_scores, f, indent=4)
