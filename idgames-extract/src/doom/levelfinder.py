@@ -1,11 +1,11 @@
-from enum import Enum
-from typing import Dict, List, Optional
+from typing import Dict, List, Optional, Set
 
 from archives.archivebase import ArchiveBase
 from archives.archivefilebase import ArchiveFileBase
+from doom.level import LevelFormat, LevelNamespace
 
 
-LEVEL_LUMP_NAMES = {
+LEVEL_LUMP_NAMES: Set[str] = {
     'THINGS',
     'LINEDEFS',
     'SIDEDEFS',
@@ -22,18 +22,13 @@ LEVEL_LUMP_NAMES = {
 }
 
 
-class LevelFormat(Enum):
-    DOOM = 'doom'
-    HEXEN = 'hexen'
-    UDMF = 'udmf'
-
-
 class LevelData:
 
     def __init__(self, name: str):
         self.name: str = name
         self.files: Dict[str, ArchiveFileBase] = {}
         self.format: LevelFormat = LevelFormat.DOOM
+        self.namespace: LevelNamespace = LevelNamespace.DOOM
 
     def add(self, file: ArchiveFileBase):
         self.files[file.name] = file

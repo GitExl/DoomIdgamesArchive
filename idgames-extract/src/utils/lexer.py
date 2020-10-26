@@ -9,7 +9,7 @@ from typing import List, Optional, Pattern, Tuple
 
 
 # A token as returned from get_token().
-Token = Tuple[str, str, int]
+Token = Tuple[str, any, int]
 
 
 @dataclass(frozen=True)
@@ -18,6 +18,7 @@ class Rule:
     """
     name: str
     regex: str
+    process: Optional[any] = None
     skip: bool = False
 
 
@@ -68,7 +69,7 @@ class Lexer(object):
         self.text_len = len(text)
         self.pos = 0
 
-    def require_token(self, token_type: str) -> str:
+    def require_token(self, token_type: str) -> any:
         """ Returns the value if the next token is of a specific type.
         """
 
@@ -99,8 +100,14 @@ class Lexer(object):
             self.pos = m.end()
             group_index = m.lastindex
             rule = self.group_rules[group_index - 1]
-            if not rule.skip:
-                return rule.name, m.group(group_index), m.pos
+            if rule.skip:
+                continue
+
+            value = m.group(group_index)
+            if rule.process is not None:
+                value = rule.process(value)
+
+            return rule.name, value, m.pos
 
         # If we're here, no rule matched.
         raise LexerError('Invalid token', self.expand_position(self.pos))

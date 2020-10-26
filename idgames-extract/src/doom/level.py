@@ -1,6 +1,21 @@
 from dataclasses import dataclass
-from enum import Flag, auto
+from enum import Enum, Flag, auto
 from typing import List, Optional
+
+
+class LevelFormat(Enum):
+    DOOM = 'doom'
+    HEXEN = 'hexen'
+    UDMF = 'udmf'
+
+
+class LevelNamespace(Enum):
+    DOOM = 'doom'
+    HERETIC = 'heretic'
+    STRIFE = 'strife'
+    HEXEN = 'hexen'
+    ETERNITY = 'eternity'
+    ZDOOM = 'zdoom'
 
 
 class ThingFlags(Flag):
@@ -49,11 +64,20 @@ class LineFlags(Flag):
     PASS_USE = auto()
 
     # Strife
-    TRANSLUCENT = auto()
+    TRANSLUCENT25 = auto()
+    TRANSLUCENT75 = auto()
     JUMP_OVER = auto()
     BLOCK_FLOAT = auto()
 
-    # Special triggering
+    # Eternity
+    WALKABLE = auto()
+
+    # ZDoom
+    MONSTER_ACTIVATES = auto()
+    BLOCK_PLAYERS = auto()
+    BLOCK_ALL = auto()
+
+    # Secial activation
     PLAYER_CROSS = auto()
     PLAYER_USE = auto()
     MONSTER_CROSS = auto()
@@ -80,7 +104,7 @@ class Line:
         'side_front', 'side_back',
         'flags',
         'type',
-        'tags',
+        'ids',
         'arg0', 'arg1', 'arg2', 'arg3', 'arg4',
         'arg0str',
     ]
@@ -91,7 +115,7 @@ class Line:
     side_back: int
     flags: LineFlags
     type: int
-    tags: List[int]
+    ids: List[int]
     arg0: int
     arg1: int
     arg2: int
@@ -114,13 +138,13 @@ class Side:
 
 @dataclass(frozen=True)
 class Sector:
-    __slots__ = ['z_floor', 'z_ceiling', 'texture_floor', 'texture_ceiling', 'tags', 'type', 'light']
+    __slots__ = ['z_floor', 'z_ceiling', 'texture_floor', 'texture_ceiling', 'ids', 'type', 'light']
 
     z_floor: int
     z_ceiling: int
     texture_floor: str
     texture_ceiling: str
-    tags: List[int]
+    ids: List[int]
     type: int
     light: int
 
@@ -132,7 +156,7 @@ class Thing:
         'angle',
         'type',
         'flags',
-        'tag',
+        'id',
         'special',
         'arg0', 'arg1', 'arg2', 'arg3', 'arg4',
         'arg0str',
@@ -144,7 +168,7 @@ class Thing:
     angle: int
     type: int
     flags: ThingFlags
-    tag: int
+    id: int
     special: int
     arg0: int
     arg1: int
@@ -156,11 +180,13 @@ class Thing:
 
 class Level:
 
-    def __init__(self, name: str,
+    def __init__(self, name: str, namespace: LevelNamespace,
                  vertices: List[Vertex] = None, lines: Optional[List[Line]] = None, sides: Optional[List[Side]] = None,
                  sectors: Optional[List[Sector]] = None, things: Optional[List[Thing]] = None):
 
         self.name: str = name
+        self.namespace = namespace
+
         self.vertices: List[Vertex] = [] if vertices is None else vertices
         self.lines: List[Line] = [] if lines is None else lines
         self.sides: List[Side] = [] if sides is None else sides

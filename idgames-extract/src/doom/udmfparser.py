@@ -39,7 +39,7 @@ LINE_FLAG_MAP: Dict[str, LineFlags] = {
     'passuse': LineFlags.PASS_USE,
 
     # Strife
-    'translucent': LineFlags.TRANSLUCENT,
+    'translucent': LineFlags.TRANSLUCENT75,
     'jumpover': LineFlags.JUMP_OVER,
     'blockfloaters': LineFlags.BLOCK_FLOAT,
 
@@ -86,14 +86,14 @@ THING_FLAG_MAP: Dict[str, ThingFlags] = {
 
 def parse_namespace(lexer: Lexer) -> str:
     lexer.require_token(UDMFToken.ASSIGN)
-    namespace = lexer.require_token(UDMFToken.STRING)[1:-1]
+    namespace = lexer.require_token(UDMFToken.STRING)
     lexer.require_token(UDMFToken.END)
 
     return namespace
 
 
 def parse_ids(more_ids: str) -> List[int]:
-    return [int(tag) for tag in more_ids.split(' ')]
+    return [int(tag) for tag in more_ids.strip().split(' ')]
 
 
 def get_bool(lexer: Lexer) -> bool:
@@ -119,7 +119,7 @@ def parse_thing(lexer: Lexer) -> Thing:
     angle: int = 0
     type: Optional[int] = None
     flags: ThingFlags = ThingFlags.NONE
-    tag: int = 0
+    id: int = 0
     special: int = 0
     arg0: int = 0
     arg1: int = 0
@@ -136,37 +136,44 @@ def parse_thing(lexer: Lexer) -> Thing:
 
         key = token[1]
         if key == 'id':
-            tag = int(lexer.require_token(UDMFToken.INTEGER))
+            id = lexer.require_token(UDMFToken.INTEGER)
         elif key == 'x':
-            x = float(lexer.require_token(UDMFToken.FLOAT))
+            x = lexer.require_token(UDMFToken.FLOAT)
         elif key == 'y':
-            y = float(lexer.require_token(UDMFToken.FLOAT))
+            y = lexer.require_token(UDMFToken.FLOAT)
+
+        # These can be integers in rare cases, but we can treat those as floats too. A bit messy.
         elif key == 'height':
-            # These can be integers in rare cases, but we can treat those as floats too.
             z_token = lexer.get_token()
-            z = float(z_token[1])
+            if z_token[0] == UDMFToken.INTEGER:
+                z = float(z_token[1])
+            elif z_token[0] == UDMFToken.FLOAT:
+                z = z_token[1]
+            else:
+                raise UDMFParserError('Expected integer or float, got "{}".'.format(z_token[0]), lexer.expand_position(z_token[2]))
+
         elif key == 'angle':
-            angle = int(lexer.require_token(UDMFToken.INTEGER))
+            angle = lexer.require_token(UDMFToken.INTEGER)
         elif key == 'type':
-            type = int(lexer.require_token(UDMFToken.INTEGER))
+            type = lexer.require_token(UDMFToken.INTEGER)
         elif key == 'special':
-            special = int(lexer.require_token(UDMFToken.INTEGER))
+            special = lexer.require_token(UDMFToken.INTEGER)
         elif key == 'arg0str':
             arg0str = lexer.require_token(UDMFToken.STRING)
         elif key == 'arg0':
-            arg0 = int(lexer.require_token(UDMFToken.INTEGER))
+            arg0 = lexer.require_token(UDMFToken.INTEGER)
         elif key == 'arg1':
-            arg1 = int(lexer.require_token(UDMFToken.INTEGER))
+            arg1 = lexer.require_token(UDMFToken.INTEGER)
         elif key == 'arg2':
-            arg2 = int(lexer.require_token(UDMFToken.INTEGER))
+            arg2 = lexer.require_token(UDMFToken.INTEGER)
         elif key == 'arg3':
-            arg3 = int(lexer.require_token(UDMFToken.INTEGER))
+            arg3 = lexer.require_token(UDMFToken.INTEGER)
         elif key == 'arg4':
-            arg4 = int(lexer.require_token(UDMFToken.INTEGER))
+            arg4 = lexer.require_token(UDMFToken.INTEGER)
 
         else:
             flag: Optional[ThingFlags] = THING_FLAG_MAP.get(key)
-            if flag:
+            if flag is not None:
                 if get_bool(lexer):
                     flags |= flag
             else:
@@ -179,7 +186,7 @@ def parse_thing(lexer: Lexer) -> Thing:
     if type is None:
         raise UDMFParserError('Thing is missing a type.', lexer.expand_position(start))
 
-    return Thing(x, y, z, angle, type, flags, tag, special, arg0, arg1, arg2, arg3, arg4, arg0str)
+    return Thing(x, y, z, angle, type, flags, id, special, arg0, arg1, arg2, arg3, arg4, arg0str)
 
 
 def parse_vertex(lexer: Lexer) -> Vertex:
@@ -197,9 +204,9 @@ def parse_vertex(lexer: Lexer) -> Vertex:
 
         key = token[1]
         if key == 'x':
-            x = float(lexer.require_token(UDMFToken.FLOAT))
+            x = lexer.require_token(UDMFToken.FLOAT)
         elif key == 'y':
-            y = float(lexer.require_token(UDMFToken.FLOAT))
+            y = lexer.require_token(UDMFToken.FLOAT)
         else:
             lexer.get_token()
 
@@ -211,7 +218,7 @@ def parse_vertex(lexer: Lexer) -> Vertex:
     return Vertex(x, y)
 
 
-def parse_line(lexer: Lexer, vanilla_namespace: bool) -> Line:
+def parse_line(lexer: Lexer, namespace_is_vanilla: bool) -> Line:
     start = lexer.pos
     lexer.require_token(UDMFToken.BLOCK_START)
 
@@ -221,7 +228,7 @@ def parse_line(lexer: Lexer, vanilla_namespace: bool) -> Line:
     side_back: int = -1
     flags: LineFlags = LineFlags.NONE
     type: int = 0
-    tags: List[int] = [0] if vanilla_namespace else [-1]
+    ids: List[int] = [0] if namespace_is_vanilla else [-1]
     arg0: int = 0
     arg1: int = 0
     arg2: int = 0
@@ -237,35 +244,35 @@ def parse_line(lexer: Lexer, vanilla_namespace: bool) -> Line:
 
         key = token[1]
         if key == 'v1':
-            vertex_start = int(lexer.require_token(UDMFToken.INTEGER))
+            vertex_start = lexer.require_token(UDMFToken.INTEGER)
         elif key == 'v2':
-            vertex_end = int(lexer.require_token(UDMFToken.INTEGER))
+            vertex_end = lexer.require_token(UDMFToken.INTEGER)
         elif key == 'sidefront':
-            side_front = int(lexer.require_token(UDMFToken.INTEGER))
+            side_front = lexer.require_token(UDMFToken.INTEGER)
         elif key == 'sideback':
-            side_back = int(lexer.require_token(UDMFToken.INTEGER))
+            side_back = lexer.require_token(UDMFToken.INTEGER)
         elif key == 'special':
-            type = int(lexer.require_token(UDMFToken.INTEGER))
+            type = lexer.require_token(UDMFToken.INTEGER)
         elif key == 'arg0str':
             arg0str = lexer.require_token(UDMFToken.STRING)
         elif key == 'arg0':
-            arg0 = int(lexer.require_token(UDMFToken.INTEGER))
+            arg0 = lexer.require_token(UDMFToken.INTEGER)
         elif key == 'arg1':
-            arg1 = int(lexer.require_token(UDMFToken.INTEGER))
+            arg1 = lexer.require_token(UDMFToken.INTEGER)
         elif key == 'arg2':
-            arg2 = int(lexer.require_token(UDMFToken.INTEGER))
+            arg2 = lexer.require_token(UDMFToken.INTEGER)
         elif key == 'arg3':
-            arg3 = int(lexer.require_token(UDMFToken.INTEGER))
+            arg3 = lexer.require_token(UDMFToken.INTEGER)
         elif key == 'arg4':
-            arg4 = int(lexer.require_token(UDMFToken.INTEGER))
+            arg4 = lexer.require_token(UDMFToken.INTEGER)
         elif key == 'id':
-            tags[0] = int(lexer.require_token(UDMFToken.INTEGER))
+            ids[0] = lexer.require_token(UDMFToken.INTEGER)
         elif key == 'moreids':
-            tags.extend(parse_ids(lexer.require_token(UDMFToken.STRING)[1:-1]))
+            ids.extend(parse_ids(lexer.require_token(UDMFToken.STRING)))
 
         else:
             flag: Optional[LineFlags] = LINE_FLAG_MAP.get(key)
-            if flag:
+            if flag is not None:
                 if get_bool(lexer):
                     flags |= flag
             else:
@@ -276,7 +283,7 @@ def parse_line(lexer: Lexer, vanilla_namespace: bool) -> Line:
     if vertex_start is None or vertex_end is None:
         raise UDMFParserError('Line is missing vertices.', lexer.expand_position(start))
 
-    return Line(vertex_start, vertex_end, side_front, side_back, flags, type, tags, arg0, arg1, arg2, arg3, arg4, arg0str)
+    return Line(vertex_start, vertex_end, side_front, side_back, flags, type, ids, arg0, arg1, arg2, arg3, arg4, arg0str)
 
 
 def parse_sector(lexer: Lexer) -> Sector:
@@ -287,7 +294,7 @@ def parse_sector(lexer: Lexer) -> Sector:
     z_ceiling: int = 0
     texture_floor: Optional[str] = None
     texture_ceiling: Optional[str] = None
-    tags: List[int] = [0]
+    ids: List[int] = [0]
     type: int = 0
     light: int = 160
 
@@ -299,21 +306,21 @@ def parse_sector(lexer: Lexer) -> Sector:
 
         key = token[1]
         if key == 'heightfloor':
-            z_floor = int(lexer.require_token(UDMFToken.INTEGER))
+            z_floor = lexer.require_token(UDMFToken.INTEGER)
         elif key == 'heightceiling':
-            z_ceiling = int(lexer.require_token(UDMFToken.INTEGER))
+            z_ceiling = lexer.require_token(UDMFToken.INTEGER)
         elif key == 'texturefloor':
-            texture_floor = lexer.require_token(UDMFToken.STRING)[1:-1]
+            texture_floor = lexer.require_token(UDMFToken.STRING)
         elif key == 'textureceiling':
-            texture_ceiling = lexer.require_token(UDMFToken.STRING)[1:-1]
+            texture_ceiling = lexer.require_token(UDMFToken.STRING)
         elif key == 'lightlevel':
-            light = int(lexer.require_token(UDMFToken.INTEGER))
+            light = lexer.require_token(UDMFToken.INTEGER)
         elif key == 'id':
-            tags[0] = int(lexer.require_token(UDMFToken.INTEGER))
+            ids[0] = lexer.require_token(UDMFToken.INTEGER)
         elif key == 'moreids':
-            tags.extend(parse_ids(lexer.require_token(UDMFToken.STRING)[1:-1]))
+            ids.extend(parse_ids(lexer.require_token(UDMFToken.STRING)))
         elif key == 'special':
-            type = int(lexer.require_token(UDMFToken.INTEGER))
+            type = lexer.require_token(UDMFToken.INTEGER)
         else:
             lexer.get_token()
 
@@ -322,7 +329,7 @@ def parse_sector(lexer: Lexer) -> Sector:
     if texture_floor is None or texture_ceiling is None:
         raise UDMFParserError('Sector has no floor or ceiling texture.', lexer.expand_position(start))
 
-    return Sector(z_floor, z_ceiling, texture_floor, texture_ceiling, tags, type, light)
+    return Sector(z_floor, z_ceiling, texture_floor, texture_ceiling, ids, type, light)
 
 
 def parse_side(lexer: Lexer) -> Side:
@@ -344,17 +351,17 @@ def parse_side(lexer: Lexer) -> Side:
 
         key = token[1]
         if key == 'sector':
-            sector = int(lexer.require_token(UDMFToken.INTEGER))
+            sector = lexer.require_token(UDMFToken.INTEGER)
         elif key == 'texturetop':
-            texture_upper = lexer.require_token(UDMFToken.STRING)[1:-1]
+            texture_upper = lexer.require_token(UDMFToken.STRING)
         elif key == 'texturebottom':
-            texture_lower = lexer.require_token(UDMFToken.STRING)[1:-1]
+            texture_lower = lexer.require_token(UDMFToken.STRING)
         elif key == 'texturemiddle':
-            texture_mid = lexer.require_token(UDMFToken.STRING)[1:-1]
+            texture_mid = lexer.require_token(UDMFToken.STRING)
         elif key == 'offsetx':
-            texture_x = int(lexer.require_token(UDMFToken.INTEGER))
+            texture_x = lexer.require_token(UDMFToken.INTEGER)
         elif key == 'offsety':
-            texture_y = int(lexer.require_token(UDMFToken.INTEGER))
+            texture_y = lexer.require_token(UDMFToken.INTEGER)
         else:
             lexer.get_token()
 
@@ -369,7 +376,8 @@ def parse_side(lexer: Lexer) -> Side:
 class UDMFParser:
 
     def __init__(self):
-        self.vanilla_namespace: bool = False
+        self.namespace_is_vanilla: bool = False
+        self.namespace: str = 'Doom'
         self.things: List[Thing] = []
         self.vertices: List[Vertex] = []
         self.lines: List[Line] = []
@@ -386,12 +394,12 @@ class UDMFParser:
                 Rule(UDMFToken.BLOCK_START, '{'),
                 Rule(UDMFToken.BLOCK_END, '}'),
                 Rule(UDMFToken.IDENTIFIER, '[A-Za-z_]+[A-Za-z0-9_]*'),
-                Rule(UDMFToken.FLOAT, '[+-]?[0-9]+\\.[0-9]*(?:[eE][+-]?[0-9]+)?'),
-                Rule(UDMFToken.INTEGER, '[+-]?[1-9]\\d*|0'),
-                # Rule(UDMFToken.INTEGER,     '0[0-9]+'),
-                # Rule(UDMFToken.INTEGER,     '0x[0-9A-Fa-f]+'),
+                Rule(UDMFToken.FLOAT, '[+-]?[0-9]+\\.[0-9]*(?:[eE][+-]?[0-9]+)?', process=lambda f: float(f)),
+                Rule(UDMFToken.INTEGER, '[+-]?[1-9]\\d*|0', process=lambda i: int(i)),
+                Rule(UDMFToken.INTEGER, '0[0-9]+', process=lambda i: int(i, 8)),
+                Rule(UDMFToken.INTEGER, '0x[0-9A-Fa-f]+', process=lambda i: int(i, 16)),
                 Rule(UDMFToken.KEYWORD, '[^{}();"\'\n\t ]+'),
-                Rule(UDMFToken.STRING, '"(?:[^"\\\\]|\\\\.)*"'),
+                Rule(UDMFToken.STRING, '"(?:[^"\\\\]|\\\\.)*"', process=lambda s: s[1:-1]),
             ]
         )
 
@@ -403,20 +411,19 @@ class UDMFParser:
             if token is None:
                 break
             if token[0] != UDMFToken.IDENTIFIER:
-                raise UDMFParserError('Expected a root identifier, got "{}".'.format(token[1]), self.lexer.expand_position(token[2]))
+                raise UDMFParserError('Expected an identifier, got "{}".'.format(token[1]), self.lexer.expand_position(token[2]))
 
             identifier = token[1]
             if identifier == 'namespace':
-                namespace = parse_namespace(self.lexer)
-                if namespace == 'doom' or namespace == 'heretic' or namespace == 'strife':
-                    self.vanilla_namespace = True
+                self.namespace = parse_namespace(self.lexer)
+                self.namespace_is_vanilla = self.namespace == 'Doom' or self.namespace == 'Heretic' or self.namespace == 'Strife'
 
             elif identifier == 'thing':
                 self.things.append(parse_thing(self.lexer))
             elif identifier == 'vertex':
                 self.vertices.append(parse_vertex(self.lexer))
             elif identifier == 'linedef':
-                self.lines.append(parse_line(self.lexer, self.vanilla_namespace))
+                self.lines.append(parse_line(self.lexer, self.namespace_is_vanilla))
             elif identifier == 'sidedef':
                 self.sides.append(parse_side(self.lexer))
             elif identifier == 'sector':

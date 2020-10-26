@@ -10,6 +10,7 @@ from doom.level import Level
 from doom.levelfinder import LevelDataFinder, LevelFormat
 from doom.udmflevelreader import UDMFLevelReader
 from extractors.extractorbase import ExtractorBase
+from idgames.game import Game
 
 
 class LevelExtractor(ExtractorBase):
@@ -18,6 +19,10 @@ class LevelExtractor(ExtractorBase):
         archive: ArchiveBase = info.get('archive', None)
         if not archive:
             self.logger.warn('Cannot extract levels without an archive.')
+            return {}
+
+        if info['game'] == Game.UNKNOWN:
+            self.logger.warn('Cannot extract levels without a known game.')
             return {}
 
         level_data_finder = LevelDataFinder()
@@ -39,9 +44,9 @@ class LevelExtractor(ExtractorBase):
         levels: List[Level] = []
         for level_data in level_data_finder.level_data:
             if level_data.format == LevelFormat.UDMF:
-                reader = UDMFLevelReader(self.logger)
+                reader = UDMFLevelReader(info['game'], self.logger)
             else:
-                reader = BinaryLevelReader(self.logger)
+                reader = BinaryLevelReader(info['game'], self.logger)
 
             level = reader.read(level_data)
             if level:

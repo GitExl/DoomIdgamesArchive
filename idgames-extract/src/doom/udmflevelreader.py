@@ -1,10 +1,20 @@
-from typing import Optional
+from typing import Dict, Optional
 
 from doom.levelfinder import LevelData
 from doom.levelreaderbase import LevelReaderBase
-from doom.level import Level
+from doom.level import Level, LevelNamespace
 from doom.udmfparser import UDMFParser, UDMFParserError
 from utils.lexer import LexerError
+
+
+UDMF_NAMESPACE_MAP: Dict[str, LevelNamespace] = {
+    'Doom': LevelNamespace.DOOM,
+    'Heretic': LevelNamespace.HERETIC,
+    'Hexen': LevelNamespace.HEXEN,
+    'Strife': LevelNamespace.STRIFE,
+    'ZDoom': LevelNamespace.ZDOOM,
+    'Eternity': LevelNamespace.ETERNITY,
+}
 
 
 class UDMFLevelReader(LevelReaderBase):
@@ -16,10 +26,18 @@ class UDMFLevelReader(LevelReaderBase):
         try:
             parser = UDMFParser()
             parser.parse(text)
-            return Level(level_name, parser.vertices, parser.lines, parser.sides, parser.sectors, parser.things)
+            namespace = self.map_udmf_namespace(parser.namespace)
+            return Level(level_name, namespace, parser.vertices, parser.lines, parser.sides, parser.sectors, parser.things)
         except LexerError as e:
             self.logger.error('Unable to lex "{}": {}'.format(level_name, e))
         except UDMFParserError as e:
             self.logger.error('Unable to parse "{}": {}'.format(level_name, e))
 
         return None
+
+    def map_udmf_namespace(self, udmf_namespace: str) -> LevelNamespace:
+        if udmf_namespace in UDMF_NAMESPACE_MAP:
+            return UDMF_NAMESPACE_MAP[udmf_namespace]
+
+        self.logger.warn('Unknown UDMF namespace "{}", using Doom fallback.'.format(udmf_namespace))
+        return LevelNamespace.DOOM
