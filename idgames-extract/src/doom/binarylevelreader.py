@@ -1,10 +1,11 @@
 from struct import Struct
 from typing import Optional, Tuple
 
-from doom.level import Level, LevelNamespace, Line, LineFlags, Sector, Side, Thing, Vertex
+from doom.level import Level, LevelNamespace, Line, LineFlags, Sector, Side, Thing, ThingFlags, Vertex
 from doom.levelfinder import LevelData, LevelFormat
 from doom.levelreaderbase import LevelReaderBase
 from idgames.game import Game
+
 
 STRUCT_VERTEX: Struct = Struct('<hh')
 
@@ -87,18 +88,82 @@ def map_line_flags(value: int, namespace: LevelNamespace) -> LineFlags:
     return flags
 
 
+def map_thing_flags(value: int, namespace: LevelNamespace) -> ThingFlags:
+    flags: ThingFlags = ThingFlags.NONE
+
+    if value & 0x0001:
+        flags |= ThingFlags.SKILL_1 | ThingFlags.SKILL_2
+    if value & 0x0002:
+        flags |= ThingFlags.SKILL_3
+    if value & 0x0004:
+        flags |= ThingFlags.SKILL_4 | ThingFlags.SKILL_5
+
+    if namespace == LevelNamespace.STRIFE:
+        if value & 0x0008:
+            flags |= ThingFlags.STANDING
+        if value & 0x0010:
+            flags |= ThingFlags.NOT_SP
+        if value & 0x0020:
+            flags |= ThingFlags.AMBUSH
+        if value & 0x0040:
+            flags |= ThingFlags.FRIEND
+
+        if value & 0x0300:
+            flags |= ThingFlags.INVISIBLE
+        else:
+            if value & 0x0100:
+                flags |= ThingFlags.TRANSLUCENT25
+            if value & 0x0200:
+                flags |= ThingFlags.TRANSLUCENT75
+
+    elif namespace == LevelNamespace.HEXEN:
+        if value & 0x0008:
+            flags |= ThingFlags.AMBUSH
+        if value & 0x0010:
+            flags |= ThingFlags.DORMANT
+        if value & 0x0020:
+            flags |= ThingFlags.CLASS1
+        if value & 0x0040:
+            flags |= ThingFlags.CLASS2
+        if value & 0x0080:
+            flags |= ThingFlags.CLASS3
+        if value & 0x0100:
+            flags |= ThingFlags.SP
+        if value & 0x0200:
+            flags |= ThingFlags.COOP
+        if value & 0x0400:
+            flags |= ThingFlags.DM
+
+    else:
+        if value & 0x0008:
+            flags |= ThingFlags.AMBUSH
+        if value & 0x0010:
+            flags |= ThingFlags.NOT_SP
+
+        # Boom\MBF
+        if value & 0x0020:
+            flags |= ThingFlags.NOT_DM
+        if value & 0x0040:
+            flags |= ThingFlags.NOT_COOP
+        if value & 0x0080:
+            flags |= ThingFlags.FRIEND
+
+    return flags
+
+
 def unpack_vertex(values: Tuple, namespace: LevelNamespace):
     return Vertex(float(values[0]), float(values[1]))
 
 
 def unpack_line_doom(values: Tuple, namespace: LevelNamespace):
-    return Line(values[0], values[1], values[5], values[6], map_line_flags(values[2], namespace), values[3], values[4], 0, 0, 0, 0, 0, None)
+    return Line(values[0], values[1], values[5], values[6], map_line_flags(values[2], namespace), values[3],
+                [values[4]], 0, 0, 0, 0, 0, None)
 
 
 def unpack_line_hexen(values: Tuple, namespace: LevelNamespace):
     return Line(
         values[0], values[1], values[9], values[10], map_line_flags(values[2], namespace), values[3],
-        0, (values[4], values[5], values[6], values[7], values[8]),
+        [0], values[4], values[5], values[6], values[7], values[8], None,
     )
 
 
@@ -111,16 +176,12 @@ def unpack_sector(values: Tuple, namespace: LevelNamespace):
 
 
 def unpack_thing_doom(values: Tuple, namespace: LevelNamespace):
-    # TODO: expand binary flags to internal flags
-    flags = values[4]
-    return Thing(float(values[0]), float(values[1]), 0, values[2], values[3], flags, 0, 0, 0, 0, 0, 0, 0, None)
+    return Thing(float(values[0]), float(values[1]), 0, values[2], values[3], map_thing_flags(values[4], namespace), 0, 0, 0, 0, 0, 0, 0, None)
 
 
 def unpack_thing_hexen(values: Tuple, namespace: LevelNamespace):
-    # TODO: expand binary Hexen flags to internal flags
-    flags = values[6]
     return Thing(
-        float(values[1]), float(values[2]), float(values[3]), values[4], values[5], flags, values[0], values[7],
+        float(values[1]), float(values[2]), float(values[3]), values[4], values[5], map_thing_flags(values[4], namespace), values[0], values[7],
         values[8], values[9], values[10], values[11], values[12], None
     )
 

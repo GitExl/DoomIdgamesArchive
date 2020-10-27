@@ -8,12 +8,12 @@ from utils.lexer import LexerError
 
 
 UDMF_NAMESPACE_MAP: Dict[str, LevelNamespace] = {
-    'Doom': LevelNamespace.DOOM,
-    'Heretic': LevelNamespace.HERETIC,
-    'Hexen': LevelNamespace.HEXEN,
-    'Strife': LevelNamespace.STRIFE,
-    'ZDoom': LevelNamespace.ZDOOM,
-    'Eternity': LevelNamespace.ETERNITY,
+    'doom': LevelNamespace.DOOM,
+    'heretic': LevelNamespace.HERETIC,
+    'hexen': LevelNamespace.HEXEN,
+    'strife': LevelNamespace.STRIFE,
+    'zdoom': LevelNamespace.ZDOOM,
+    'eternity': LevelNamespace.ETERNITY,
 }
 
 
@@ -26,7 +26,7 @@ class UDMFLevelReader(LevelReaderBase):
         try:
             parser = UDMFParser()
             parser.parse(text)
-            namespace = self.map_udmf_namespace(parser.namespace)
+            namespace = self.map_udmf_namespace(parser.namespace.lower())
             return Level(level_name, namespace, parser.vertices, parser.lines, parser.sides, parser.sectors, parser.things)
         except LexerError as e:
             self.logger.error('Unable to lex "{}": {}'.format(level_name, e))

@@ -27,7 +27,12 @@ class ThingFlags(Flag):
     SKILL_4 = auto()
     SKILL_5 = auto()
     AMBUSH = auto()
-    SINGLE = auto()
+
+    NOT_SP = auto()
+    NOT_DM = auto()
+    NOT_COOP = auto()
+
+    SP = auto()
     DM = auto()
     COOP = auto()
 
@@ -43,8 +48,12 @@ class ThingFlags(Flag):
     # Strife
     STANDING = auto()
     STRIFE_ALLY = auto()
-    TRANSLUCENT = auto()
+    TRANSLUCENT25 = auto()
+    TRANSLUCENT75 = auto()
     INVISIBLE = auto()
+
+    # ZDoom
+    SECRET = auto()
 
 
 class LineFlags(Flag):

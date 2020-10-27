@@ -63,7 +63,7 @@ THING_FLAG_MAP: Dict[str, ThingFlags] = {
     'skill4': ThingFlags.SKILL_4,
     'skill5': ThingFlags.SKILL_5,
     'ambush': ThingFlags.AMBUSH,
-    'single': ThingFlags.SINGLE,
+    'single': ThingFlags.SP,
     'dm': ThingFlags.DM,
     'coop': ThingFlags.COOP,
 
@@ -79,8 +79,11 @@ THING_FLAG_MAP: Dict[str, ThingFlags] = {
     # Strife
     'standing': ThingFlags.STANDING,
     'strifeally': ThingFlags.STRIFE_ALLY,
-    'translucent': ThingFlags.TRANSLUCENT,
+    'translucent': ThingFlags.TRANSLUCENT25,
     'invisible': ThingFlags.INVISIBLE,
+
+    # ZDoom
+    'countsecret': ThingFlags.SECRET,
 }
 
 
