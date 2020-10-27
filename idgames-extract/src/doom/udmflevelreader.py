@@ -20,14 +20,20 @@ UDMF_NAMESPACE_MAP: Dict[str, LevelNamespace] = {
 class UDMFLevelReader(LevelReaderBase):
 
     def read(self, level_data: LevelData) -> Optional[Level]:
+        map_lump = level_data.files.get('TEXTMAP')
+        if map_lump is None:
+            self.logger.error('Cannot load UDMF level that has no TEXTMAP lump.')
+            return None
+
         level_name = level_data.name
-        text = level_data.files.get('TEXTMAP').get_data().decode('latin1')
+        text = map_lump.get_data().decode('latin1')
 
         try:
             parser = UDMFParser()
             parser.parse(text)
             namespace = self.map_udmf_namespace(parser.namespace.lower())
             return Level(level_name, namespace, parser.vertices, parser.lines, parser.sides, parser.sectors, parser.things)
+
         except LexerError as e:
             self.logger.error('Unable to lex "{}": {}'.format(level_name, e))
         except UDMFParserError as e:

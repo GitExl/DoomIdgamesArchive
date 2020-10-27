@@ -86,7 +86,7 @@ class LineFlags(Flag):
     BLOCK_PLAYERS = auto()
     BLOCK_ALL = auto()
 
-    # Secial activation
+    # Special activation
     PLAYER_CROSS = auto()
     PLAYER_USE = auto()
     MONSTER_CROSS = auto()

@@ -1,11 +1,14 @@
+from dataclasses import dataclass
 from typing import List
 
 
+@dataclass(frozen=True)
 class Color:
-    def __init__(self, r: int, g: int, b: int):
-        self.r: int = r
-        self.g: int = g
-        self.b: int = b
+    __slots__ = ['r', 'g', 'b']
+
+    r: int
+    g: int
+    b: int
 
 
 class Palette:

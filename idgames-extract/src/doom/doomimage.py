@@ -27,6 +27,7 @@ class DoomImage(object):
         :return:
         """
         width, height, left, top = DoomImage.S_HEADER.unpack_from(data)
+        data_len = len(data)
 
         # Attempt to detect invalid data.
         if width > 2048 or height > 2048 or top > 2048 or left > 2048:
@@ -38,6 +39,7 @@ class DoomImage(object):
 
         # Initialize an empty bitmap.
         pixels = bytearray([0, 0, 0] * width * height)
+        pixels_len = len(pixels)
 
         # Read column offsets.
         offset_struct = Struct('<' + ('I' * width))
@@ -49,7 +51,7 @@ class DoomImage(object):
             offset = offsets[column_index]
 
             # Attempt to detect invalid data.
-            if offset >= len(data):
+            if offset >= data_len:
                 return None
 
             prev_delta = 0
@@ -70,13 +72,13 @@ class DoomImage(object):
 
                 pixel_index = 0
                 while pixel_index < pixel_count:
-                    if offset + pixel_index >= len(data):
+                    if offset + pixel_index >= data_len:
                         break
 
                     pixel = data[offset + pixel_index]
                     destination = ((pixel_index + column_top) * width + column_index) * 3
 
-                    if destination + 2 < len(pixels):
+                    if destination + 2 < pixels_len:
                         pixels[destination + 0] = palette.colors[pixel].r
                         pixels[destination + 1] = palette.colors[pixel].g
                         pixels[destination + 2] = palette.colors[pixel].b
@@ -84,7 +86,7 @@ class DoomImage(object):
                     pixel_index += 1
 
                 offset += pixel_count + 1
-                if offset >= len(data):
+                if offset >= data_len:
                     break
 
             column_index += 1
