@@ -4,6 +4,7 @@ from glob import glob
 
 from extractors.archiveextractor import ArchiveExtractor
 from extractors.archivelistextractor import ArchiveListExtractor
+from extractors.extractedinfo import ExtractedInfo
 from extractors.gameextractor import GameExtractor
 from extractors.levelextractor import LevelExtractor
 from extractors.graphicsextractor import GraphicsExtractor
@@ -16,18 +17,19 @@ from writers.graphicswriter import GraphicsWriter
 from idgames.ignorelist import must_ignore
 from utils.logger import Logger
 
+
 EXTRACTORS = [
     ArchiveExtractor,
     TextExtractor,
     GameExtractor,
     ArchiveListExtractor,
     LevelExtractor,
-    # GraphicsExtractor,
+    GraphicsExtractor,
 ]
 
 WRITERS = [
-    # GraphicsWriter,
-    # AppDatabaseWriter,
+    GraphicsWriter,
+    AppDatabaseWriter,
 ]
 
 
@@ -60,17 +62,17 @@ def extract():
             logger.info('Ignoring')
             continue
 
-        info = {
-            'path': path_system,
-            'path_base': path_base,
-            'path_idgames': path_idgames,
-            'path_idgames_base': path_idgames_base,
-            'filename_base': filename_base,
-        }
+        info = ExtractedInfo(
+            path_system,
+            path_base,
+            path_idgames,
+            path_idgames_base,
+            filename_base,
+        )
 
         # Run all extractors and writers in sequence.
         for extractor in extractors:
-            info.update(extractor.extract(info))
+            extractor.extract(info)
         for writer in writers:
             writer.write(info)
 

@@ -2,6 +2,7 @@ import json
 from typing import Dict
 
 from archives.archivebase import ArchiveBase
+from extractors.extractedinfo import ExtractedInfo
 from extractors.extractorbase import ExtractorBase
 from idgames.game import Game
 from textparser.textkeys import TEXT_GAMES
@@ -33,39 +34,40 @@ class GameExtractor(ExtractorBase):
 
         return lump_scores
 
-    def extract(self, info: dict) -> dict:
+    def extract(self, info: ExtractedInfo):
         game = Game.UNKNOWN
 
         # Only try to detect the game if one is not set already.
-        if 'game' in info and info['game'] != Game.UNKNOWN:
-            game = info['game']
-            self.logger.decision('Detected game "{}" from info dictionary.'.format(game.name))
+        if 'game' in info.text_keys and info.text_keys['game'] != Game.UNKNOWN:
+            game = info.text_keys['game']
+            self.logger.decision('Detected game "{}" from parsed text file.'.format(game.name))
 
         # Detect from idgames path.
-        if game == Game.UNKNOWN and 'path_idgames' in info:
-            game = self.detect_from_path(info['path_idgames'])
+        if game == Game.UNKNOWN:
+            game = self.detect_from_path(info.path_idgames)
             if game != Game.UNKNOWN:
                 self.logger.decision('Detected game "{}" from path.'.format(game.name))
 
         # Detect from certain lump names.
-        if game == Game.UNKNOWN and 'archive' in info:
-            game = self.detect_from_archive(info['archive'])
+        if game == Game.UNKNOWN and info.archive is not None:
+            game = self.detect_from_archive(info.archive)
             if game != Game.UNKNOWN:
                 self.logger.decision('Detected game "{}" from archive filenames.'.format(game.name))
 
         # Last ditch effort, just use the entire text file.
-        if game == Game.UNKNOWN and 'text_file' in info:
-            game = self.detect_from_text(info['text_file'])
+        if game == Game.UNKNOWN and info.text_contents:
+            game = self.detect_from_text(info.text_contents)
             if game != Game.UNKNOWN:
-                self.logger.decision('Detected game "{}" from text file contents.'.format(game.name))
+                self.logger.decision('Detected game "{}" from complete text file contents.'.format(game.name))
+
+        # TODO: from thing types and texture names
 
         if game == Game.UNKNOWN:
             self.logger.warn('Cannot determine game.')
-            self.logger.stream('game_unknown', info['path_idgames'])
+            self.logger.stream('game_unknown', info.path_idgames)
+            return
 
-        return {
-            'game': game
-        }
+        info.game = game
 
     @staticmethod
     def detect_from_path(path: str) -> Game:
@@ -94,6 +96,8 @@ class GameExtractor(ExtractorBase):
         return Game.UNKNOWN
 
     def detect_from_archive(self, archive: ArchiveBase) -> Game:
+
+        # TODO: is this still necessary or is the lump score method better?
         if archive.file_find_basename('bossback') or archive.file_find_regexp('VILE') or archive.file_find_regexp('CPOS') or archive.file_find_basename('help'):
             return Game.DOOM2
 

@@ -1,29 +1,27 @@
 from io import BytesIO
-from os.path import basename, splitext
 from pathlib import Path
-from typing import List
 
 from archives.archivebase import ArchiveBase
 from archives.wadarchive import WADArchive
 from doom.binarylevelreader import BinaryLevelReader
-from doom.level import Level
 from doom.levelfinder import LevelDataFinder, LevelFormat
 from doom.udmflevelreader import UDMFLevelReader
+from extractors.extractedinfo import ExtractedInfo
 from extractors.extractorbase import ExtractorBase
 from idgames.game import Game
 
 
 class LevelExtractor(ExtractorBase):
 
-    def extract(self, info: dict) -> dict:
-        archive: ArchiveBase = info.get('archive', None)
-        if not archive:
+    def extract(self, info: ExtractedInfo):
+        archive: ArchiveBase = info.archive
+        if archive is None:
             self.logger.warn('Cannot extract levels without an archive.')
-            return {}
+            return
 
-        if info['game'] == Game.UNKNOWN:
+        if info.game == Game.UNKNOWN:
             self.logger.warn('Cannot extract levels without a known game.')
-            return {}
+            return
 
         level_data_finder = LevelDataFinder()
 
@@ -41,16 +39,15 @@ class LevelExtractor(ExtractorBase):
 
             wad_archives.append(wad_archive)
 
-        levels: List[Level] = []
         for level_data in level_data_finder.level_data:
             if level_data.format == LevelFormat.UDMF:
-                reader = UDMFLevelReader(info['game'], self.logger)
+                reader = UDMFLevelReader(info.game, self.logger)
             else:
-                reader = BinaryLevelReader(info['game'], self.logger)
+                reader = BinaryLevelReader(info.game, self.logger)
 
             level = reader.read(level_data)
             if level:
-                levels.append(level)
+                info.levels.append(level)
                 self.logger.debug('Found {} ({}): {} vertices, {} lines, {} sides, {} sectors, {} things.'.format(
                     level.name, level_data.format.name,
                     len(level.vertices), len(level.lines), len(level.sides), len(level.sectors), len(level.things))
@@ -59,8 +56,4 @@ class LevelExtractor(ExtractorBase):
         for archive in wad_archives:
             archive.close()
 
-        self.logger.decision('Found {} valid levels.'.format(len(levels)))
-
-        return {
-            'levels': levels
-        }
+        self.logger.decision('Found {} valid levels.'.format(len(info.levels)))

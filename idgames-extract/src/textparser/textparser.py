@@ -27,9 +27,6 @@ class TextParser:
         values = []
         newline_count = 0
 
-        self.info['text_file'] = file.read()
-        file.seek(0)
-
         for line in file:
             line = line.rstrip()
 

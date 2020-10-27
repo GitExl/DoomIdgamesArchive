@@ -6,6 +6,7 @@ from zipfile import ZipFile, ZipInfo
 from archives.archivebase import ArchiveBase
 from archives.wadarchive import WADArchive
 from archives.ziparchive import ZIPArchive
+from extractors.extractedinfo import ExtractedInfo
 from extractors.extractorbase import ExtractorBase
 from utils.sevenzip import SZArchive
 
@@ -23,13 +24,13 @@ class ArchiveExtractor(ExtractorBase):
         'ipk7',
     ]
 
-    def extract(self, info: dict) -> dict:
+    def extract(self, info: ExtractedInfo):
         main_fileinfo = None
 
         try:
-            self.logger.debug('Opening "{}"'.format(info['path']))
-            main_archive = ZipFile(info['path'])
-            main_fileinfo = self.get_data_main_fileinfo(info['filename_base'], main_archive)
+            self.logger.debug('Opening "{}"'.format(info.path))
+            main_archive = ZipFile(info.path)
+            main_fileinfo = self.get_data_main_fileinfo(info.filename_base, main_archive)
 
         except zipfile.BadZipFile:
             main_archive = None
@@ -43,11 +44,11 @@ class ArchiveExtractor(ExtractorBase):
             if not self.is_compression_type_supported(main_fileinfo.compress_type):
                 self.logger.debug('Opening "{}" as using 7zip process'.format(main_fileinfo.filename))
 
-                main_archive_7z = SZArchive(info['path'])
+                main_archive_7z = SZArchive(info.path)
                 file_7z = main_archive_7z.get_file(main_fileinfo.filename)
                 if not file_7z:
                     self.logger.warn('Cannot find file {} in archive.'.format(main_fileinfo.filename))
-                    return {}
+                    return
                 file = file_7z.get_data()
 
             else:
@@ -58,23 +59,22 @@ class ArchiveExtractor(ExtractorBase):
             archive = self.load_main_file(file, main_fileinfo.filename, main_archive.filename)
             if not archive:
                 self.logger.warn('Unable to read archive.')
-                return {}
+                return
 
         else:
             self.logger.error('Unable to find main data file.')
-            self.logger.stream('no_main_data_file', info['path_idgames'])
-            return {}
+            self.logger.stream('no_main_data_file', info.path_idgames)
+            return
 
-        return {
-            'main_archive': main_archive,
-            'archive': archive,
-        }
+        info.main_archive = main_archive
+        info.archive = archive
 
-    def cleanup(self, info: dict):
-        if 'main_archive' in info and info['main_archive']:
-            main_archive: ZipFile = info['main_archive']
-            self.logger.debug('Closing "{}"'.format(main_archive.filename))
-            main_archive.close()
+    def cleanup(self, info: ExtractedInfo):
+        if info.main_archive is None:
+            return
+
+        self.logger.debug('Closing "{}"'.format(info.main_archive.filename))
+        info.main_archive.close()
 
     @staticmethod
     def is_compression_type_supported(method: int) -> bool:

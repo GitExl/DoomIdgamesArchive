@@ -3,6 +3,7 @@ from typing import Dict
 
 from archives.archivelist import ArchiveList
 from archives.wadarchive import WADArchive
+from extractors.extractedinfo import ExtractedInfo
 from extractors.extractorbase import ExtractorBase
 
 from idgames.game import Game
@@ -26,30 +27,28 @@ class ArchiveListExtractor(ExtractorBase):
         self._add_iwad(Game.STRIFE, 'strife0.wad')
         self._add_iwad(Game.HACX, 'hacx.wad')
 
-    def extract(self, info: dict) -> dict:
-        if 'archive' not in info:
+    def extract(self, info: ExtractedInfo):
+        if info.archive is None:
             self.logger.warn('Cannot create archive list without main archive.')
-            return {}
+            return
 
-        if info['game'] not in self.iwads:
+        if info.game not in self.iwads:
             self.logger.warn('Cannot create archive list for archive for an unknown game.')
-            return {}
+            return
 
-        iwad = self.iwads[info['game']]
+        iwad = self.iwads[info.game]
 
         self.logger.decision('Using "{}" as IWAD.'.format(os.path.basename(iwad.file.name)))
 
-        archive_list = ArchiveList()
-        archive_list.append(iwad)
-        archive_list.append(info['archive'])
+        info.archive_list = ArchiveList()
+        info.archive_list.append(iwad)
+        info.archive_list.append(info.archive)
 
-        return {
-            'archive_list': archive_list,
-        }
+    def cleanup(self, info: ExtractedInfo):
+        if info.archive_list is None:
+            return
 
-    def cleanup(self, info: dict):
-        if 'archive_list' in info and info['archive_list']:
-            info['archive_list'].close(iwads=False)
+        info.archive_list.close(iwads=False)
 
     def _add_iwad(self, game: Game, filename: str):
         wad_path = '{}/{}'.format(self.config.get('paths.iwads'), filename)

@@ -1,3 +1,4 @@
+from extractors.extractedinfo import ExtractedInfo
 from utils.config import Config
 from utils.logger import Logger
 
@@ -8,7 +9,7 @@ class WriterBase:
         self.logger: Logger = logger
         self.config: Config = config
 
-    def write(self, info: dict):
+    def write(self, info: ExtractedInfo):
         pass
 
     def close(self):

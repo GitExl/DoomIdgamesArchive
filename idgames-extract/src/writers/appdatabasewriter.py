@@ -4,6 +4,7 @@ from sqlite3 import Connection, Cursor
 
 from PIL import Image
 
+from extractors.extractedinfo import ExtractedInfo
 from utils.config import Config
 from utils.logger import Logger
 from writers.writerbase import WriterBase
@@ -18,24 +19,23 @@ class AppDatabaseWriter(WriterBase):
         self.cursor: Cursor = self.db.cursor()
         self.create_tables()
 
-    def write(self, info: dict):
-        path = info['path_idgames']
-        game = info['game'].value
+    def write(self, info: ExtractedInfo):
+        path = info.path_idgames
+        game = info.game.value
 
         self.cursor.execute('INSERT INTO `files` (`path`, `game`) VALUES (?, ?)', (path, game,))
         file_id = self.cursor.lastrowid
 
-        if 'graphics' in info:
-            for key, image in info['graphics'].items():
-                if not image:
-                    continue
+        for key, image in info.graphics.items():
+            if not image:
+                continue
 
-                image_avg = image.resize((1, 1), Image.LANCZOS)
-                pixel_avg = image_avg.getpixel((0, 0))
-                color_avg = pixel_avg[0] << 16 | pixel_avg[1] << 8 | pixel_avg[2]
+            image_avg = image.resize((1, 1), Image.LANCZOS)
+            pixel_avg = image_avg.getpixel((0, 0))
+            color_avg = pixel_avg[0] << 16 | pixel_avg[1] << 8 | pixel_avg[2]
 
-                path_image = '{}_{}.webp'.format(info['path_idgames_base'], key)
-                self.cursor.execute('INSERT INTO `images` (`file_id`, `path`, `width`, `height`, `color`) VALUES (?, ?, ?, ?, ?)', (file_id, path_image, image.width, image.height, color_avg))
+            path_image = '{}_{}.webp'.format(info.path_idgames_base, key)
+            self.cursor.execute('INSERT INTO `images` (`file_id`, `path`, `width`, `height`, `color`) VALUES (?, ?, ?, ?, ?)', (file_id, path_image, image.width, image.height, color_avg))
 
         self.db.commit()
 

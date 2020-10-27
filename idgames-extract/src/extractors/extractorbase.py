@@ -1,3 +1,4 @@
+from extractors.extractedinfo import ExtractedInfo
 from utils.config import Config
 from utils.logger import Logger
 
@@ -8,10 +9,10 @@ class ExtractorBase:
         self.logger: Logger = logger
         self.config: Config = config
 
-    def extract(self, info: dict) -> dict:
+    def extract(self, info: ExtractedInfo):
         pass
 
-    def cleanup(self, info: dict):
+    def cleanup(self, info: ExtractedInfo):
         pass
 
     def close(self):
