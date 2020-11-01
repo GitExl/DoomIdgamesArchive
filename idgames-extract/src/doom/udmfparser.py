@@ -14,14 +14,14 @@ class UDMFToken(Enum):
     WHITESPACE: str = 'white'
     COMMENT: str = 'comment'
     IDENTIFIER: str = 'ident'
-    BLOCK_START: str = 'blkstart'
-    BLOCK_END: str = 'blkend'
+    BLOCK_START: str = 'bstart'
+    BLOCK_END: str = 'bend'
     ASSIGN: str = 'assign'
     END: str = 'end'
     INTEGER: str = 'int'
     FLOAT: str = 'float'
     KEYWORD: str = 'keyword'
-    STRING: str = 'string'
+    STRING: str = 'str'
 
 
 LINE_FLAG_MAP: Dict[str, LineFlags] = {
