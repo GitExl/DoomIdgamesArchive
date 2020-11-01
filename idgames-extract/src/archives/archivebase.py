@@ -30,7 +30,6 @@ class ArchiveBase:
         pass
 
     def file_add(self, file: ArchiveFileBase):
-        file.owner = self
         self.files.append(file)
 
     def file_find_basename(self, file_basename: str) -> Optional[ArchiveFileBase]:
