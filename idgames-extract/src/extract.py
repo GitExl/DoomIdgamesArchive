@@ -8,6 +8,7 @@ from extractors.extractedinfo import ExtractedInfo
 from extractors.gameextractor import GameExtractor
 from extractors.levelextractor import LevelExtractor
 from extractors.graphicsextractor import GraphicsExtractor
+from extractors.mapinfoextractor import MapInfoExtractor
 from extractors.textextractor import TextExtractor
 from utils.config import Config
 
@@ -22,14 +23,15 @@ EXTRACTORS = [
     ArchiveExtractor,
     TextExtractor,
     GameExtractor,
-    ArchiveListExtractor,
-    LevelExtractor,
-    GraphicsExtractor,
+    # ArchiveListExtractor,
+    MapInfoExtractor,
+    # LevelExtractor,
+    # GraphicsExtractor,
 ]
 
 WRITERS = [
-    GraphicsWriter,
-    AppDatabaseWriter,
+    # GraphicsWriter,
+    # AppDatabaseWriter,
 ]
 
 
@@ -49,10 +51,9 @@ def extract():
     path_system_files = glob('{}/**/*.zip'.format(config.get('paths.idgames')), recursive=True)
     for path_system in path_system_files:
         path_system = str(path_system).replace('\\', '/')
-
+        path_base = splitext(path_system)[0]
         path_idgames = relpath(path_system, config.get('paths.idgames')).replace('\\', '/')
         path_idgames_base = splitext(path_idgames)[0]
-        path_base = splitext(path_system)[0]
         filename_base = basename(path_base)
 
         logger.info('Processing {}...'.format(path_system))

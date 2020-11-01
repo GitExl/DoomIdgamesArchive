@@ -30,13 +30,13 @@ class LexerError(Exception):
         super(Exception, self).__init__('Line {} column {}: {}'.format(position[0], position[1], message))
 
 
-class Lexer(object):
+class Lexer:
     """ A simple regex-based lexer/tokenizer.
 
         See below for an example of usage.
     """
 
-    def __init__(self, rules: List[Rule]):
+    def __init__(self, rules: List[Rule], add_newline: bool = True):
         """ Create a lexer.
 
             rules:
@@ -60,12 +60,16 @@ class Lexer(object):
         self.text: Optional[str] = None
         self.text_len: int = 0
         self.pos: int = 0
+        self.add_newline = add_newline
 
     def input(self, text: str):
         """ Initializes the lexer text input.
         """
 
         self.text = text
+        if self.add_newline:
+            self.text += '\n'
+
         self.text_len = len(text)
         self.pos = 0
 
