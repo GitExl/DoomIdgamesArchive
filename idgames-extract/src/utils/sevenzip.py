@@ -14,8 +14,8 @@ class SZParseMode(Enum):
 
 class SZArchive:
 
-    def __init__(self, path: str):
-        self.path: str = path
+    def __init__(self, path: Path):
+        self.path: Path = path
         self.type: Optional[str] = None
         self.files: List[SZFile] = []
         self.file_names: Dict[str, int] = {}
@@ -23,7 +23,7 @@ class SZArchive:
         self._read_info()
 
     def _read_info(self):
-        proc = subprocess.Popen(['7za', 'l', '-slt', '-so', '-sccUTF-8', self.path], stdout=subprocess.PIPE, encoding='utf8')
+        proc = subprocess.Popen(['7za', 'l', '-slt', '-so', '-sccUTF-8', self.path.as_posix()], stdout=subprocess.PIPE, encoding='utf8')
 
         mode = SZParseMode.NONE
         file: Optional[SZFile] = None

@@ -25,14 +25,12 @@ class Downloader:
                 with dest_path.open('wb') as file_dest:
 
                     # TODO: use ftplib if the source is ftp:// so we can use the primary Berlin FTP source
+                    with request.urlopen(mirror_src_url) as request_src:
+                        shutil.copyfileobj(request_src, file_dest)
 
-
-                        with request.urlopen(mirror_src_url) as request_src:
-                            shutil.copyfileobj(request_src, file_dest)
-
-                            modified_time = request_src.getheader('last-modified')
-                            modified_timestamp = datetime.strptime(modified_time, '%a, %d %b %Y %H:%M:%S %Z').timestamp()
-                            break
+                        modified_time = request_src.getheader('last-modified')
+                        modified_timestamp = datetime.strptime(modified_time, '%a, %d %b %Y %H:%M:%S %Z').timestamp()
+                        break
 
             os.utime(dest_path, (modified_timestamp, modified_timestamp))
 

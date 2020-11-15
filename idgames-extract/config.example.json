@@ -10,9 +10,6 @@
     }
   },
   "writers": {
-    "appdatabase": {
-      "output": "./output/app.db"
-    },
     "graphics": {
       "output_path": "./output/graphics"
     }
@@ -26,5 +23,11 @@
   "mirrors": [
     "https://mirrors.syringanetworks.net/idgames",
     "https://www.quaddicted.com/files/idgames"
-  ]
+  ],
+  "db": {
+    "host": "127.0.0.1",
+    "database": "idgames",
+    "user": "user",
+    "password": "password"
+  }
 }

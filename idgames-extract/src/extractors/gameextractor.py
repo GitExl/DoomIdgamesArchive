@@ -1,4 +1,5 @@
 import json
+from pathlib import Path
 from typing import Dict
 
 from archives.archivebase import ArchiveBase
@@ -64,24 +65,25 @@ class GameExtractor(ExtractorBase):
 
         if game == Game.UNKNOWN:
             self.logger.warn('Cannot determine game.')
-            self.logger.stream('game_unknown', info.path_idgames)
+            self.logger.stream('game_unknown', info.path_idgames.as_posix())
             return
 
         info.game = game
 
     @staticmethod
-    def detect_from_path(path: str) -> Game:
-        if path.find('doom2') > -1:
+    def detect_from_path(path: Path) -> Game:
+        path_str = path.as_posix()
+        if path_str.find('doom2') > -1:
             return Game.DOOM2
-        elif path.find('doom') > -1:
+        elif path_str.find('doom') > -1:
             return Game.DOOM
-        elif path.find('heretic') > -1:
+        elif path_str.find('heretic') > -1:
             return Game.HERETIC
-        elif path.find('hexen') > -1:
+        elif path_str.find('hexen') > -1:
             return Game.HEXEN
-        elif path.find('strife') > -1:
+        elif path_str.find('strife') > -1:
             return Game.HEXEN
-        elif path.find('hacx') > -1:
+        elif path_str.find('hacx') > -1:
             return Game.HACX
 
         return Game.UNKNOWN

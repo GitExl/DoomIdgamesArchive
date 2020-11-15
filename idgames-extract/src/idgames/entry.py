@@ -1,140 +1,75 @@
-from datetime import date
-from enum import Enum
-from typing import Optional, Set, List, Dict
-
-from PIL import Image
+from typing import Dict, List, Optional
 
 from idgames.game import Game
 
 
-class GameStyles(Enum):
-    SINGLE_PLAYER = 'single_player'
-    DEATHMATCH = 'deathmatch'
-    COOPERATIVE = 'cooperative'
-    CTF = 'ctf'
-    TEAM_DEATHMATCH = 'team_deathmatch'
-    OTHER = 'other'
+INT_TO_GAME: Dict[int, Game] = {
+    0: Game.DOOM,
+    1: Game.DOOM2,
+    2: Game.TNT,
+    3: Game.PLUTONIA,
+    4: Game.HERETIC,
+    5: Game.HEXEN,
+    6: Game.STRIFE,
+    7: Game.CHEX,
+    8: Game.HACX,
+}
 
-
-class GameStyleSupport(Enum):
-    YES = 'yes'
-    NO = 'no'
-    STARTS_ONLY = 'starts only'
-
-
-class ContentTypes(Enum):
-    LEVELS = 'levels'
-    MUSIC = 'music'
-    GRAPHICS = 'graphics'
-    TEXTURES = 'textures'
-    SOUNDS = 'sounds'
-    DEMOS = 'demos'
-    DEHACKED = 'dehacked'
-    DECORATE = 'decorate'
-    PALETTE = 'palette'
-    ZSCRIPT = 'zscript'
-
-
-class ReviewType(Enum):
-    TEXT = 'text'
-    VIDEO = 'video'
-
-
-class GraphicType(Enum):
-    SCREEN = 'screen'
-    SCREENSHOT = 'screenshot'
-
-
-class VideoType(Enum):
-    YOUTUBE = 'youtube'
-    TWITCH = 'twitch'
-
-
-class DifficultyLevel(Enum):
-    UNKNOWN = 'unknown'
-    BABY = 'baby'
-    EASY = 'easy'
-    MEDIUM = 'medium'
-    HARD = 'hard'
-    NIGHTMARE = 'nightmare'
-
-
-class Level:
-
-    def __init__(self, lump_name: str):
-        self.lump_name: str = lump_name
-
-        self.title: Optional[str] = None
-
-
-class Graphic:
-
-    def __init__(self, title: str, graphic_type: GraphicType, image: Image):
-        self.title: str = title
-        self.graphic_type: GraphicType = graphic_type
-        self.image: Image = image
-
-        self.source: Optional[str] = None
-        self.attribution: Optional[str] = None
-
-
-class Video:
-
-    def __init__(self, title: str, video_type: VideoType, source: str):
-        self.title: str = title
-        self.video_type: VideoType = video_type
-        self.source: str = source
-
-        self.attribution: Optional[str] = None
-
-
-class Review:
-
-    def __init__(self, review_type: ReviewType):
-        self.review_type: ReviewType = review_type
-
-        self.text: Optional[str] = None
-        self.author: Optional[str] = None
-        self.source: Optional[str] = None
-        self.attribution: Optional[str] = None
+GAME_TO_INT: Dict[Game, int] = {
+    Game.DOOM: 0,
+    Game.DOOM2: 1,
+    Game.TNT: 2,
+    Game.PLUTONIA: 3,
+    Game.HERETIC: 4,
+    Game.HEXEN: 5,
+    Game.STRIFE: 6,
+    Game.CHEX: 7,
+    Game.HACX: 8,
+}
 
 
 class Entry:
 
-    def __init__(self, path: str, text: str):
+    def __init__(self, path: str, file_modified: int, entry_updated: int):
         self.path: str = path
-        self.text: str = text
+        self.file_modified: int = file_modified
+        self.entry_updated: int = entry_updated
 
-        self.game_styles: Dict[GameStyles,GameStyleSupport] = {}
-        self.content: Set[ContentTypes] = set()
-        self.authors: List[str] = []
-        self.links: List[str] = []
-        self.levels: Dict[Level] = {}
-        self.reviews: List[Review] = []
-        self.graphics: Dict[Graphic] = {}
-        self.videos: List[Video] = []
-        self.difficulty_levels: Set[DifficultyLevel] = set()
+        self.id: Optional[int] = None
 
-        self.score_aggregated: float = 0
-
-        self.game: Game = Game.UNKNOWN
         self.title: Optional[str] = None
-        self.description: Optional[str] = None
-        self.based_on: Optional[str] = None
-        self.story: Optional[str] = None
-        self.notes: Optional[str] = None
-        self.theme: Optional[str] = None
-        self.known_bugs: Optional[str] = None
-        self.tools_used: Optional[str] = None
-        self.credits: Optional[str] = None
-        self.tested_with: Optional[str] = None
-        self.do_not_run_with: Optional[str] = None
-        self.build_time: Optional[str] = None
-        self.source_port: Optional[str] = None
-        self.other_files_required: Optional[str] = None
-        self.copyright: Optional[str] = None
-        self.music: Optional[str] = None
+        self.game: Optional[Game] = None
+        self.authors: List[str] = []
 
-        self.date_file: Optional[date] = None
-        self.date_completed: Optional[date] = None
-        self.date_released: Optional[date] = None
+    def __repr__(self):
+        return '{}, {}: {}'.format(self.id, self.path, self.title)
+
+    def to_row(self) -> Dict[str, any]:
+        game = None
+        if self.game in GAME_TO_INT:
+            game = GAME_TO_INT.get(self.game)
+
+        return {
+            'path': self.path,
+            'file_modified': self.file_modified,
+            'entry_updated': self.entry_updated,
+            'title': self.title,
+            'game': game
+        }
+
+    @staticmethod
+    def from_row(row: Dict):
+        game: Game = Game.UNKNOWN
+        if row['game'] in INT_TO_GAME:
+            game = INT_TO_GAME.get(row['game'])
+
+        entry = Entry(
+            row['path'],
+            row['file_modified'],
+            row['entry_updated']
+        )
+        entry.id = row['id']
+        entry.title = row['title']
+        entry.game = game
+
+        return entry

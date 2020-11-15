@@ -46,5 +46,5 @@ class MapInfoExtractor(ExtractorBase):
         try:
             parser.parse(text)
         except LexerError as e:
-            self.logger.stream('mapinfo_lexer_error', info.path_idgames)
+            self.logger.stream('mapinfo_lexer_error', info.path_idgames.as_posix())
             self.logger.stream('mapinfo_lexer_error', str(e))

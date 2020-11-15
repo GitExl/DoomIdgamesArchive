@@ -28,8 +28,8 @@ class ArchiveExtractor(ExtractorBase):
         main_fileinfo = None
 
         try:
-            self.logger.debug('Opening "{}"'.format(info.path))
-            main_archive = ZipFile(info.path)
+            self.logger.debug('Opening "{}"'.format(info.path_local))
+            main_archive = ZipFile(info.path_local)
             main_fileinfo = self.get_data_main_fileinfo(info.filename_base, main_archive)
 
         except zipfile.BadZipFile:
@@ -44,7 +44,7 @@ class ArchiveExtractor(ExtractorBase):
             if not self.is_compression_type_supported(main_fileinfo.compress_type):
                 self.logger.debug('Opening "{}" as using 7zip process'.format(main_fileinfo.filename))
 
-                main_archive_7z = SZArchive(info.path)
+                main_archive_7z = SZArchive(info.path_local)
                 file_7z = main_archive_7z.get_file(main_fileinfo.filename)
                 if not file_7z:
                     self.logger.warn('Cannot find file {} in archive.'.format(main_fileinfo.filename))
@@ -63,7 +63,7 @@ class ArchiveExtractor(ExtractorBase):
 
         else:
             self.logger.error('Unable to find main data file.')
-            self.logger.stream('no_main_data_file', info.path_idgames)
+            self.logger.stream('no_main_data_file', info.path_idgames.as_posix())
             return
 
         info.main_archive = main_archive

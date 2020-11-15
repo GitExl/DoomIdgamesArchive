@@ -12,12 +12,12 @@ from textparser.textparser import TextParser
 class TextExtractor(ExtractorBase):
 
     def extract(self, info: ExtractedInfo):
-        text_path = '{}.txt'.format(info.path_base)
+        text_path = info.path_local_base.with_suffix('.txt')
         contents = None
 
         # Parse from directory text file.
         if path.isfile(text_path):
-            text_file = codecs.open(text_path, 'r', 'latin_1')
+            text_file = codecs.open(text_path.as_posix(), 'r', 'latin_1')
             contents = text_file.read()
             text_file.close()
 
