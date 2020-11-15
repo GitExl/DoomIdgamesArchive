@@ -17,13 +17,15 @@ class KeyType(Enum):
 
 
 TEXT_KEYS = {
-    'author': {
+    'authors': {
         'type': KeyType.TEXT,
         'keys': {'author', 'authors', 'author(s)', 'autor', 'original author'},
+        'array': True,
     },
     'title': {
         'type': KeyType.TEXT,
         'keys': {'title', 'level name', 'name'},
+        'single_line': True,
     },
     'game_style_singleplayer': {
         'type': KeyType.BOOL,

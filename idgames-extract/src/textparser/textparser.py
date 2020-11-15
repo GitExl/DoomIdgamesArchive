@@ -1,6 +1,6 @@
 import re
 
-from re import RegexFlag
+from re import Pattern, RegexFlag
 from typing import TextIO, Tuple, Optional, List
 
 from idgames.engine import Engine
@@ -11,8 +11,10 @@ from textparser.textkeys import TEXT_ENGINE, TEXT_KEYS, KeyType, TEXT_GAMES, TEX
 
 KEY_VALUE_MIN_TRAILING_WHITESPACE = 3
 
-RE_KEY_VALUE = re.compile(r':(?!//)')
-RE_HEADER = re.compile(r'[=\-]{2,}')
+RE_KEY_VALUE: Pattern = re.compile(r':(?!//)')
+RE_HEADER: Pattern = re.compile(r'[+]?[=\-]{2,}')
+RE_WHITESPACE_COLLAPSE: Pattern = re.compile(r'\s\s+')
+RE_ORDERED_LIST: Pattern = re.compile(r'[0-9]\.\s')
 
 
 class TextParser:
@@ -44,7 +46,7 @@ class TextParser:
 
             newline_count = 0
 
-            # Headers are treated a s the key of a new key\value pair.
+            # Headers are treated as the key of a new key\value pair.
             header = self.detect_header(line)
             if header is not None:
                 self.add_pair(key, values)
@@ -79,7 +81,8 @@ class TextParser:
         if key[0] == '*':
             key = key.strip('* ')
 
-        self.pairs.append((key, ' '.join(values)))
+        for value in values:
+            self.pairs.append((key, value))
 
     @staticmethod
     def detect_key_value(text: str) -> Tuple[Optional[str], Optional[str]]:
@@ -103,6 +106,11 @@ class TextParser:
     @staticmethod
     def detect_header(text: str) -> Optional[str]:
         text = text.strip()
+
+        # Starts with "5. "
+        list_match = RE_ORDERED_LIST.match(text)
+        if list_match is not None:
+            text = text[list_match.end():]
 
         # * Detect this *
         if len(text) > 2 and text[0] == '*' and text[-1] == '*':
@@ -138,7 +146,7 @@ class TextParser:
 
         # Parse value from the key's type.
         if parser_data['type'] == KeyType.TEXT:
-            value = str(value)
+            value = str(value).strip()
         elif parser_data['type'] == KeyType.BOOL:
             value = self.parse_bool(value)
         elif parser_data['type'] == KeyType.GAME:
@@ -150,13 +158,13 @@ class TextParser:
 
         # TODO
         elif parser_data['type'] == KeyType.MAP_NUMBER:
-            value = str(value)
+            value = str(value).strip()
         elif parser_data['type'] == KeyType.INTEGER:
-            value = str(value)
+            value = str(value).strip()
         elif parser_data['type'] == KeyType.GAME_STYLE:
-            value = str(value)
+            value = str(value).strip()
         elif parser_data['type'] == KeyType.DATETIME:
-            value = str(value)
+            value = str(value).strip()
 
         else:
             raise Exception('Unimplemented parser for key type "{}"'.format(parser_data['type']))
@@ -170,9 +178,13 @@ class TextParser:
 
         else:
             if parser_data['type'] == KeyType.TEXT:
+                if not len(value):
+                    return True
+                value = RE_WHITESPACE_COLLAPSE.sub('', value)
+
                 if parser_key not in self.info:
                     self.info[parser_key] = value
-                else:
+                elif not parser_data.get('single_line', False):
                     self.info[parser_key] += '\n' + value
 
             elif parser_data['type'] == KeyType.DIFFICULTY:
