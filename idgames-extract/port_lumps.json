@@ -81,7 +81,7 @@
     "inherit": "boom",
     "lumps": [
       "MAPINFO",
-      "RMAPINFO",
+      "RMAPINFO"
     ]
   },
   "edge": {

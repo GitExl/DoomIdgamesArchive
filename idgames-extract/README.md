@@ -7,9 +7,9 @@ Run ``src/extract.py``. This will read /idgames archive files from ``/idgames`` 
 ``/logs``.
 
 ## Requirements
-This requires Python 3.8 or newer, as well as Pillow and Colorama, both of which are available via PyPI.
+This requires Python 3.8 or newer, as well as pillow, colorama and mysql-connector-python, which are all available via PyPI.
 
-The following IWADs are required to be present in /iwads as these are used for their palette:
+The following IWADs are required to be present in your configured iwads directory:
 
 * ``DOOM.WAD``: (Ultimate) Doom
 * ``DOOM2.WAD``: Doom 2

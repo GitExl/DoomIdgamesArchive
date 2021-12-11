@@ -39,19 +39,23 @@ class LevelExtractor(ExtractorBase):
 
             wad_archives.append(wad_archive)
 
-        for level_data in level_data_finder.level_data:
-            if level_data.format == LevelFormat.UDMF:
-                reader = UDMFLevelReader(info.game, self.logger)
-            else:
-                reader = BinaryLevelReader(info.game, self.logger)
+        # Some safeguarding against dumb map bomb entries.
+        if len(level_data_finder.level_data) > 500:
+            self.logger.warn('Ignoring all maps inside possible map bomb.')
+        else:
+            for level_data in level_data_finder.level_data:
+                if level_data.format == LevelFormat.UDMF:
+                    reader = UDMFLevelReader(info.game, self.logger)
+                else:
+                    reader = BinaryLevelReader(info.game, self.logger)
 
-            level = reader.read(level_data)
-            if level:
-                info.levels.append(level)
-                self.logger.debug('Found {} ({}): {} vertices, {} lines, {} sides, {} sectors, {} things.'.format(
-                    level.name, level_data.format.name,
-                    len(level.vertices), len(level.lines), len(level.sides), len(level.sectors), len(level.things))
-                )
+                level = reader.read(level_data)
+                if level:
+                    info.levels.append(level)
+                    self.logger.debug('Found {} ({}): {} vertices, {} lines, {} sides, {} sectors, {} things.'.format(
+                        level.name, level_data.format.name,
+                        len(level.vertices), len(level.lines), len(level.sides), len(level.sectors), len(level.things))
+                    )
 
         for archive in wad_archives:
             archive.close()

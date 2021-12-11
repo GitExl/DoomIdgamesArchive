@@ -1,5 +1,5 @@
 from pathlib import Path
-from typing import Optional
+from typing import Optional, List
 
 from mysql.connector import MySQLConnection, connection
 
@@ -77,3 +77,18 @@ class DBStorage:
     def remove_orphan_authors(self):
         self.cursor.execute('DELETE FROM author WHERE id NOT IN (SELECT author_id FROM entry_authors)')
         self.db.commit()
+
+    def remove_dead_entries(self, existing_paths: List[Path]):
+        local_paths = set()
+        for path_local in existing_paths:
+            local_paths.add(path_local.relative_to(self.config.get('paths.idgames')).as_posix())
+
+        self.cursor.execute('SELECT id, path FROM entry')
+        path_rows = self.cursor.fetchall()
+        db_paths = dict((path, id) for (id, path) in path_rows)
+
+        for db_path, db_id in db_paths.items():
+            if db_path in local_paths:
+                continue
+
+            self.cursor.execute('DELETE FROM entry WHERE id=%s', (db_id,))

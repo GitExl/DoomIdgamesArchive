@@ -29,14 +29,14 @@ EXTRACTORS = [
     TextExtractor,
     GameExtractor,
     PropertyExtractor,
-    # ArchiveListExtractor,
+    ArchiveListExtractor,
     # MapInfoExtractor,
     # LevelExtractor,
-    # GraphicsExtractor,
+    GraphicsExtractor,
 ]
 
 WRITERS = [
-    # GraphicsWriter,
+    GraphicsWriter,
 ]
 
 
@@ -63,8 +63,10 @@ class Extract:
         filename_base = path_local.stem
 
         entry = self.storage.get_entry_by_path(path_idgames)
-        # if entry is not None and entry.file_modified >= int(path_local.stat().st_mtime):
-        #     return None, None
+
+        # Bail if the file has not been updated since the last scan.
+        if entry is not None and entry.file_modified >= int(path_local.stat().st_mtime):
+            return None, None
 
         # Ignore some files we'd rather not analyse.
         ignore_reason = must_ignore(path_idgames)
@@ -110,7 +112,8 @@ def run():
     time_now = int(time.time())
 
     idgames_local_root = Path(config.get('paths.idgames'))
-    for path_system in idgames_local_root.rglob('*.zip'):
+    paths_system = list(idgames_local_root.rglob('*.zip'))
+    for path_system in paths_system:
         info, entry = extract.process_file(path_system)
         if info is None:
             continue
@@ -129,6 +132,9 @@ def run():
         entry.authors = info.authors
 
         entry.id = storage.save_entry(entry)
+
+    logger.info('Removing dead entries...')
+    storage.remove_dead_entries(paths_system)
 
     logger.info('Removing orphaned authors...')
     storage.remove_orphan_authors()
