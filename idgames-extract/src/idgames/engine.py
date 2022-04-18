@@ -3,17 +3,20 @@ from enum import Enum
 
 class Engine(Enum):
     UNKNOWN = 'unknown'
-    VANILLA = 'vanilla'
-    NOLIMITS = 'nolimits'
+    DOOM = 'doom'
+    HERETIC = 'heretic'
+    HEXEN = 'hexen'
+    STRIFE = 'strife'
+    NOLIMITS = 'nolimits'   # X
     BOOM = 'boom'
-    PRBOOM = 'prboom'
-    ZDOOM = 'zdoom'
+    MBF = 'mbf'
+    ZDOOM = 'zdoom'     # X
     GZDOOM = 'gzdoom'
     LEGACY = 'legacy'
-    SKULLTAG = 'skulltag'
+    SKULLTAG = 'skulltag'   # X
     ZDAEMON = 'zdaemon'
-    DOOMSDAY = 'doomsday'
+    DOOMSDAY = 'doomsday'   # X
     EDGE = 'edge'
     ETERNITY = 'eternity'
     DOOMRETRO = 'doomretro'
-    ZANDRONUM = 'zandronum'
+    ZANDRONUM = 'zandronum'     # X

@@ -6,7 +6,12 @@
   },
   "extractors": {
     "game": {
-      "lump_score_table": "lump_scores.json"
+      "lump_score_table": "game_lump_scores.json"
+    },
+    "engine": {
+      "lump_table": "engine_lumps.json",
+      "doomednum_table": "engine_doomednums.json",
+      "doomednum_scores": "engine_doomednum_scores.json"
     }
   },
   "writers": {
@@ -21,8 +26,9 @@
     "ls-laR.gz"
   ],
   "mirrors": [
-    "https://mirrors.syringanetworks.net/idgames",
-    "https://www.quaddicted.com/files/idgames"
+    "https://www.quaddicted.com/files/idgames",
+    "https://ftpmirror1.infania.net/pub/idgames",
+    "https://youfailit.net/pub/idgames"
   ],
   "db": {
     "host": "127.0.0.1",

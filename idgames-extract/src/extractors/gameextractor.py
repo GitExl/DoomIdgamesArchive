@@ -27,11 +27,11 @@ class GameExtractor(ExtractorBase):
         with open(self.config.get('extractors.game.lump_score_table'), 'r') as f:
             scores = json.load(f)
 
-            for file_name, scores in scores.items():
-                lump_scores[file_name] = {}
+        for file_name, scores in scores.items():
+            lump_scores[file_name] = {}
 
-                for game, score in scores.items():
-                    lump_scores[file_name][Game(game)] = score
+            for game, score in scores.items():
+                lump_scores[file_name][Game(game)] = score
 
         return lump_scores
 

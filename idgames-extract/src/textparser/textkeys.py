@@ -292,7 +292,7 @@ TEXT_ENGINE = {
     Engine.ZDOOM: {
         're': [r'zdoom'],
     },
-    Engine.VANILLA: {
+    Engine.DOOM: {
         'keys': {
             'none', 'no', 'none.', 'doom2', 'vanilla', '-', 'doom 2', 'nope', 'any', 'n/a', 'vanilla compatible',
             'doom2.exe', 'vanilla-compatible', 'vanilla doom', 'none required',
@@ -300,7 +300,7 @@ TEXT_ENGINE = {
     },
     Engine.BOOM: {
         'keys': {},
-        're': [r'boom'],
+        're': [r'boom', 'prboom+', 'prboom-plus -complevel 2'],
     },
     Engine.GZDOOM: {
         'keys': {},
@@ -312,8 +312,8 @@ TEXT_ENGINE = {
     Engine.NOLIMITS: {
         'keys': {'limit removing', 'limit-removing', 'limit removing port', 'yes', 'limit-removing port'},
     },
-    Engine.PRBOOM: {
-        'keys': {'prboom+', 'prboom-plus -complevel 2'},
+    Engine.MBF: {
+        'keys': {'mbf', 'marine\'s best friend'},
     },
     Engine.LEGACY: {
         'keys': {'legacy', 'doom legacy'},
@@ -323,5 +323,8 @@ TEXT_ENGINE = {
     },
     Engine.ZDAEMON: {
         'keys': {'zdaemon'},
+    },
+    Engine.ETERNITY: {
+        'keys': {'eternity'},
     },
 }

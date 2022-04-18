@@ -1,0 +1,93 @@
+{
+  "boom": {
+    "lumps": [
+      "ANIMATED",
+      "DEHACKED",
+      "SWITCHES"
+    ]
+  },
+  "zdoom": {
+    "inherit": "boom",
+    "lumps": [
+      "ALTHUDCF",
+      "ANIMDEFS",
+      "CONBACK",
+      "CVARINFO",
+      "DECALDEF",
+      "DECORATE",
+      "DEFBINDS",
+      "DEHSUPP",
+      "DIALOGUE",
+      "FONTDEFS",
+      "FSGLOBAL",
+      "GAMEINFO",
+      "HI_END",
+      "HI_START",
+      "HIRESTEX",
+      "IWADINFO",
+      "KEYCONF",
+      "LANGUAGE",
+      "LOADACS",
+      "LOCKDEFS",
+      "MAPINFO",
+      "MENUDEF",
+      "MUSINFO",
+      "PALVERS",
+      "REVERBS",
+      "S_SKIN",
+      "SBARINFO",
+      "SCRIPTS",
+      "SECRETS",
+      "TEAMINFO",
+      "TERRAIN",
+      "TEXTCOLO",
+      "TEXTURES",
+      "TITLEMAP",
+      "TRNSLATE",
+      "TX_END",
+      "TX_START",
+      "VOXELDEF",
+      "X11R6RGB",
+      "XHAIRS",
+      "ZMAPINFO"
+    ]
+  },
+  "gzdoom": {
+    "inherit": "zdoom",
+    "lumps": [
+      "GLDEFS",
+      "MODELDEF"
+    ]
+  },
+  "skulltag": {
+    "inherit": "zdoom",
+    "lumps": [
+      "ANCRINFO",
+      "BOTINFO",
+      "CMPGNINF",
+      "SECTINFO",
+      "SKININFO"
+    ]
+  },
+  "eternity": {
+    "inherit": "boom",
+    "lumps": [
+      "EDFROOT",
+      "EMAPINFO",
+      "OPTIONS"
+    ]
+  },
+  "doomretro": {
+    "inherit": "boom",
+    "lumps": [
+      "MAPINFO",
+      "RMAPINFO"
+    ]
+  },
+  "edge": {
+    "inherit": "boom",
+    "lumps": [
+      "DOOM_DDF"
+    ]
+  }
+}

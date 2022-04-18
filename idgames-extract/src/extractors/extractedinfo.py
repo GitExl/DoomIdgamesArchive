@@ -8,6 +8,7 @@ from PIL.Image import Image
 from archives.archivebase import ArchiveBase
 from archives.archivelist import ArchiveList
 from doom.level import Level
+from idgames.engine import Engine
 from idgames.entry import Entry
 from idgames.game import Game
 
@@ -30,6 +31,7 @@ class ExtractedInfo:
 
     title: Optional[str] = None
     game: Game = Game.UNKNOWN
+    engine: Engine = Engine.UNKNOWN
     authors: List[str] = field(default_factory=lambda: [])
     graphics: Dict[str, Image] = field(default_factory=lambda: {})
     levels: List[Level] = field(default_factory=lambda: [])

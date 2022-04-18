@@ -6,4 +6,5 @@ logs/*
 *.exe
 
 config.json
-lump_scores.json
+game_lump_scores.json
+engine_doomednum_scores.json

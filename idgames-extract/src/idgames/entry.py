@@ -1,5 +1,6 @@
-from typing import Dict, List, Optional
+from typing import Dict, Optional
 
+from idgames.engine import Engine
 from idgames.game import Game
 
 
@@ -27,6 +28,48 @@ GAME_TO_INT: Dict[Game, int] = {
     Game.HACX: 8,
 }
 
+INT_TO_ENGINE: Dict[int, Engine] = {
+    0: Engine.UNKNOWN,
+    1: Engine.DOOM,
+    2: Engine.HERETIC,
+    3: Engine.HEXEN,
+    4: Engine.STRIFE,
+    5: Engine.NOLIMITS,
+    6: Engine.BOOM,
+    7: Engine.MBF,
+    8: Engine.ZDOOM,
+    9: Engine.GZDOOM,
+    10: Engine.LEGACY,
+    11: Engine.SKULLTAG,
+    12: Engine.ZDAEMON,
+    13: Engine.DOOMSDAY,
+    14: Engine.EDGE,
+    15: Engine.ETERNITY,
+    16: Engine.DOOMRETRO,
+    17: Engine.ZANDRONUM,
+}
+
+ENGINE_TO_INT: Dict[Engine, int] = {
+    Engine.UNKNOWN: 0,
+    Engine.DOOM: 1,
+    Engine.HERETIC: 2,
+    Engine.HEXEN: 3,
+    Engine.STRIFE: 4,
+    Engine.NOLIMITS: 5,
+    Engine.BOOM: 6,
+    Engine.MBF: 7,
+    Engine.ZDOOM: 8,
+    Engine.GZDOOM: 9,
+    Engine.LEGACY: 10,
+    Engine.SKULLTAG: 11,
+    Engine.ZDAEMON: 12,
+    Engine.DOOMSDAY: 13,
+    Engine.EDGE: 14,
+    Engine.ETERNITY: 15,
+    Engine.DOOMRETRO: 16,
+    Engine.ZANDRONUM: 17,
+}
+
 
 class Entry:
 
@@ -39,7 +82,7 @@ class Entry:
 
         self.title: Optional[str] = None
         self.game: Optional[Game] = None
-        self.authors: List[str] = []
+        self.engine: Optional[Engine] = None
 
     def __repr__(self):
         return '{}, {}: {}'.format(self.id, self.path, self.title)
@@ -49,12 +92,17 @@ class Entry:
         if self.game in GAME_TO_INT:
             game = GAME_TO_INT.get(self.game)
 
+        engine = None
+        if self.engine in ENGINE_TO_INT:
+            engine = ENGINE_TO_INT.get(self.engine)
+
         return {
             'path': self.path,
             'file_modified': self.file_modified,
             'entry_updated': self.entry_updated,
             'title': self.title,
-            'game': game
+            'game': game,
+            'engine': engine,
         }
 
     @staticmethod
@@ -62,6 +110,10 @@ class Entry:
         game: Game = Game.UNKNOWN
         if row['game'] in INT_TO_GAME:
             game = INT_TO_GAME.get(row['game'])
+
+        engine: Engine = Engine.UNKNOWN
+        if row['engine'] in INT_TO_ENGINE:
+            engine = INT_TO_ENGINE.get(row['engine'])
 
         entry = Entry(
             row['path'],
@@ -71,5 +123,6 @@ class Entry:
         entry.id = row['id']
         entry.title = row['title']
         entry.game = game
+        entry.engine = engine
 
         return entry
