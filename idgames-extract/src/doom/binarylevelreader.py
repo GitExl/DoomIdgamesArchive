@@ -209,7 +209,7 @@ class BinaryLevelReader(LevelReaderBase):
             lines = BinaryLevelReader._read_binary_data(level_data, 'LINEDEFS', unpack_line_hexen, STRUCT_LINE_HEXEN)
             things = BinaryLevelReader._read_binary_data(level_data, 'THINGS', unpack_thing_hexen, STRUCT_THING_HEXEN)
 
-        return Level(level_name, namespace, vertices, lines, sides, sectors, things)
+        return Level(level_name, namespace, level_data.format, vertices, lines, sides, sectors, things)
 
     @staticmethod
     def _read_binary_data(level_data: LevelData, file_name: str, unpack_func, data_struct: Struct):

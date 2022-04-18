@@ -3,6 +3,7 @@ from typing import Optional, List
 
 from mysql.connector import MySQLConnection, connection
 
+from doom.level import Level, LEVEL_FORMAT_TO_INT
 from idgames.entry import Entry
 from utils.config import Config
 
@@ -50,10 +51,15 @@ class DBStorage:
         if entry.id is None:
             entry.id = self.cursor.lastrowid
 
+        return entry.id
+
+    def save_entry_authors(self, entry: Entry, authors: List[str]):
+
         # Update (remove + re-add) authors.
         self.cursor.execute('DELETE FROM entry_authors WHERE entry_id=%s', (entry.id,))
+
         known_author_ids = set()
-        for author_name in entry.authors:
+        for author_name in authors:
             self.cursor.execute('SELECT id FROM author WHERE name=%s LIMIT 1', (author_name,))
             author_row = self.cursor.fetchone()
             if author_row is not None:
@@ -70,13 +76,20 @@ class DBStorage:
             self.cursor.execute('INSERT INTO entry_authors VALUES (%s, %s)', (entry.id, author_id))
             known_author_ids.add(author_id)
 
-        self.db.commit()
+    def save_entry_levels(self, entry: Entry, levels: List[Level]):
+        self.cursor.execute('DELETE FROM entry_levels WHERE entry_id=%s', (entry.id,))
 
-        return entry.id
+        for level in levels:
+            self.cursor.execute(
+                'INSERT INTO entry_levels (entry_id, name, format, line_count, side_count, thing_count, sector_count) VALUES (%s, %s, %s, %s, %s, %s, %s)',
+                (entry.id, level.name, LEVEL_FORMAT_TO_INT.get(level.format), len(level.lines), len(level.sides), len(level.things), len(level.sectors))
+            )
 
     def remove_orphan_authors(self):
         self.cursor.execute('DELETE FROM author WHERE id NOT IN (SELECT author_id FROM entry_authors)')
-        self.db.commit()
+
+    def remove_orphan_levels(self):
+        self.cursor.execute('DELETE FROM entry_levels WHERE entry_id NOT IN (SELECT id FROM entry)')
 
     def remove_dead_entries(self, existing_paths: List[Path]):
         local_paths = set()
@@ -92,3 +105,6 @@ class DBStorage:
                 continue
 
             self.cursor.execute('DELETE FROM entry WHERE id=%s', (db_id,))
+
+    def commit(self):
+        self.db.commit()

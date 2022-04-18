@@ -51,7 +51,7 @@ class LevelDataFinder:
 
             level_data = LevelDataFinder._collect_level_data(archive, index - 1)
             if name is not None:
-                level_data.name = name
+                level_data.name = name[0:8]
             self.level_data.append(level_data)
 
     @staticmethod

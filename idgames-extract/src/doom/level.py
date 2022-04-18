@@ -1,12 +1,26 @@
 from dataclasses import dataclass
 from enum import Enum, Flag, auto
-from typing import List, Optional
+from typing import List, Optional, Dict
 
 
 class LevelFormat(Enum):
     DOOM = 'doom'
     HEXEN = 'hexen'
     UDMF = 'udmf'
+
+
+INT_TO_LEVEL_FORMAT: Dict[int, LevelFormat] = {
+    0: LevelFormat.DOOM,
+    1: LevelFormat.HEXEN,
+    2: LevelFormat.UDMF,
+}
+
+
+LEVEL_FORMAT_TO_INT: Dict[LevelFormat, int] = {
+    LevelFormat.DOOM: 0,
+    LevelFormat.HEXEN: 1,
+    LevelFormat.UDMF: 2,
+}
 
 
 class LevelNamespace(Enum):
@@ -189,12 +203,13 @@ class Thing:
 
 class Level:
 
-    def __init__(self, name: str, namespace: LevelNamespace,
+    def __init__(self, name: str, namespace: LevelNamespace, format: LevelFormat,
                  vertices: List[Vertex] = None, lines: Optional[List[Line]] = None, sides: Optional[List[Side]] = None,
                  sectors: Optional[List[Sector]] = None, things: Optional[List[Thing]] = None):
 
         self.name: str = name
         self.namespace = namespace
+        self.format: LevelFormat = format
 
         self.vertices: List[Vertex] = [] if vertices is None else vertices
         self.lines: List[Line] = [] if lines is None else lines

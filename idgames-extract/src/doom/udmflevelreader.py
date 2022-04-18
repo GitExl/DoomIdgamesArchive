@@ -2,7 +2,7 @@ from typing import Dict, Optional
 
 from doom.levelfinder import LevelData
 from doom.levelreaderbase import LevelReaderBase
-from doom.level import Level, LevelNamespace
+from doom.level import Level, LevelNamespace, LevelFormat
 from doom.udmfparser import UDMFParser, UDMFParserError
 from utils.lexer import LexerError
 
@@ -32,7 +32,7 @@ class UDMFLevelReader(LevelReaderBase):
             parser = UDMFParser()
             parser.parse(text)
             namespace = self.map_udmf_namespace(parser.namespace.lower())
-            return Level(level_name, namespace, parser.vertices, parser.lines, parser.sides, parser.sectors, parser.things)
+            return Level(level_name, namespace, LevelFormat.UDMF, parser.vertices, parser.lines, parser.sides, parser.sectors, parser.things)
 
         except LexerError as e:
             self.logger.error('Unable to lex "{}": {}'.format(level_name, e))

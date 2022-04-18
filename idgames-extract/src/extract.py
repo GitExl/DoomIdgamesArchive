@@ -5,6 +5,7 @@ from typing import List, Optional, Tuple
 
 from extractors.archiveextractor import ArchiveExtractor
 from extractors.archivelistextractor import ArchiveListExtractor
+from extractors.engineextractor import EngineExtractor
 from extractors.extractedinfo import ExtractedInfo
 from extractors.extractorbase import ExtractorBase
 from extractors.gameextractor import GameExtractor
@@ -31,8 +32,9 @@ EXTRACTORS = [
     PropertyExtractor,
     ArchiveListExtractor,
     # MapInfoExtractor,
-    # LevelExtractor,
-    GraphicsExtractor,
+    LevelExtractor,
+    EngineExtractor,
+    # GraphicsExtractor,
 ]
 
 WRITERS = [
@@ -129,15 +131,20 @@ def run():
 
         entry.title = info.title
         entry.game = info.game
-        entry.authors = info.authors
+        entry.engine = info.engine
 
         entry.id = storage.save_entry(entry)
+        storage.save_entry_authors(entry, info.authors)
+        storage.save_entry_levels(entry, info.levels)
+        storage.commit()
 
     logger.info('Removing dead entries...')
     storage.remove_dead_entries(paths_system)
-
     logger.info('Removing orphaned authors...')
     storage.remove_orphan_authors()
+    logger.info('Removing orphaned levels...')
+    storage.remove_orphan_levels()
+    storage.commit()
 
     storage.close()
     extract.close()
