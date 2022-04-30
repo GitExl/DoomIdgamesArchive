@@ -193,7 +193,7 @@ TEXT_KEYS = {
     },
     'story': {
         'type': KeyType.TEXT,
-        'keys': {'story', 'the story'},
+        'keys': {'story', 'the story', 'story line'},
     },
     'theme': {
         'type': KeyType.TEXT,
@@ -265,7 +265,7 @@ TEXT_GAMES = {
 TEXT_DIFFICULTY = {
     'true': {
         'keys': {'yes', 'y', 'supported', 'possibly', 'of course', 'any', 'all', 'full implementation', 'fully functional.', 'fully supported', 'some'},
-        're': ['^yes', '^yup', '^yep', '^yeah', r'^skills\s', r'^skill\s', '^only', '^implemented', r'^all\b', '^definitely', '^fully implemented', '^some\b']
+        're': ['^yes', '^yup', '^yep', '^yeah', r'^skills\s', r'^skill\s', '^only', '^implemented', r'^all\b', '^definitely', '^fully implemented', r'^some\b']
     },
     'false': {
         'keys': {'not implented', 'no', 'not implimented', '-', 'n\\a', 'unknown', 'n', 'not really', 'na', 'not applicable'},
@@ -280,7 +280,7 @@ TEXT_BOOLEAN = {
         're': ['^yea.*', '^oh yeah.*', '^oh yes.*', '^supported.*', '^starts.*', '^yes.*', '^sure.*', '^probably.*',
                '^absolutely.*', '^definitely.*', '^some .*', '^duh.*', '^hell (yes|yeah).*', '^i guess.*',
                '^implemented.*', '^of course.*', '^yep.*', '^yup.*', '^a .*', '^all .*', '^designed.*', '^fully .*',
-               '^full .*', '^you bet.*', '.*\(yes\).*', '^aye.*'],
+               '^full .*', '^you bet.*', r'.*\(yes\).*', '^aye.*'],
     },
     'false': {
         'keys': {'n/a', '-', '- no', '0', 'nah'},
@@ -299,11 +299,9 @@ TEXT_ENGINE = {
         },
     },
     Engine.BOOM: {
-        'keys': {},
         're': [r'boom', 'prboom+', 'prboom-plus -complevel 2'],
     },
     Engine.GZDOOM: {
-        'keys': {},
         're': [r'gzdoom'],
     },
     Engine.SKULLTAG: {

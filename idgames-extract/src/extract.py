@@ -17,6 +17,7 @@ from extractors.textextractor import TextExtractor
 from idgames.dbstorage import DBStorage
 from idgames.entry import Entry
 from utils.config import Config
+from writers.appdatabasewriter import AppDatabaseWriter
 
 from writers.graphicswriter import GraphicsWriter
 
@@ -38,7 +39,8 @@ EXTRACTORS = [
 ]
 
 WRITERS = [
-    GraphicsWriter,
+    # GraphicsWriter,
+    # AppDatabaseWriter,
 ]
 
 
@@ -67,8 +69,8 @@ class Extract:
         entry = self.storage.get_entry_by_path(path_idgames)
 
         # Bail if the file has not been updated since the last scan.
-        if entry is not None and entry.file_modified >= int(path_local.stat().st_mtime):
-            return None, None
+        # if entry is not None and entry.file_modified >= int(path_local.stat().st_mtime):
+        #     return None, None
 
         # Ignore some files we'd rather not analyse.
         ignore_reason = must_ignore(path_idgames)
@@ -132,10 +134,16 @@ def run():
         entry.title = info.title
         entry.game = info.game
         entry.engine = info.engine
+        entry.map_count = len(info.levels)
+        entry.is_singleplayer = info.is_singleplayer
+        entry.is_cooperative = info.is_cooperative
+        entry.is_deathmatch = info.is_deathmatch
 
         entry.id = storage.save_entry(entry)
         storage.save_entry_authors(entry, info.authors)
         storage.save_entry_levels(entry, info.levels)
+        storage.save_entry_textfile(entry, info.text_contents)
+        storage.save_entry_images(entry, info.graphics)
         storage.commit()
 
     logger.info('Removing dead entries...')
@@ -144,6 +152,10 @@ def run():
     storage.remove_orphan_authors()
     logger.info('Removing orphaned levels...')
     storage.remove_orphan_levels()
+    logger.info('Removing orphaned text files...')
+    storage.remove_orphan_textfiles()
+    logger.info('Removing orphaned images...')
+    storage.remove_orphan_images()
     storage.commit()
 
     storage.close()

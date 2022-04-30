@@ -26,5 +26,3 @@ class GraphicsWriter(WriterBase):
                 graphic.save(path_file, method=6, quality=95)
             else:
                 graphic.save(path_file, method=6, lossless=True)
-
-            return

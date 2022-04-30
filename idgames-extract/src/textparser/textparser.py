@@ -38,8 +38,8 @@ class TextParser:
                 newline_count += 1
                 continue
 
-            # After 2 or more newlines, assume a break in between key\values.
-            elif newline_count > 1:
+            # After some newlines, assume a break in between key\values.
+            elif newline_count > 2:
                 self.add_pair(key, values)
                 key = None
                 values = []
@@ -180,12 +180,12 @@ class TextParser:
             if parser_data['type'] == KeyType.TEXT:
                 if not len(value):
                     return True
-                value = RE_WHITESPACE_COLLAPSE.sub('', value)
+                value = RE_WHITESPACE_COLLAPSE.sub(' ', value)
 
                 if parser_key not in self.info:
                     self.info[parser_key] = value
                 elif not parser_data.get('single_line', False):
-                    self.info[parser_key] += '\n' + value
+                    self.info[parser_key] += ' ' + value
 
             elif parser_data['type'] == KeyType.DIFFICULTY:
                 if value is not None:
@@ -261,7 +261,7 @@ class TextParser:
 
         parser_key, data = self.match_key(value, TEXT_DIFFICULTY)
         if parser_key is not None:
-            return bool(parser_key)
+            return parser_key == 'true'
 
         self.logger.stream('text_parser_value_difficulty', '{}'.format(value))
         return None

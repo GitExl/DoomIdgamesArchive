@@ -16,6 +16,10 @@ class PropertyExtractor(ExtractorBase):
         if info.title is not None and len(info.title) > 255:
             info.title = '{}...'.format(info.title[:252])
 
+        info.is_singleplayer = info.text_keys.get('game_style_singleplayer', None)
+        info.is_cooperative = info.text_keys.get('game_style_cooperative', None)
+        info.is_deathmatch = info.text_keys.get('game_style_deathmatch', None)
+
         parsed_authors = info.text_keys.get('authors', [])
         parsed_authors = list(set(parsed_authors))
 

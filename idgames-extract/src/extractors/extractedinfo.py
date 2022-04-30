@@ -32,6 +32,9 @@ class ExtractedInfo:
     title: Optional[str] = None
     game: Game = Game.UNKNOWN
     engine: Engine = Engine.UNKNOWN
+    is_singleplayer: Optional[bool] = None
+    is_cooperative: Optional[bool] = None
+    is_deathmatch: Optional[bool] = None
     authors: List[str] = field(default_factory=lambda: [])
     graphics: Dict[str, Image] = field(default_factory=lambda: {})
     levels: List[Level] = field(default_factory=lambda: [])

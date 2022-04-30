@@ -83,6 +83,10 @@ class Entry:
         self.title: Optional[str] = None
         self.game: Optional[Game] = None
         self.engine: Optional[Engine] = None
+        self.is_singleplayer: Optional[bool] = None
+        self.is_cooperative: Optional[bool] = None
+        self.is_deathmatch: Optional[bool] = None
+        self.map_count: int = 0
 
     def __repr__(self):
         return '{}, {}: {}'.format(self.id, self.path, self.title)
@@ -103,6 +107,10 @@ class Entry:
             'title': self.title,
             'game': game,
             'engine': engine,
+            'map_count': self.map_count,
+            'is_singleplayer': self.is_singleplayer,
+            'is_cooperative': self.is_cooperative,
+            'is_deathmatch': self.is_deathmatch,
         }
 
     @staticmethod
@@ -124,5 +132,9 @@ class Entry:
         entry.title = row['title']
         entry.game = game
         entry.engine = engine
+        entry.map_count = row['map_count']
+        entry.is_singleplayer = row['is_singleplayer']
+        entry.is_cooperative = row['is_cooperative']
+        entry.is_deathmatch = row['is_deathmatch']
 
         return entry

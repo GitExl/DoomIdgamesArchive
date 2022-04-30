@@ -5,7 +5,9 @@ from typing import Dict, Optional, Pattern
 
 IGNORE: Dict[Pattern, str] = {
     re.compile(r'levels/doom/a-c/bedlam2\.zip'): 'X-rated',
+    re.compile(r'levels/doom/g-i/ittu\.zip'): 'X-rated',
     re.compile(r'levels/doom2/a-c/cassie\.zip'): 'X-rated',
+    re.compile(r'levels/doom2/deathmatch/Ports/m-o/noname3d\.zip'): 'X-rated',
     re.compile(r'levels/doom2/g-i/goatdoom\.zip'): 'Shock image',
     re.compile(r'levels/doom2/m-o/noname\.zip'): 'X-rated',
     re.compile(r'levels/doom2/s-u/ultra\.zip'): 'Invalid WAD file (Wolf3D)',
@@ -25,6 +27,7 @@ IGNORE: Dict[Pattern, str] = {
     re.compile(r'levels/doom2/Ports/0-9/30kmaps\.zip'): '30k map bomb',
     re.compile(r'levels/doom2/Ports/0-9/100kmaps\.zip'): '100k map bomb',
     re.compile(r'themes/terrywads/sreality\.zip'): 'X-rated',
+    re.compile(r'themes/terrywads/comsn\.zip'): 'X-rated',
     re.compile(r'themes/wolf3d/.*'): 'Nazi imagery',
     re.compile(r'themes/x-rated/.*'): 'X-rated',
 }

@@ -1,6 +1,7 @@
 from pathlib import Path
-from typing import Optional, List
+from typing import Optional, List, Dict
 
+from PIL.Image import Image
 from mysql.connector import MySQLConnection, connection
 
 from doom.level import Level, LEVEL_FORMAT_TO_INT
@@ -85,11 +86,27 @@ class DBStorage:
                 (entry.id, level.name, LEVEL_FORMAT_TO_INT.get(level.format), len(level.lines), len(level.sides), len(level.things), len(level.sectors))
             )
 
+    def save_entry_textfile(self, entry: Entry, text_file: Optional[str]):
+        self.cursor.execute('DELETE FROM entry_textfile WHERE entry_id=%s', (entry.id,))
+        if text_file is not None and len(text_file):
+            self.cursor.execute('INSERT INTO entry_textfile VALUES (%s, %s)', (entry.id, text_file))
+
+    def save_entry_images(self, entry: Entry, images: Dict[str, Image]):
+        self.cursor.execute('DELETE FROM entry_images WHERE entry_id=%s', (entry.id,))
+        for name, image in images.items():
+            self.cursor.execute('INSERT INTO entry_images VALUES (%s, %s, %s, %s)', (entry.id, name, image.width, image.height))
+
     def remove_orphan_authors(self):
         self.cursor.execute('DELETE FROM author WHERE id NOT IN (SELECT author_id FROM entry_authors)')
 
     def remove_orphan_levels(self):
         self.cursor.execute('DELETE FROM entry_levels WHERE entry_id NOT IN (SELECT id FROM entry)')
+
+    def remove_orphan_textfiles(self):
+        self.cursor.execute('DELETE FROM entry_textfile WHERE entry_id NOT IN (SELECT id FROM entry)')
+
+    def remove_orphan_images(self):
+        self.cursor.execute('DELETE FROM entry_images WHERE entry_id NOT IN (SELECT id FROM entry)')
 
     def remove_dead_entries(self, existing_paths: List[Path]):
         local_paths = set()

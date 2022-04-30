@@ -11,7 +11,7 @@ from doom.doomimage import DoomImage
 from doom.palette import Palette
 
 
-TITLE_GRAPHICS: List[str] = ['titlepic', 'title', 'interpic', 'bossback', 'endpic', 'pfub1', 'victory2', 'pfub2', 'wimap0', 'wimap1', 'wimap2']
+TITLE_GRAPHICS: List[str] = ['titlepic', 'title', 'interpic', 'bossback', 'endpic', 'pfub1', 'victory2', 'pfub2', 'wimap0', 'wimap1', 'wimap2', 'credit', 'help', 'help1', 'help2']
 
 
 class GraphicsExtractor(ExtractorBase):
@@ -35,9 +35,7 @@ class GraphicsExtractor(ExtractorBase):
 
             graphic = self.read_graphic(file, palette)
             if graphic:
-                self.logger.decision('Using "{}" as main graphic.'.format(file.name))
-                info.graphics['main'] = graphic
-                break
+                info.graphics[filename] = graphic
 
     def read_graphic(self, file: ArchiveFileBase, palette: Palette) -> Optional[Image.Image]:
         image: Optional[Image.Image] = None
